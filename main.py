@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-printf("oda er med!")
+print("oda er med!")
