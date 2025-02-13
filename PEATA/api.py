@@ -4,20 +4,20 @@ import os
 
 load_dotenv()
 
-BASE_URL = os.getenv("BASE_URL")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_KEY = os.getenv("CLIENT_KEY")
+ENDPOINT_URL = "https://open.tiktokapis.com/v2/oauth/token/"
 
-#Testing connecting to another open-source API
-response = requests.get("https://api.github.com")
+#Obtain a client access token, add this to the authorization header
+access_token_headers = {'Content-Type' : 'application/x-www-form-urlencoded', 
+                        'Cache-Control' : 'no-cache'}
+req_body_params = {
+    'client_key': CLIENT_KEY,
+    'client_secret': CLIENT_SECRET,
+    'grant_type': 'client_credentials'
+}
 
-#Status code
-print("Response: %d" % response.status_code)
+response = requests.post(ENDPOINT_URL, headers=access_token_headers, data=req_body_params)
 
-#Response content, JSON format
-print(response.content)
-
-#Getting specific headers
-print("Content type: ", end="")
-print(response.headers["Content-Type"])
+print(response.status_code)
+print(response.json())
