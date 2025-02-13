@@ -21,3 +21,4 @@ response = requests.post(ENDPOINT_URL, headers=access_token_headers, data=req_bo
 
 print(response.status_code)
 print(response.json())
+print(response.text)
