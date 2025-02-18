@@ -2,7 +2,7 @@ import requests
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(dotenv_path="")
 
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 CLIENT_KEY = os.getenv("CLIENT_KEY")
@@ -30,5 +30,5 @@ def obtain_access_token(client_key, client_secret):
         print("Something went wrong")
         return 0;
 
-    
+print(repr(CLIENT_SECRET))    
 access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
