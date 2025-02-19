@@ -80,18 +80,24 @@ class TikTokApi:
         else:
             print("not ok..")
             return []
+    
+    def get_videos_dynamic_params(self, params):
+        return ""
 
+    #needs to take in params in format as above
     def get_video_comments(self, video_id):
+        #doesnt work
         url = "https://open.tiktokapis.com/v2/research/video/{video_id}/comments/"
         headers = {"Authorization" : f"Bearer {self.access_token}"}
         params = {"limit" : 10}
         
-        response = requests.post(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers, params=params)
         
         if response.status_code == 200:
             print("OK:)")
         else:
             print("Failed")
+            
         return ""
 tiktok = TikTokApi()
 access_token = tiktok.access_token #This is how you use the access token
