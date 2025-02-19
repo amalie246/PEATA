@@ -42,7 +42,7 @@ class TikTokApi:
         end_date = "20240505"
         query_params = {
             "fields" : "id,video_description,like_count,region_code", #Can set a lot more fields
-            "max_count" : 100,
+            "max_count" : 10,
             "start_date" : start_date,
             "end_date" : end_date
         }
@@ -59,8 +59,8 @@ class TikTokApi:
                 "field_name": "keyword",
                 "field_values": ["conspiracion"]
             }
-        ]
-    },
+            ]
+            },
             "start_date" : start_date,
             "end_date" : end_date
         }
@@ -73,6 +73,9 @@ class TikTokApi:
         
         if(response.status_code == 200):
             print("OK")
+            data = response.json().get("data", [])
+            videos = data.get("videos", [])
+            print(videos)
         else:
             print("not ok..")
         
