@@ -76,11 +76,13 @@ class TikTokApi:
             data = response.json().get("data", [])
             videos = data.get("videos", [])
             print(videos)
+            return videos
         else:
             print("not ok..")
-        
-        return 0
-    
+            return []
+
+    def get_video_comments(self, video_id):
+        return ""
 tiktok = TikTokApi()
 access_token = tiktok.access_token #This is how you use the access token
-tiktok.retrieve_video_data()
+tiktok.retrieve_video_data() #Example video id: 7374154040684449057
