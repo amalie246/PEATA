@@ -82,7 +82,18 @@ class TikTokApi:
             return []
 
     def get_video_comments(self, video_id):
+        url = "https://open.tiktokapis.com/v2/research/video/{video_id}/comments/"
+        headers = {"Authorization" : f"Bearer {self.access_token}"}
+        params = {"limit" : 10}
+        
+        response = requests.post(url, headers=headers, params=params)
+        
+        if response.status_code == 200:
+            print("OK:)")
+        else:
+            print("Failed")
         return ""
 tiktok = TikTokApi()
 access_token = tiktok.access_token #This is how you use the access token
-tiktok.retrieve_video_data() #Example video id: 7374154040684449057
+#tiktok.retrieve_video_data() #Example video id: 7374154040684449057
+tiktok.get_video_comments("7374154040684449057")
