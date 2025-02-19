@@ -39,7 +39,7 @@ class TikTokApi:
     def retrieve_video_data(self):
         #This is just an example of data, should make method more dynamic
         start_date = "20240504" #This is how the date should be formatted
-        end_date = "20240505"
+        end_date = "20240528"
         query_params = {
             "fields" : "id,video_description,like_count,region_code", #Can set a lot more fields
             "max_count" : 10,
@@ -52,12 +52,12 @@ class TikTokApi:
             {
                 "operation": "EQ",
                 "field_name": "region_code",
-                "field_values": ["ES"]
+                "field_values": ["NO"]
             },
             {
                 "operation": "EQ",
                 "field_name": "keyword",
-                "field_values": ["conspiracion"]
+                "field_values": ["politikk"]
             }
             ]
             },
