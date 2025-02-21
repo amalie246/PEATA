@@ -13,6 +13,7 @@ class TikTokApi:
         self.access_token = self.obtain_access_token()
         self.BASE_URL = "https://open.tiktokapis.com/v2/research/video/query/"
         self.USER_INFO_URL = "https://open.tiktokapis.com/v2/research/user/info/"
+        self.VIDEO_COMMENTS_URL = "https://open.tiktokapis.com/v2/research/video/comment/list/"
 
     #Obtain a client access token, add this to the authorization header
     def obtain_access_token(self):
@@ -86,9 +87,39 @@ class TikTokApi:
     def get_videos_dynamic_params(self, params, query, startdate, enddate):
         return ""
     
+    def get_videos_with_pagination(self):
+        #TODO
+        return ""
+    
+    def get_video_comments(self, video_id):
+        url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
+        
+        headers = {
+            "Content-Type" : "application/json",
+            "Authorization" : f"Bearer {self.access_token}"
+        }
+    
+        data = {
+            "video_id" : video_id,
+            "max_count" : 100 #Default is 10, max is 100
+            #cursor - index of comments, for pagination
+        }
+        
+        response = requests.post(url, headers=headers, json=data)
+        
+        if response.status_code == 200:
+            comments = response.json()
+            print(comments)
+            return comments
+        else:
+            return "Invalid"
+    
     def get_public_user_info(self, username):
         #Get user info with get_videos_dynamic_params
+        
+        #can switch out fields to let user choose this themselves, although not needed at this moment
         url = f"{self.USER_INFO_URL}?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"
+        
         headers = {
             "Content-Type" : "application/json",
             "Authorization" : f"Bearer {self.access_token}"
@@ -108,7 +139,9 @@ class TikTokApi:
             return "Invalid"
 
     
+
+#---EXAMPLES ON HOW TO USE THIS CLASS---#
 tiktok = TikTokApi()
-#access_token = tiktok.access_token #This is how you use the access token
-#tiktok.retrieve_video_data() #Example video id: 7374154040684449057
-tiktok.get_public_user_info("veronicakaaay")
+#videos = tiktok.retrieve_video_data() #Example video id: 7374154040684449057
+#user_info = tiktok.get_public_user_info("veronicakaaay")
+comments = tiktok.get_video_comments("7374154040684449057")
