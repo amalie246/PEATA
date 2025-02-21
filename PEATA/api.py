@@ -104,8 +104,10 @@ class TikTokApi:
             "max_count" : 100 #Default is 10, max is 100
             #cursor - index of comments, for pagination
         }
+        all_comments = []
         
         response = requests.post(url, headers=headers, json=data)
+        #TODO: Handle pagination
         
         if response.status_code == 200:
             comments = response.json()
