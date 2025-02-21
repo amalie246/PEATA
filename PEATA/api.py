@@ -12,6 +12,7 @@ class TikTokApi:
         self.client_secret = os.getenv("CLIENT_SECRET")
         self.access_token = self.obtain_access_token()
         self.BASE_URL = "https://open.tiktokapis.com/v2/research/video/query/"
+        self.USER_INFO_URL = "https://open.tiktokapis.com/v2/research/user/info/?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"
 
     #Obtain a client access token, add this to the authorization header
     def obtain_access_token(self):
@@ -36,7 +37,7 @@ class TikTokApi:
             print("Something went wrong")
             return 0;
     
-    def retrieve_video_data(self):
+    def retrieve_video_data_example(self):
         #This is just an example of data, should make method more dynamic
         start_date = "20240504" #This is how the date should be formatted
         end_date = "20240528"
@@ -81,25 +82,32 @@ class TikTokApi:
             print("not ok..")
             return []
     
-    def get_videos_dynamic_params(self, params):
-        return ""
-
     #needs to take in params in format as above
-    def get_video_comments(self, video_id):
-        #doesnt work
-        url = "https://open.tiktokapis.com/v2/research/video/{video_id}/comments/"
-        headers = {"Authorization" : f"Bearer {self.access_token}"}
-        params = {"limit" : 10}
-        
-        response = requests.get(url, headers=headers, params=params)
-        
-        if response.status_code == 200:
-            print("OK:)")
-        else:
-            print("Failed")
-            
+    def get_videos_dynamic_params(self, params, query, startdate, enddate):
         return ""
+    
+    def get_public_user_info(self, username):
+        #Get user info with get_videos_dynamic_params
+        headers = {
+            "Content-Type" : "application/json", #or text/plain
+            "Authorization" : f"Bearer {self.access_token}"
+        }
+        
+        data = {
+            "username" : username
+        }
+        
+        response = requests.post(self.USER_INFO_URL, headers=headers, json=data)
+        
+        if(response.status_code == 200):
+            user_info = response.json();
+            print(user_info)
+            return user_info
+        else:
+            return "Invalid"
+
+    
 tiktok = TikTokApi()
-access_token = tiktok.access_token #This is how you use the access token
+#access_token = tiktok.access_token #This is how you use the access token
 #tiktok.retrieve_video_data() #Example video id: 7374154040684449057
-tiktok.get_video_comments("7374154040684449057")
+tiktok.get_public_user_info("veronicakaaay")
