@@ -12,7 +12,7 @@ class TikTokApi:
         self.client_secret = os.getenv("CLIENT_SECRET")
         self.access_token = self.obtain_access_token()
         self.BASE_URL = "https://open.tiktokapis.com/v2/research/video/query/"
-        self.USER_INFO_URL = "https://open.tiktokapis.com/v2/research/user/info/?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"
+        self.USER_INFO_URL = "https://open.tiktokapis.com/v2/research/user/info/"
 
     #Obtain a client access token, add this to the authorization header
     def obtain_access_token(self):
@@ -88,8 +88,9 @@ class TikTokApi:
     
     def get_public_user_info(self, username):
         #Get user info with get_videos_dynamic_params
+        url = f"{self.USER_INFO_URL}?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"
         headers = {
-            "Content-Type" : "application/json", #or text/plain
+            "Content-Type" : "application/json",
             "Authorization" : f"Bearer {self.access_token}"
         }
         
@@ -97,7 +98,7 @@ class TikTokApi:
             "username" : username
         }
         
-        response = requests.post(self.USER_INFO_URL, headers=headers, json=data)
+        response = requests.post(url, headers=headers, json=data)
         
         if(response.status_code == 200):
             user_info = response.json();
