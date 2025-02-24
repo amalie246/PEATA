@@ -146,4 +146,6 @@ class TikTokApi:
 tiktok = TikTokApi()
 #videos = tiktok.retrieve_video_data() #Example video id: 7374154040684449057
 #user_info = tiktok.get_public_user_info("veronicakaaay")
-comments = tiktok.get_video_comments("7374154040684449057")
+#comments = tiktok.get_video_comments("7374154040684449057")
+brukerinput = input("Skriv inn en id")
+tiktok.get_video_comments(brukerinput)
