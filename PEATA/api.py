@@ -43,7 +43,7 @@ class TikTokApi:
         start_date = "20240504" #This is how the date should be formatted
         end_date = "20240528"
         query_params = {
-            "fields" : "id,video_description,like_count,region_code", #Can set a lot more fields
+            "fields" : "id,video_description,like_count,comment_count,region_code", #Can set a lot more fields
             "max_count" : 10,
             "start_date" : start_date,
             "end_date" : end_date
@@ -84,7 +84,7 @@ class TikTokApi:
             return []
     
     #needs to take in params in format as above
-    def get_videos_dynamic_params(self, params, query, startdate, enddate):
+    def get_videos_by_params(self, username, keyword, startdate, enddate):
         return ""
     
     def get_videos_with_pagination(self):
@@ -101,20 +101,29 @@ class TikTokApi:
     
         data = {
             "video_id" : video_id,
-            "max_count" : 100 #Default is 10, max is 100
-            #cursor - index of comments, for pagination
+           "max_count" : 100,
+           "cursor": 0
+            
         }
         all_comments = []
         
-        response = requests.post(url, headers=headers, json=data)
-        #TODO: Handle pagination
-        
-        if response.status_code == 200:
-            comments = response.json()
-            print(comments)
-            return comments
-        else:
-            return "Invalid"
+        does_have_more = True
+        while does_have_more:
+            response = requests.post(url, headers=headers, json=data)
+            
+            if response.status_code == 200:
+                comments = response.json()
+                all_comments.extend(comments["data"]["comments"])
+                
+                check_pagination = comments["data"]["has_more"]
+                
+                if check_pagination == False:
+                    break
+            
+        print(all_comments)
+        return all_comments
+    
+    
     
     def get_public_user_info(self, username):
         #Get user info with get_videos_dynamic_params
@@ -144,8 +153,6 @@ class TikTokApi:
 
 #---EXAMPLES ON HOW TO USE THIS CLASS---#
 tiktok = TikTokApi()
-#videos = tiktok.retrieve_video_data() #Example video id: 7374154040684449057
+#videos = tiktok.retrieve_video_data_example() #Example video id: 7374154040684449057
 #user_info = tiktok.get_public_user_info("veronicakaaay")
-#comments = tiktok.get_video_comments("7374154040684449057")
-brukerinput = input("Skriv inn en id")
-tiktok.get_video_comments(brukerinput)
+comments = tiktok.get_video_comments("7374006748505460000")
