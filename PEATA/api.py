@@ -154,7 +154,7 @@ class TikTokApi:
             return []
         
 
-    
+    #Edge case - extreme long processing time for many comments!
     def get_video_comments(self, video_id):
         url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
         
@@ -185,6 +185,7 @@ class TikTokApi:
                     break
             
         print(all_comments)
+        print("Amount of comments: %d" % (len(all_comments)))
         return all_comments
     
     
@@ -218,7 +219,7 @@ class TikTokApi:
 #---EXAMPLES ON HOW TO USE THIS CLASS---#
 tiktok = TikTokApi()
 #user_info = tiktok.get_public_user_info("veronicakaaay")
-#comments = tiktok.get_video_comments("7374006748505460000")
+comments = tiktok.get_video_comments("7463699433146961194")
 #videos = tiktok.retrieve_video_data_example()
 #videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
 
@@ -257,4 +258,4 @@ query_body_example2 = {
             "start_date" : "20250101",
             "end_date" : "20250103"
     }
-videos = tiktok.get_videos_by_dynamic_query_body(query_body_example2, "20250101", "20250103")
+#videos = tiktok.get_videos_by_dynamic_query_body(query_body_example2, "20250101", "20250103")
