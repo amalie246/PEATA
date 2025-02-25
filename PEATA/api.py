@@ -83,13 +83,77 @@ class TikTokApi:
             print("not ok..")
             return []
     
-    #needs to take in params in format as above
-    def get_videos_by_params(self, username, keyword, startdate, enddate):
-        return ""
+    #This method only is able to get username AND keyword, in a EQ operation
+    #Also only returns 100 videos, needs to handle pagination
+    def get_videos(self, username, keyword, startdate, enddate):
+        #All fields, NOTE TO SELF: Remove unneccesary fields if needed
+        query_params = {
+                "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
+                "max_count" : 100,
+                "start_date" : startdate,
+                "end_date" : enddate
+        }
+        
+        #EQ, IN, GT/GTE, LT/LTE, can also combine these..
+        query_body = {
+            "query":   {
+                    "and" : [{
+                            "operation" : "EQ",
+                            "field_name" : "keyword",
+                            "field_values" : [f"{keyword}"]
+                        }, {
+                            "operation" : "EQ",
+                            "field_name" : "username",
+                            "field_values" : [f"{username}"]
+                        }]
+                },
+                "start_date" : startdate,
+                "end_date" : enddate
+        }
+                            
+        headers = {
+                "Content-Type" : "application/json",
+                "Authorization" : f"Bearer {self.access_token}"
+            }
+        
+        #TODO handle pagination
+        response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json().get("data", [])
+            videos = data.get("videos", [])
+            print(videos)
+            return videos
+            
+        else:
+            print(response.json())
+            return ""
     
-    def get_videos_with_pagination(self):
-        #TODO
-        return ""
+    def get_videos_by_dynamic_query_body(self, query_body, start_date, end_date):
+        query_params = {
+                "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
+                "max_count" : 100,
+                "start_date" : start_date,
+                "end_date" : end_date
+        }
+        
+        headers = {
+                "Content-Type" : "application/json",
+                "Authorization" : f"Bearer {self.access_token}"
+        }
+        
+        response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json().get("data", [])
+            videos = data.get("videos", [])
+            print(videos)
+            return videos
+        else:
+            print(response.json())
+            return []
+        
+
     
     def get_video_comments(self, video_id):
         url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
@@ -153,6 +217,44 @@ class TikTokApi:
 
 #---EXAMPLES ON HOW TO USE THIS CLASS---#
 tiktok = TikTokApi()
-#videos = tiktok.retrieve_video_data_example() #Example video id: 7374154040684449057
 #user_info = tiktok.get_public_user_info("veronicakaaay")
-comments = tiktok.get_video_comments("7374006748505460000")
+#comments = tiktok.get_video_comments("7374006748505460000")
+#videos = tiktok.retrieve_video_data_example()
+#videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
+
+query_body_example = {
+        "query":   {
+                "and" : [{
+                        "operation" : "EQ",
+                        "field_name" : "keyword",
+                        "field_values" : ["Chicken"]
+                    }, {
+                        "operation" : "EQ",
+                        "field_name" : "username",
+                        "field_values" : ["izzyandmarysdad"]
+                    }, {
+                        "operation" : "EQ",
+                        "field_name" : "region_code",
+                        "field_values" : ["US"]
+                    }]
+            },
+            "start_date" : "20250101",
+            "end_date" : "20250129"
+    }
+#TODO using OR operations on keyword seems to gather a lot of data, fix this                   
+query_body_example2 = {
+        "query":   {
+                "or" : [{
+                        "operation" : "EQ",
+                        "field_name" : "keyword",
+                        "field_values" : ["Chicken"]
+                    }, {
+                        "operation" : "EQ",
+                        "field_name" : "keyword",
+                        "field_values" : ["Burger"]
+                    }]
+            },
+            "start_date" : "20250101",
+            "end_date" : "20250103"
+    }
+videos = tiktok.get_videos_by_dynamic_query_body(query_body_example2, "20250101", "20250103")
