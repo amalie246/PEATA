@@ -72,18 +72,29 @@ class TikTokApi:
                 "Authorization" : f"Bearer {self.access_token}"
             }
         
-        #TODO handle pagination
-        response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+        does_have_more = True
+        all_videos = []
+        
+        while does_have_more:
+            response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
 
-        if response.status_code == 200:
-            data = response.json().get("data", [])
-            videos = data.get("videos", [])
-            print(videos)
-            return videos
-            
-        else:
-            print(response.json())
-            return ""
+            if response.status_code == 200:
+                data = response.json().get("data", [])
+                videos = data.get("videos", [])
+                all_videos.extend(videos)
+                
+                check_pagination = data["has_more"]
+                
+                if check_pagination == False:
+                    break
+                
+            else:
+                print(response.json())
+        print(all_videos)
+        print("Amount of videos retrieved: %d" % (len(all_videos)))
+        return all_videos
+        
+
     
     def get_videos_by_dynamic_query_body(self, query_body, start_date, end_date):
         query_params = {
@@ -103,6 +114,9 @@ class TikTokApi:
         if response.status_code == 200:
             data = response.json().get("data", [])
             videos = data.get("videos", [])
+        
+            
+            
             print(videos)
             return videos
         else:
@@ -128,6 +142,7 @@ class TikTokApi:
         all_comments = []
         iteration = 0
         
+        #TODO this is a max count for comments set at 400..
         does_have_more = True
         while does_have_more:
             iteration = iteration + 1
@@ -178,12 +193,12 @@ class TikTokApi:
 
 #---EXAMPLES ON HOW TO USE THIS CLASS---#
 tiktok = TikTokApi()
-user_info = tiktok.get_public_user_info("veronicakaaay")
+#user_info = tiktok.get_public_user_info("veronicakaaay")
 
 #Should return about 3000 comments, method restricts it to 400
 #comments = tiktok.get_video_comments("7463699433146961194")
 #videos = tiktok.retrieve_video_data_example()
-#videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
+videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
 
 query_body_example = {
         "query":   {
