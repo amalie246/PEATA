@@ -170,9 +170,11 @@ class TikTokApi:
             
         }
         all_comments = []
+        iteration = 0
         
         does_have_more = True
         while does_have_more:
+            iteration = iteration + 1
             response = requests.post(url, headers=headers, json=data)
             
             if response.status_code == 200:
@@ -182,6 +184,8 @@ class TikTokApi:
                 check_pagination = comments["data"]["has_more"]
                 
                 if check_pagination == False:
+                    break
+                if iteration == 4:
                     break
             
         print(all_comments)
@@ -218,8 +222,10 @@ class TikTokApi:
 
 #---EXAMPLES ON HOW TO USE THIS CLASS---#
 tiktok = TikTokApi()
-#user_info = tiktok.get_public_user_info("veronicakaaay")
-comments = tiktok.get_video_comments("7463699433146961194")
+user_info = tiktok.get_public_user_info("veronicakaaay")
+
+#Should return about 3000 comments, method restricts it to 400
+#comments = tiktok.get_video_comments("7463699433146961194")
 #videos = tiktok.retrieve_video_data_example()
 #videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
 
