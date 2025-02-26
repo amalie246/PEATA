@@ -11,6 +11,7 @@ class QueryFormatter:
     def build_query(self, bool_operation, value_field_operation_tuple):
         #Takes in boolean logic operations: AND, OR, NOT for now
         #TODO : make more dynamic, per now the logic operations is limited to 1 operation per query body
+        #It is allowed to combine AND/OR/NOT operations in different clauses
         
         clause_arr = []
         #Takes in field_values[0], field_name[1] and operation[2]

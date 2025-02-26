@@ -37,51 +37,7 @@ class TikTokApi:
         else:
             print("Something went wrong")
             return 0;
-    
-    def retrieve_video_data_example(self):
-        #This is just an example of data, should make method more dynamic
-        start_date = "20240504" #This is how the date should be formatted
-        end_date = "20240528"
-        query_params = {
-            "fields" : "id,video_description,like_count,comment_count,region_code", #Can set a lot more fields
-            "max_count" : 10,
-            "start_date" : start_date,
-            "end_date" : end_date
-        }
-        query_body = {
-            "query": {
-        "and": [
-            {
-                "operation": "EQ",
-                "field_name": "region_code",
-                "field_values": ["NO"]
-            },
-            {
-                "operation": "EQ",
-                "field_name": "keyword",
-                "field_values": ["politikk"]
-            }
-            ]
-            },
-            "start_date" : start_date,
-            "end_date" : end_date
-        }
-        headers = {
-            "Content-Type" : "application/json",
-            "Authorization" : f"Bearer {self.access_token}"
-        }
-        
-        response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
-        
-        if(response.status_code == 200):
-            print("OK")
-            data = response.json().get("data", [])
-            videos = data.get("videos", [])
-            print(videos)
-            return videos
-        else:
-            print("not ok..")
-            return []
+
     
     #This method only is able to get username AND keyword, in a EQ operation
     #Also only returns 100 videos, needs to handle pagination
