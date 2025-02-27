@@ -15,6 +15,7 @@ class TikTokApi:
         self.USER_INFO_URL = "https://open.tiktokapis.com/v2/research/user/info/"
         self.VIDEO_COMMENTS_URL = "https://open.tiktokapis.com/v2/research/video/comment/list/"
 
+        
     #Obtain a client access token, add this to the authorization header
     def obtain_access_token(self):
         ENDPOINT_URL = "https://open.tiktokapis.com/v2/oauth/token/"
