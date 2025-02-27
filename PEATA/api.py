@@ -17,6 +17,7 @@ class TikTokApi:
         self.USER_INFO_URL = "https://open.tiktokapis.com/v2/research/user/info/"
         self.VIDEO_COMMENTS_URL = "https://open.tiktokapis.com/v2/research/video/comment/list/"
 
+        
     #Obtain a client access token, add this to the authorization header
     def obtain_access_token(self):
         ENDPOINT_URL = "https://open.tiktokapis.com/v2/oauth/token/"
@@ -92,6 +93,7 @@ class TikTokApi:
                 
             else:
                 print(response.json())
+                
         print(all_videos)
         print("Amount of videos retrieved: %d" % (len(all_videos)))
         return all_videos
@@ -111,19 +113,28 @@ class TikTokApi:
                 "Authorization" : f"Bearer {self.access_token}"
         }
         
-        response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+        does_have_more = True
+        all_videos = []
         
-        if response.status_code == 200:
-            data = response.json().get("data", [])
-            videos = data.get("videos", [])
+        while does_have_more:
+            response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json().get("data", [])
+                videos = data.get("videos", [])
+                all_videos.extend(videos)
+                
+                check_pagination = data["has_more"]
+                if check_pagination == False:
+                    break
+            else:
+                print(response.json())
         
-            
-            
-            print(videos)
-            return videos
-        else:
-            print(response.json())
-            return []
+        print(all_videos)
+        print("Amount of videos retrieved: %d" % (len(all_videos)))
+        return all_videos
+        
+        
         
 
     #Edge case - extreme long processing time for many comments!
@@ -237,8 +248,7 @@ tiktok = TikTokApi()
 
 #Should return about 3000 comments, method restricts it to 400
 #comments = tiktok.get_video_comments("7463699433146961194")
-#videos = tiktok.retrieve_video_data_example()
-videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
+#videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
 
 query_body_example = {
         "query":   {
