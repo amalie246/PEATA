@@ -13,9 +13,10 @@ class TikTokApi:
         self.client_key = os.getenv("CLIENT_KEY")
         self.client_secret = os.getenv("CLIENT_SECRET")
         self.access_token = self.obtain_access_token()
-        self.BASE_URL = "https://open.tiktokapis.com/v2/research/video/query/"
-        self.USER_INFO_URL = "https://open.tiktokapis.com/v2/research/user/info/"
-        self.VIDEO_COMMENTS_URL = "https://open.tiktokapis.com/v2/research/video/comment/list/"
+        self.BASE_URL = "https://open.tiktokapis.com/v2"
+        self.VIDEO_QUERY_URL = self.BASE_URL + "/research/video/query/"
+        self.USER_INFO_URL = self.BASE_URL + "/research/user/info/"
+        self.VIDEO_COMMENTS_URL = self.BASE_URL + "/research/video/comment/list/"
 
         
     #Obtain a client access token, add this to the authorization header
@@ -79,7 +80,7 @@ class TikTokApi:
         all_videos = []
         
         while does_have_more:
-            response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+            response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
 
             if response.status_code == 200:
                 data = response.json().get("data", [])
@@ -117,7 +118,7 @@ class TikTokApi:
         all_videos = []
         
         while does_have_more:
-            response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+            response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
             
             if response.status_code == 200:
                 data = response.json().get("data", [])
