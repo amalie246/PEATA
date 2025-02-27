@@ -8,6 +8,7 @@
 class QueryFormatter:
     
     #This data should be retrieved from the GUI (or some service between)
+    #UNTESTED SO FAR
     def build_query(self, bool_operation, value_field_operation_tuple):
         #Takes in boolean logic operations: AND, OR, NOT for now
         #TODO : make more dynamic, per now the logic operations is limited to 1 operation per query body
@@ -32,3 +33,7 @@ class QueryFormatter:
                     }
             }
         return query_body
+    
+    def build_query_handling_multiple_bool_operations(self, ):
+        #Fixes the problem stated above!
+        return ""

@@ -90,6 +90,7 @@ class TikTokApi:
                 
             else:
                 print(response.json())
+                
         print(all_videos)
         print("Amount of videos retrieved: %d" % (len(all_videos)))
         return all_videos
@@ -109,19 +110,28 @@ class TikTokApi:
                 "Authorization" : f"Bearer {self.access_token}"
         }
         
-        response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+        does_have_more = True
+        all_videos = []
         
-        if response.status_code == 200:
-            data = response.json().get("data", [])
-            videos = data.get("videos", [])
+        while does_have_more:
+            response = requests.post(self.BASE_URL, json=query_body, params=query_params, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json().get("data", [])
+                videos = data.get("videos", [])
+                all_videos.extend(videos)
+                
+                check_pagination = data["has_more"]
+                if check_pagination == False:
+                    break
+            else:
+                print(response.json())
         
-            
-            
-            print(videos)
-            return videos
-        else:
-            print(response.json())
-            return []
+        print(all_videos)
+        print("Amount of videos retrieved: %d" % (len(all_videos)))
+        return all_videos
+        
+        
         
 
     #Edge case - extreme long processing time for many comments!
