@@ -34,6 +34,12 @@ class QueryFormatter:
             }
         return query_body
     
-    def build_query_handling_multiple_bool_operations(self, ):
-        #Fixes the problem stated above!
-        return ""
+    def build_query_handling_multiple_bool_operations(self):
+        #Needs to take in a operation for multiple clauses
+        #And it should also be able to take in multiple such operations!
+        clause_arr = []
+        query_body = []
+        
+        return query_body
+
+

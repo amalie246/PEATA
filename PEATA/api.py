@@ -208,8 +208,7 @@ tiktok = TikTokApi()
 
 #Should return about 3000 comments, method restricts it to 400
 #comments = tiktok.get_video_comments("7463699433146961194")
-#videos = tiktok.retrieve_video_data_example()
-videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
+#videos = tiktok.get_videos("i.am.never.full", "chicken", "20241101", "20241129")
 
 query_body_example = {
         "query":   {
