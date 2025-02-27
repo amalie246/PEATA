@@ -6,6 +6,7 @@ import csv
 
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
 load_dotenv(dotenv_path=dotenv_path)
+BASE_URL = "https://open.tiktokapis.com/v2"
 
 class TikTokApi:
     
@@ -13,10 +14,10 @@ class TikTokApi:
         self.client_key = os.getenv("CLIENT_KEY")
         self.client_secret = os.getenv("CLIENT_SECRET")
         self.access_token = self.obtain_access_token()
-        self.BASE_URL = "https://open.tiktokapis.com/v2"
-        self.VIDEO_QUERY_URL = self.BASE_URL + "/research/video/query/"
-        self.USER_INFO_URL = self.BASE_URL + "/research/user/info/"
-        self.VIDEO_COMMENTS_URL = self.BASE_URL + "/research/video/comment/list/"
+        
+        self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
+        self.USER_INFO_URL = BASE_URL + "/research/user/info/"
+        self.VIDEO_COMMENTS_URL = BASE_URL + "/research/video/comment/list/"
 
         
     #Obtain a client access token, add this to the authorization header
