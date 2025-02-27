@@ -1,6 +1,8 @@
 import requests
 from dotenv import load_dotenv
 import os
+import json
+import csv
 
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
 load_dotenv(dotenv_path=dotenv_path)
@@ -98,7 +100,7 @@ class TikTokApi:
     
     def get_videos_by_dynamic_query_body(self, query_body, start_date, end_date):
         query_params = {
-                "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
+                "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
                 "max_count" : 100,
                 "start_date" : start_date,
                 "end_date" : end_date
@@ -189,7 +191,45 @@ class TikTokApi:
         else:
             return "Invalid"
 
+
+
     
+
+def save_json_to_file(data, filename="data.json"):
+    with open(filename, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+    print(f"JSON-data lagret i {filename}")
+
+def save_any_json_data(data, filename="output", file_format="json"):
+    filename = f"{filename}.{file_format}"
+    if file_format == "json":
+        save_json_to_file(data, filename)
+    elif file_format == "csv":
+        save_json_to_csv(data, filename)
+    else:
+        print("Ugyldig format! Velg enten 'json' eller 'csv'.")
+        
+
+def save_json_to_csv(data, filename="data.csv"):
+    if not data:
+        print("Ingen data å lagre.")
+        return
+    if not isinstance(data, list) or not all(isinstance(item, dict) for item in data):
+        print("Dataformatet er feil, må være en liste med dictionaries.")
+        return
+
+    all_keys = set()
+    for item in data:
+        all_keys.update(item.keys())
+
+    with open(filename, mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=list(all_keys), extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(data)
+    
+    print(f"JSON-data lagret i CSV-fil: {filename}")
+
+
 
 #---EXAMPLES ON HOW TO USE THIS CLASS---#
 tiktok = TikTokApi()
@@ -236,3 +276,7 @@ query_body_example2 = {
             "end_date" : "20250103"
     }
 #videos = tiktok.get_videos_by_dynamic_query_body(query_body_example2, "20250101", "20250103")
+
+videos = tiktok.get_videos_by_dynamic_query_body(query_body_example2, "20250101", "20250103")
+save_any_json_data(videos, "tiktok_videos", "json")
+save_any_json_data(videos, "tiktok_videos", "csv")
