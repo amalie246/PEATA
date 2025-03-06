@@ -178,6 +178,47 @@ class TikTokApi:
         print("Amount of comments: %d" % (len(all_comments)))
         return all_comments
     
+   
+    
+   #har lyst til å få denne til å funke
+    def get_music_info(self, music_id):
+        url = f"{BASE_URL}/research/music/query/"
+        headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {self.access_token}"
+    }
+        data = {
+        "query": {
+            "and": [
+                {"operation": "EQ", "field_name": "id", "field_values": [music_id]}
+            ]
+        },
+        "fields": "id,title,author_name,album_name,cover_url,duration",
+        "max_count": 1 
+    }
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code != 200:
+            print(f"Feil ved henting av musikkinfo (status {response.status_code}): {response.text}")
+        return None
+        try:
+            json_response = response.json()
+            if not json_response or "data" not in json_response:
+                print("Feil: Ingen data returnert fra API-et.")
+            return None
+            music_data = json_response["data"].get("music", [])
+            if not music_data:
+                print("Ingen musikk funnet for denne ID-en.")
+            return None
+            return music_data[0]
+        except requests.exceptions.JSONDecodeError:
+            print("JSONDecodeError: API-et returnerte ikke gyldig JSON.")
+            print("Rå respons fra API:", response.text)
+        return None
+
+
+
+
+
     
     
     def get_public_user_info(self, username):
@@ -206,7 +247,7 @@ class TikTokApi:
 
 
 
-    
+
 
 def save_json_to_file(data, filename="data.json"):
     with open(filename, "w", encoding="utf-8") as file:
@@ -241,6 +282,9 @@ def save_json_to_csv(data, filename="data.csv"):
         writer.writerows(data)
     
     print(f"JSON-data lagret i CSV-fil: {filename}")
+    
+    
+
 
 
 
@@ -289,6 +333,11 @@ query_body_example2 = {
     }
 #videos = tiktok.get_videos_by_dynamic_query_body(query_body_example2, "20250101", "20250103")
 
-#videos = tiktok.get_videos_by_dynamic_query_body(query_body_example2, "20250101", "20250103")
-#save_any_json_data(videos, "tiktok_videos", "json")
-#save_any_json_data(videos, "tiktok_videos", "csv")
+music_id = "7476018305115933974" 
+music_info = tiktok.get_music_info(music_id)
+
+if music_info:
+    save_any_json_data([music_info], "tiktok_music_info", "csv")
+else:
+    print("Ingen musikkdata ble funnet.")
+
