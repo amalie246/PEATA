@@ -1,15 +1,21 @@
 from api import TikTokApi
 from queryFormatter import QueryFormatter
 from file_converter import FileConverter
-from fileHandler import FileHandler
+#from fileHandler import FileHandler
+from tiktok_login import Login
 
 def main():
-    tiktok_api = TikTokApi();
-    query_formatter = QueryFormatter();
-    file_converter = FileConverter();
-    file_handler = FileHandler();
+    tiktok_api = TikTokApi()
+    query_formatter = QueryFormatter()
+    file_converter = FileConverter()
+    #file_handler = FileHandler()
+    login = Login()
+    login.login()
     
-    tiktok_api.get_video_comments("7463699433146961194");
+    #   1 - QueryFormatter takes input from GUI, gives to TikTok Api
+    #   2 - TikTokApi takes query, fetches data from endpoint, sends to FileConverter
+    #   3 - FileConverter converts json to csv, and provides json and csv files
+    #   4 - (Optional) FileHandler creates PDF and/or excel sheet
     
 
 if __name__ == "__main__":
