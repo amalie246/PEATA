@@ -22,29 +22,40 @@ class Gui:
         root.geometry("500x500")
         root.configure(bg="lightblue")
         
+        def add_dropdown_row():
+            row_index = len(dropdown_rows)
+            clickedBool = tk.StringVar()
+            clickedBool.set( "and" )
+            clickedEq = tk.StringVar()
+            clickedEq.set("EQ")
+            
+            bool_drop = tk.OptionMenu(dropdown_frame, clickedBool, *boolean_operations)
+            bool_drop.grid(row=row_index, column=0, padx=10)
+            eq_drop = tk.OptionMenu(dropdown_frame, clickedEq, *eq_operations)
+            eq_drop.grid(row=row_index, column=2, padx=10)
+            
+            dropdown_rows.append((clickedBool, clickedEq))
+            
         def show_selection():
-            label1.config(text=clickedBool.get())
-            label2.config(text=clickedEq.get())
+            selections = []
+            for bool_var, eq_var in dropdown_rows:
+                selections.append(f"{bool_var.get()} - {eq_var.get()}")
+                
+            label.config(text="Your selections: " + ", ".join(selections))
+            
+        dropdown_rows = []
             
         dropdown_frame = tk.Frame(root)
         dropdown_frame.pack(pady=20)
         
-        clickedBool = tk.StringVar()
-        clickedBool.set( "and" )
-        clickedEq = tk.StringVar()
-        clickedEq.set("EQ")
-        
-        bool_drop = tk.OptionMenu(dropdown_frame, clickedBool, *boolean_operations)
-        bool_drop.grid(row=0, column=0, padx=10)
-        eq_drop = tk.OptionMenu(dropdown_frame, clickedEq, *eq_operations)
-        eq_drop.grid(row=0, column=2, padx=10)
+        add_dropdown_row()
+        add_btn = tk.Button(dropdown_frame, text="+", command=add_dropdown_row)
+        add_btn.grid(row=9, column=0, pady=10)
         
         button = tk.Button(dropdown_frame, text="Submit", command=show_selection)
         button.grid(row=3, column=1, pady=10)
-        label1 = tk.Label(dropdown_frame, text=" ")
-        label1.grid(row=4, column=0, padx=10)
-        label2 = tk.Label(dropdown_frame, text= " ")
-        label2.grid(row=4, column=2, padx=10)
+        label = tk.Label(dropdown_frame, text=" ")
+        label.grid(row=10, column=1, pady=10)
         
         
         def show_popup():
