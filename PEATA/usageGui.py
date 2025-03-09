@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import requests
+from api import TikTokApi
 
 #TODO for this class
 #   1 - Make it so that users can choose between getting videos, user info or comments
@@ -13,6 +14,7 @@ class Gui:
         self.client_secret = cs
         self.client_id = ci
         self.client_key = ck
+        self.tiktok_api = TikTokApi()
     
     def test_page(self):
         root = tk.Tk()
@@ -47,11 +49,25 @@ class Gui:
             def submit():
                 user_input = entry.get()
                 label.config(text=f"Username: {user_input}")
+                #Here, fetch the data from TikTok API!
+                #TODO : tiktok api uses .env variables, should use whatever is put in on login page
+                user_info = self.tiktok_api.get_public_user_info(user_input)
+                temp_label.config(state=tk.NORMAL)  # Enable editing to update text
+                temp_label.delete(1.0, tk.END)  # Clear existing text
+                temp_label.insert(tk.END, f"{user_info}")  # Insert new text
+                temp_label.config(state=tk.DISABLED)
             
             submit_btn = tk.Button(choice_frame, text="Submit", command=submit)
             submit_btn.grid(row=5, column=4)
             label = tk.Label(choice_frame, text="", font=("Arial", 12))
             label.grid(row=6, column=1)
+            temp_label = tk.Text(choice_frame, height=10, width=80, wrap=tk.WORD, bg="lightgray", font=("Arial", 10))
+            temp_label.grid(row=8, column=1, columnspan=3, pady=10)
+            temp_label.config(state=tk.DISABLED)  # Initially disable editing
+
+            scrollbar = tk.Scrollbar(choice_frame, command=temp_label.yview)
+            scrollbar.grid(row=8, column=4, sticky="ns")
+            temp_label.config(yscrollcommand=scrollbar.set)
             
             
         choice_frame = tk.Frame(full_frame, width=900, height=900, bg="white", bd=2, relief="solid")

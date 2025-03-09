@@ -6,9 +6,9 @@ from file_converter import FileConverter
 from usageGui import Gui
 
 def main():
-    tiktok_api = TikTokApi()
-    query_formatter = QueryFormatter()
-    file_converter = FileConverter()
+    #tiktok_api = TikTokApi()
+    #query_formatter = QueryFormatter()
+    #file_converter = FileConverter()
     #file_handler = FileHandler()
     
     #In login, check if client secret stuff are valid by fetching access token
