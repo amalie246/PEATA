@@ -36,10 +36,23 @@ class Gui:
             #Maybe insert a max count 
             #Inform users that having a large max count is time consuming
             comments = []
+
         
         def user_queries():
             #Username is required, also only field
             user = []
+            entry = tk.Entry(choice_frame, width=50)
+            entry.grid(row=5, column=3)
+            
+            def submit():
+                user_input = entry.get()
+                label.config(text=f"Username: {user_input}")
+            
+            submit_btn = tk.Button(choice_frame, text="Submit", command=submit)
+            submit_btn.grid(row=5, column=4)
+            label = tk.Label(choice_frame, text="", font=("Arial", 12))
+            label.grid(row=6, column=1)
+            
             
         choice_frame = tk.Frame(full_frame, width=900, height=900, bg="white", bd=2, relief="solid")
         choice_frame.pack(pady=10, padx=10)
@@ -56,8 +69,6 @@ class Gui:
         
         user_btn = tk.Button(choice_frame, text="User info queries (by username)", command=user_queries)
         user_btn.grid(row=3, column=3)
-        
-        
         
         root.mainloop()
         
