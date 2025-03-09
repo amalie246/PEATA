@@ -52,10 +52,12 @@ class Gui:
                 #Here, fetch the data from TikTok API!
                 #TODO : tiktok api uses .env variables, should use whatever is put in on login page
                 user_info = self.tiktok_api.get_public_user_info(user_input)
-                temp_label.config(state=tk.NORMAL)  # Enable editing to update text
-                temp_label.delete(1.0, tk.END)  # Clear existing text
-                temp_label.insert(tk.END, f"{user_info}")  # Insert new text
+                temp_label.config(state=tk.NORMAL)
+                temp_label.delete(1.0, tk.END)
+                temp_label.insert(tk.END, f"{user_info}")
                 temp_label.config(state=tk.DISABLED)
+                
+                #Now, create the csv file
             
             submit_btn = tk.Button(choice_frame, text="Submit", command=submit)
             submit_btn.grid(row=5, column=4)
@@ -70,12 +72,16 @@ class Gui:
             temp_label.config(yscrollcommand=scrollbar.set)
             
             
+        title_frame = tk.Frame(full_frame, bg="#87CEFA", padx=20, relief="solid", height=200)
+        title_frame.pack(fill="x", side="top", pady=0)
+        
+        title = tk.Label(title_frame, text="Choose between queries", font=("Arial", 16, "bold"), bg="#87CEFA")
+        title.pack(pady=20)
+        
         choice_frame = tk.Frame(full_frame, width=900, height=900, bg="white", bd=2, relief="solid")
-        choice_frame.pack(pady=10, padx=10)
+        choice_frame.pack(pady=0, padx=10)
         choice_frame.grid_propagate(False)
         
-        title = tk.Label(choice_frame, text="Choose between queries", font=("Arial", 16, "bold"))
-        title.grid(row=1, column=2, pady=10)
         
         video_btn = tk.Button(choice_frame, text="Video queries", command=video_queries)
         video_btn.grid(row=3, column=1)
