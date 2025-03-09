@@ -14,7 +14,7 @@ def main():
     #In login, check if client secret stuff are valid by fetching access token
     #login = Login()
     gui = Gui("ghj", "ghjk", "ghjkl")
-    gui.page()
+    gui.test_page()
     
     #Make login pop up, save the client secrets and stuff to pass into gui
     #login.login()
