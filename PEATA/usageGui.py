@@ -75,6 +75,8 @@ class Gui:
             submit_btn = tk.Button(right_top_frame, text="Submit", command=submit)
             submit_btn.pack(side="top", pady=5)
         
+        def download():
+            download = []
         #CONTENT in frames
         title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#B3B3B3")
         title.pack(fill="both")
@@ -95,11 +97,14 @@ class Gui:
         
         temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="lightgray", font=("Arial", 10))
         temp_label.grid(row=8, column=1, columnspan=3, pady=10)
-        temp_label.config(state=tk.DISABLED)  # Initially disable editing
+        temp_label.config(state=tk.DISABLED)#Editing is disabled
 
         scrollbar = tk.Scrollbar(right_btm_frame, command=temp_label.yview)
         scrollbar.grid(row=8, column=4, sticky="ns")
         temp_label.config(yscrollcommand=scrollbar.set)
+        
+        download_btn = tk.Button(right_btm_frame, text="Download as CSV file", command=download)
+        download_btn.grid(row=9, column=1)
         
         root.mainloop()
         
