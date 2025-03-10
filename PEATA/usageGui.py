@@ -1,6 +1,6 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 from tkinter import messagebox
-import requests
 from api import TikTokApi
 
 #TODO for this class
@@ -30,19 +30,25 @@ class Gui:
         full_frame = tk.Frame(root, bg="#CAE1FF")
         full_frame.pack(fill="both", expand=True)
         
-        header_frame = tk.Frame(full_frame, bg="#B0C4DE", height=100)
+        header_frame = tk.Frame(full_frame, bg="#CCCCCC", height=100)
         header_frame.pack(fill="x", side="top")
         
         content_frame = tk.Frame(full_frame, bg="white")
         content_frame.pack(fill="both", expand=True)
+        content_frame.columnconfigure(0, weight=1, uniform="equal")
+        content_frame.columnconfigure(1, weight=1, uniform="equal")
+        content_frame.rowconfigure(0, weight=1, uniform="equal")
+        content_frame.rowconfigure(1, weight=1, uniform="equal")
         
-        #Top frame - choosing what data to fetch
-        top_frame = tk.Frame(content_frame, bg="#CAE1FF")
-        top_frame.pack(fill="both", expand=True, side="top")
+        left_top_frame = tk.Frame(content_frame, bg="white")
+        left_top_frame.grid(row=0, column=0, sticky="nsew")
+        right_top_frame = tk.Frame(content_frame, bg="white")
+        right_top_frame.grid(row=0, column=1, sticky="nsew")
+        left_btm_frame = tk.Frame(content_frame, bg="white")
+        left_btm_frame.grid(row=1, column=0, sticky="nsew")
+        right_btm_frame = tk.Frame(content_frame, bg="white")
+        right_btm_frame.grid(row=1, column=1, sticky="nsew")
         
-        #Query options, sneak peek of data in a textbox before downloading starts
-        btm_frame = tk.Frame(content_frame, bg="#BCD2EE")
-        btm_frame.pack(fill="both", expand=True, side="bottom")
         
         def video_queries():
             videos = []
@@ -51,96 +57,49 @@ class Gui:
             comments = []
         
         def user_queries():
-            user = []
-        
-        #CONTENT in frames
-        title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#B0C4DE")
-        title.pack(fill="both")
-        
-        video_btn = tk.Button(top_frame, text="Video queries", command=video_queries)
-        video_btn.pack(side="top", pady=10, padx=5)
-        comment_btn = tk.Button(top_frame, text="Comments (by video id)", command=comment_queries)
-        comment_btn.pack(side="top", pady=10, padx=5)
-        
-        
-        root.mainloop()
-    
-    def test_page2(self):
-        root = tk.Tk()
-        root.title("Packaged Easier to Access APIs: TikTok Research API")
-        root.attributes("-fullscreen", True)
-        root.bind("<Escape>", lambda event: root.destroy())
-        
-        full_frame = tk.Frame(root, bg="#BFEFFF")
-        full_frame.pack(fill="both", expand=True)
-        
-        def video_queries():
-            #Initially, there should be "username", "keyword", "startdate" and "enddate"
-            #Make sure enddate can NOT be more than 30 days after start date
-            #User can also press button to add more queries
-            #And also change username
-            #startdate and enddate is hard required
-            videos = []
-        
-        def comment_queries():
-            #Video ID is required, also the only field
-            #Maybe insert a max count 
-            #Inform users that having a large max count is time consuming
-            comments = []
-
-        
-        def user_queries():
-            #Username is required, also only field
-            user = []
-            entry = tk.Entry(choice_frame, width=50)
-            entry.grid(row=5, column=3)
+            label = tk.Label(right_top_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
+            label.pack(side="top", pady=10)
+            entry = tk.Entry(right_top_frame, width=50)
+            entry.pack(side="top", pady=10)
+            
             
             def submit():
-                user_input = entry.get()
-                label.config(text=f"Username: {user_input}")
-                #Here, fetch the data from TikTok API!
-                #TODO : tiktok api uses .env variables, should use whatever is put in on login page
-                user_info = self.tiktok_api.get_public_user_info(user_input)
+                username = entry.get()
+                label.config(text=f"Fetching info about {username}...")
+                user_info = self.tiktok_api.get_public_user_info(username)
                 temp_label.config(state=tk.NORMAL)
                 temp_label.delete(1.0, tk.END)
                 temp_label.insert(tk.END, f"{user_info}")
                 temp_label.config(state=tk.DISABLED)
                 
-                #Now, create the csv file
-            
-            submit_btn = tk.Button(choice_frame, text="Submit", command=submit)
-            submit_btn.grid(row=5, column=4)
-            label = tk.Label(choice_frame, text="", font=("Arial", 12))
-            label.grid(row=6, column=1)
-            temp_label = tk.Text(choice_frame, height=10, width=80, wrap=tk.WORD, bg="lightgray", font=("Arial", 10))
-            temp_label.grid(row=8, column=1, columnspan=3, pady=10)
-            temp_label.config(state=tk.DISABLED)  # Initially disable editing
+            submit_btn = tk.Button(right_top_frame, text="Submit", command=submit)
+            submit_btn.pack(side="top", pady=5)
+        
+        #CONTENT in frames
+        title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#B3B3B3")
+        title.pack(fill="both")
 
-            scrollbar = tk.Scrollbar(choice_frame, command=temp_label.yview)
-            scrollbar.grid(row=8, column=4, sticky="ns")
-            temp_label.config(yscrollcommand=scrollbar.set)
-            
-            
-        title_frame = tk.Frame(full_frame, bg="#87CEFA", padx=20, relief="solid", height=200)
-        title_frame.pack(fill="x", side="top", pady=0)
+        btn_style = ttk.Style()
+        btn_style.configure("Custom.TButton",
+                    font=("Arial", 10, "bold"),
+                    padding=1,
+                    borderwidth=2,
+                    relief="sunken")
         
-        title = tk.Label(title_frame, text="Choose between queries", font=("Arial", 16, "bold"), bg="#87CEFA")
-        title.pack(pady=20)
+        video_btn = ttk.Button(left_top_frame, text="Video queries", command=video_queries, style="Custom.TButton")
+        video_btn.pack(side="top", pady=10, padx=5)
+        comment_btn = ttk.Button(left_top_frame, text="Comments (by video id)", command=comment_queries, style="Custom.TButton")
+        comment_btn.pack(side="top", pady=10, padx=5)
+        user_btn = ttk.Button(left_top_frame, text="User info queries", command=user_queries, style="Custom.TButton")
+        user_btn.pack(side="top", pady=10, padx=5)
         
-        choice_frame = tk.Frame(full_frame, width=900, height=900, bg="white", bd=2, relief="solid")
-        choice_frame.pack(pady=0, padx=10)
-        choice_frame.grid_propagate(False)
-        
-        
-        video_btn = tk.Button(choice_frame, text="Video queries", command=video_queries)
-        video_btn.grid(row=3, column=1)
-        
-        comment_btn = tk.Button(choice_frame, text="Comment queries (by video id)", command=comment_queries)
-        comment_btn.grid(row=3, column=2)
-        
-        user_btn = tk.Button(choice_frame, text="User info queries (by username)", command=user_queries)
-        user_btn.grid(row=3, column=3)
-        
+        temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="lightgray", font=("Arial", 10))
+        temp_label.grid(row=8, column=1, columnspan=3, pady=10)
+        temp_label.config(state=tk.DISABLED)  # Initially disable editing
+
+        scrollbar = tk.Scrollbar(right_btm_frame, command=temp_label.yview)
+        scrollbar.grid(row=8, column=4, sticky="ns")
+        temp_label.config(yscrollcommand=scrollbar.set)
         
         root.mainloop()
         
