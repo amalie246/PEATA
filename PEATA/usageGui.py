@@ -22,7 +22,7 @@ class Gui:
                 root.destroy()
             
         root = tk.Tk()
-        root.title("Packaged Easier to Access APIs: TikTok Research API")
+        root.title("Packaged Easier Access to APIs: TikTok Research API")
         root.attributes("-fullscreen", True)
         root.bind("<Escape>", lambda event: show_exit())
         
@@ -57,10 +57,13 @@ class Gui:
             comments = []
         
         def user_queries():
-            label = tk.Label(right_top_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
+            if hasattr(user_queries, "label"):
+                return
+            label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
             label.pack(side="top", pady=10)
-            entry = tk.Entry(right_top_frame, width=50)
+            entry = tk.Entry(left_btm_frame, width=50)
             entry.pack(side="top", pady=10)
+            user_queries.label = label
             
             
             def submit():
@@ -72,7 +75,7 @@ class Gui:
                 temp_label.insert(tk.END, f"{user_info}")
                 temp_label.config(state=tk.DISABLED)
                 
-            submit_btn = tk.Button(right_top_frame, text="Submit", command=submit)
+            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
             submit_btn.pack(side="top", pady=5)
         
         def download():
