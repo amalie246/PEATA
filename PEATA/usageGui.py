@@ -15,8 +15,42 @@ class Gui:
         self.client_id = ci
         self.client_key = ck
         self.tiktok_api = TikTokApi()
-    
+        
     def test_page(self):
+        def show_exit():
+            if messagebox.askyesno("Exit Program", "Are you sure you want to quit your session?"):
+                root.destroy()
+            
+        root = tk.Tk()
+        root.title("Packaged Easier to Access APIs: TikTok Research API")
+        root.attributes("-fullscreen", True)
+        root.bind("<Escape>", lambda event: show_exit())
+        
+        #FRAMES for content placing
+        full_frame = tk.Frame(root, bg="#CAE1FF")
+        full_frame.pack(fill="both", expand=True)
+        
+        header_frame = tk.Frame(full_frame, bg="#B0C4DE", height=100)
+        header_frame.pack(fill="x", side="top")
+        
+        content_frame = tk.Frame(full_frame, bg="white")
+        content_frame.pack(fill="both", expand=True)
+        
+        #Top frame - choosing what data to fetch
+        top_frame = tk.Frame(content_frame, bg="#CAE1FF")
+        top_frame.pack(fill="both", expand=True, side="top")
+        
+        #Query options, sneak peek of data in a textbox before downloading starts
+        btm_frame = tk.Frame(content_frame, bg="#BCD2EE")
+        btm_frame.pack(fill="both", expand=True, side="bottom")
+        
+        #CONTENT in frames
+        title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#B0C4DE")
+        title.pack(fill="both")
+        
+        root.mainloop()
+    
+    def test_page2(self):
         root = tk.Tk()
         root.title("Packaged Easier to Access APIs: TikTok Research API")
         root.attributes("-fullscreen", True)
@@ -26,7 +60,7 @@ class Gui:
         full_frame.pack(fill="both", expand=True)
         
         def video_queries():
-            #Initially, there should be "username", "startdate" and "enddate"
+            #Initially, there should be "username", "keyword", "startdate" and "enddate"
             #Make sure enddate can NOT be more than 30 days after start date
             #User can also press button to add more queries
             #And also change username
@@ -91,6 +125,7 @@ class Gui:
         
         user_btn = tk.Button(choice_frame, text="User info queries (by username)", command=user_queries)
         user_btn.grid(row=3, column=3)
+        
         
         root.mainloop()
         
