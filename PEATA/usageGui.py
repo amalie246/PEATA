@@ -44,9 +44,24 @@ class Gui:
         btm_frame = tk.Frame(content_frame, bg="#BCD2EE")
         btm_frame.pack(fill="both", expand=True, side="bottom")
         
+        def video_queries():
+            videos = []
+        
+        def comment_queries():
+            comments = []
+        
+        def user_queries():
+            user = []
+        
         #CONTENT in frames
         title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#B0C4DE")
         title.pack(fill="both")
+        
+        video_btn = tk.Button(top_frame, text="Video queries", command=video_queries)
+        video_btn.pack(side="top", pady=10, padx=5)
+        comment_btn = tk.Button(top_frame, text="Comments (by video id)", command=comment_queries)
+        comment_btn.pack(side="top", pady=10, padx=5)
+        
         
         root.mainloop()
     
