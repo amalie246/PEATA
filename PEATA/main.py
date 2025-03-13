@@ -2,7 +2,7 @@ from api import TikTokApi
 from queryFormatter import QueryFormatter
 from file_converter import FileConverter
 #from fileHandler import FileHandler
-#from tiktok_login import Login
+from tiktok_login import Login
 from usageGui import Gui
 
 def main():
@@ -12,12 +12,13 @@ def main():
     #file_handler = FileHandler()
     
     #In login, check if client secret stuff are valid by fetching access token
-    #login = Login()
+    login = Login()
+    login.login()
     gui = Gui("ghj", "ghjk", "ghjkl")
     gui.test_page()
     
     #Make login pop up, save the client secrets and stuff to pass into gui
-    #login.login()
+    #
     
     
     #   1 - QueryFormatter takes input from GUI, gives to TikTok Api

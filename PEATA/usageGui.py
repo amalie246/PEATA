@@ -38,15 +38,13 @@ class Gui:
         
         content_frame = tk.Frame(full_frame, bg="white")
         content_frame.pack(fill="both", expand=True)
-        content_frame.columnconfigure(0, weight=1, uniform="equal")
-        content_frame.columnconfigure(1, weight=1, uniform="equal")
+        content_frame.columnconfigure(0, weight=1)
+        content_frame.columnconfigure(1, weight=1)
         content_frame.rowconfigure(0, weight=1, uniform="equal")
         content_frame.rowconfigure(1, weight=1, uniform="equal")
         
-        left_top_frame = tk.Frame(content_frame, bg="white")
-        left_top_frame.grid(row=0, column=0, sticky="nsew")
-        right_top_frame = tk.Frame(content_frame, bg="white")
-        right_top_frame.grid(row=0, column=1, sticky="nsew")
+        top_frame = tk.Frame(content_frame, bg="gray")
+        top_frame.grid(row=0, column=0, sticky="nsew")
         left_btm_frame = tk.Frame(content_frame, bg="white")
         left_btm_frame.grid(row=1, column=0, sticky="nsew")
         right_btm_frame = tk.Frame(content_frame, bg="white")
@@ -94,12 +92,12 @@ class Gui:
                     borderwidth=2,
                     relief="sunken")
         
-        video_btn = ttk.Button(left_top_frame, text="Video queries", command=video_queries, style="Custom.TButton")
-        video_btn.pack(side="top", pady=10, padx=5)
-        comment_btn = ttk.Button(left_top_frame, text="Comments (by video id)", command=comment_queries, style="Custom.TButton")
-        comment_btn.pack(side="top", pady=10, padx=5)
-        user_btn = ttk.Button(left_top_frame, text="User info queries", command=user_queries, style="Custom.TButton")
-        user_btn.pack(side="top", pady=10, padx=5)
+        video_btn = ttk.Button(top_frame, text="Video queries", command=video_queries, style="Custom.TButton")
+        video_btn.pack(side="left", pady=10, padx=5)
+        comment_btn = ttk.Button(top_frame, text="Comments (by video id)", command=comment_queries, style="Custom.TButton")
+        comment_btn.pack(side="left", pady=10, padx=5)
+        user_btn = ttk.Button(top_frame, text="User info queries", command=user_queries, style="Custom.TButton")
+        user_btn.pack(side="left", pady=10, padx=5)
         
         temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
         temp_label.grid(row=8, column=1, columnspan=3, pady=10)
