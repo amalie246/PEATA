@@ -23,6 +23,8 @@ class Gui:
                 root.destroy()
             
         root = tk.Tk()
+        style = ttk.Style()
+        style.theme_use('clam')
         root.title("Packaged Easier Access to APIs: TikTok Research API")
         root.attributes("-fullscreen", True)
         root.bind("<Escape>", lambda event: show_exit())
