@@ -6,7 +6,6 @@ from api import TikTokApi
 #TODO for this class
 #   1 - Make it so that users can choose between getting videos, user info or comments
 #   2 - Dropdown menu (dynamic) for multiple fields for query
-
 #   3 - Connect this with TikTokApi class
 #   4 - A simple query for videos by date and username
 
@@ -33,7 +32,7 @@ class Gui:
         full_frame = tk.Frame(root, bg="#CAE1FF")
         full_frame.pack(fill="both", expand=True)
         
-        header_frame = tk.Frame(full_frame, bg="#CCCCCC", height=100)
+        header_frame = tk.Frame(full_frame, bg="#FFFFFF", height=100)
         header_frame.pack(fill="x", side="top")
         
         content_frame = tk.Frame(full_frame, bg="white")
@@ -41,15 +40,17 @@ class Gui:
         content_frame.columnconfigure(0, weight=1)
         content_frame.columnconfigure(1, weight=1)
         content_frame.rowconfigure(0, weight=1, uniform="equal")
-        content_frame.rowconfigure(1, weight=1, uniform="equal")
+        content_frame.rowconfigure(1, weight=3, uniform="equal")
         
-        top_frame = tk.Frame(content_frame, bg="gray")
-        top_frame.grid(row=0, column=0, sticky="nsew")
-        left_btm_frame = tk.Frame(content_frame, bg="white")
-        left_btm_frame.grid(row=1, column=0, sticky="nsew")
-        right_btm_frame = tk.Frame(content_frame, bg="white")
-        right_btm_frame.grid(row=1, column=1, sticky="nsew")
+        top_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        top_frame.grid(row=0, column=0, columnspan= 2, sticky="nsew", padx=20)
+        left_btm_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        left_btm_frame.grid(row=1, column=0, sticky="nsew", pady=20, padx=20)
+        right_btm_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        right_btm_frame.grid(row=1, column=1, sticky="nsew", pady=20, padx=20)
         
+        button_frame = tk.Frame(top_frame, bg="#D1D1D1")
+        button_frame.pack(side="top", pady=70)
         
         def video_queries():
             videos = []
@@ -82,29 +83,33 @@ class Gui:
         def download():
             download = []
         #CONTENT in frames
-        title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#B3B3B3")
+        title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#FFFFFF")
         title.pack(fill="both")
 
         btn_style = ttk.Style()
         btn_style.configure("Custom.TButton",
-                    font=("Arial", 10, "bold"),
-                    padding=1,
+                    font=("Segoe UI", 10, "bold"),
+                    padding=10,
                     borderwidth=2,
-                    relief="sunken")
+                    relief="flat",
+                    foreground="white",
+                    background="black",
+                    focusthickness=3,
+                    focuscolor="")
         
-        video_btn = ttk.Button(top_frame, text="Video queries", command=video_queries, style="Custom.TButton")
-        video_btn.pack(side="left", pady=10, padx=5)
-        comment_btn = ttk.Button(top_frame, text="Comments (by video id)", command=comment_queries, style="Custom.TButton")
-        comment_btn.pack(side="left", pady=10, padx=5)
-        user_btn = ttk.Button(top_frame, text="User info queries", command=user_queries, style="Custom.TButton")
-        user_btn.pack(side="left", pady=10, padx=5)
+        video_btn = ttk.Button(button_frame, text="Video queries", command=video_queries, style="Custom.TButton")
+        video_btn.pack(side="left", pady=10, padx=50)
+        comment_btn = ttk.Button(button_frame, text="Comments (by video id)", command=comment_queries, style="Custom.TButton")
+        comment_btn.pack(side="left", pady=10, padx=50)
+        user_btn = ttk.Button(button_frame, text="User info queries", command=user_queries, style="Custom.TButton")
+        user_btn.pack(side="left", pady=10, padx=50)
         
         temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
-        temp_label.grid(row=8, column=1, columnspan=3, pady=10)
+        temp_label.grid(row=8, column=10, columnspan=3, pady=10)
         temp_label.config(state=tk.DISABLED)#Editing is disabled
 
         scrollbar = tk.Scrollbar(right_btm_frame, command=temp_label.yview)
-        scrollbar.grid(row=8, column=4, sticky="ns")
+        scrollbar.grid(row=8, column=13, sticky="ns")
         temp_label.config(yscrollcommand=scrollbar.set)
         
         download_btn = tk.Button(right_btm_frame, text="Download as CSV file", command=download)
