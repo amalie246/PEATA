@@ -2,28 +2,44 @@ from pathlib import Path
 import pandas as pd
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-
-file_path = Path(__file__).parent / "data" /"customers-100.csv"
+import os
+from PEATA.config import CSV_FOLDER, EXPORTS_FOLDER
 
 
 class FileHandler:
     
     def __init__(self):
         self.data = None # Store the DataFrame
+        self.file_path = self.get_latest_csv_file() 
+        
+    # No need to manually specify the filename each time
+    def get_latest_csv_file(self):
+        # Find the most recently modified CSV file in the CSV folder
+        csv_files = list(Path(CSV_FOLDER).glob("*.csv"))
+        if not csv_files:
+            print("No CSV files found.")
+            return None
+        
+        latest_file = max(csv_files, key=os.path.getmtime) # Get the most recent file
+        print(f"Latest CSV file detected: {latest_file}")
+        return latest_file
     
-    def open_file(self, file_path):
-        # Opens a CSV file and returns the data as a pandas DataFrame.
+    def open_file(self):
+        # Opens the latest CSV file and returns the data as a pandas DataFrame.
+        if not self.file_path:
+            print("No CSV file to open.")
+            return None
         try:
-            self.data = pd.read_csv(file_path)         
-            print(f"File {file_path} opened successfully.")
+            self.data = pd.read_csv(self.file_path)         
+            print(f"File {self.file_path} opened successfully.")
             return self.data
         except FileNotFoundError:
-            print(f"Error: The file {file_path} was not found.")
+            print(f"Error: The file {self.file_path} was not found.")
         except Exception as e:
-            print(f"Error opening file {file_path}: {e}")
+            print(f"Error opening file {self.file_path}: {e}")
         
         
-    def close_file(self, file_path):
+    def close_file(self):
        # Closes the file by deleting the stored DataFrame reference.
         if self.data is not None:
             self.data = None # Clear the DataFrame from memory
@@ -32,13 +48,13 @@ class FileHandler:
             print("No file data to close.")
             
 
-    def export_as_pdf(self, output_file):
+    def export_as_pdf(self):
         if self.data is None:
             print("No data available to export.")
             return
         try:
-            pdf_file = Path(output_file)
-            c = canvas.Canvas(str(pdf_file),pagesize=letter)
+            output_pdf = Path(EXPORTS_FOLDER) / (self.file_path.stem + ".pdf") # Same name as CSV
+            c = canvas.Canvas(str(output_pdf),pagesize=letter)
             width, height = letter
             
             c.drawString(30, height - 30, "Exported Data") 
@@ -69,39 +85,36 @@ class FileHandler:
                     row_count = 0
             
             c.save()
-            print(f"PDF exported successfully: {pdf_file}")
+            print(f"PDF exported successfully: {output_pdf}")
              
         except Exception as e:
             print(f"Error exporting to PDF: {e}")
             
-    def export_as_excel(self, output_file):
+    def export_as_excel(self):
         if self.data is None:
             print("No data available to export.")
             return
         try:
-            excel_file = Path(output_file)
-            with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
+            output_excel = Path(EXPORTS_FOLDER) / (self.file_path.stem + ".xlsx") # Same name as CSV
+            with pd.ExcelWriter(output_excel, engine="xlsxwriter") as writer:
                 self.data.to_excel(writer, sheet_name="Sheet1", index=False)
                 
-            print(f"Excel file exported successfully: {excel_file}")
+            print(f"Excel file exported successfully: {output_excel}")
             
         except Exception as e:
             print(f"Error exproting to Excel: {e}")
-    
-""" Open file """            
-file_handler = FileHandler()  # Instantiate the class
-data = file_handler.open_file(file_path)
+            
+            
+# """ Example Usage """            
+# file_handler = FileHandler()  # Instantiate the class
+# data = file_handler.open_file()
 
-""" Close file"""
 # if data is not None: 
-#     print(data.head()) # Display first few rows
-    
-# file_handler.close_file(file_path)
 
-""" Export as PDF """
-# output_pdf_path = Path(__file__).parent / "output" / "customers-100.pdf"
-# file_handler.export_as_pdf(output_pdf_path)
+# """ Export as PDF and Excel"""
+# file_handler.export_as_pdf()
+# file_handler.export_as_excel()
 
-""" Export as Excel """
-output_excel_path = Path(__file__).parent / "output" / "customers-100.xlsx"
-file_handler.export_as_excel(output_excel_path)
+
+# """ Close file """
+# file_handler.close_file()

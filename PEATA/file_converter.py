@@ -1,8 +1,16 @@
 import json
 import csv
+import os
+from PEATA.config import JSON_FOLDER, CSV_FOLDER
+
+"""Haven't tested with modified code yet, might not work fully."""
 
 class FileConverter:
+   
+     
     def save_json_to_file(data, filename="data.json"):
+        #Save JSON data to a file in the 'json' folder
+        filepath = os.path.join(JSON_FOLDER, filename)
         with open(filename, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
         print(f"JSON-data lagret i {filename}")
@@ -16,6 +24,8 @@ class FileConverter:
         for item in data:
             fieldnames.update(item.keys())
 
+        #Save CSV file in the 'csv' folder
+        filepath = os.path.join(CSV_FOLDER, filename)
         with open(filename, mode="w", newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=sorted(fieldnames))
             writer.writeheader()
