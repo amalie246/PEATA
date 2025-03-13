@@ -4,6 +4,7 @@ from file_converter import FileConverter
 #from fileHandler import FileHandler
 from tiktok_login import Login
 from usageGui import Gui
+from tkinter import Tk
 
 def main():
     #tiktok_api = TikTokApi()
@@ -12,7 +13,9 @@ def main():
     #file_handler = FileHandler()
     
     #In login, check if client secret stuff are valid by fetching access token
-    login = Login()
+    root = Tk()
+    login = Login(root)
+    root.mainloop()
     login.login()
     gui = Gui("ghj", "ghjk", "ghjkl")
     gui.test_page()
