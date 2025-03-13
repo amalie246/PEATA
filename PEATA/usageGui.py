@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import messagebox
 from api import TikTokApi
+from PIL import Image, ImageTk
 
 #TODO for this class
 #   1 - Make it so that users can choose between getting videos, user info or comments
