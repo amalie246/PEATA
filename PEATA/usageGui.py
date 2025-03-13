@@ -6,6 +6,7 @@ from api import TikTokApi
 #TODO for this class
 #   1 - Make it so that users can choose between getting videos, user info or comments
 #   2 - Dropdown menu (dynamic) for multiple fields for query
+
 #   3 - Connect this with TikTokApi class
 #   4 - A simple query for videos by date and username
 
@@ -98,7 +99,7 @@ class Gui:
         user_btn = ttk.Button(left_top_frame, text="User info queries", command=user_queries, style="Custom.TButton")
         user_btn.pack(side="top", pady=10, padx=5)
         
-        temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="lightgray", font=("Arial", 10))
+        temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
         temp_label.grid(row=8, column=1, columnspan=3, pady=10)
         temp_label.config(state=tk.DISABLED)#Editing is disabled
 
