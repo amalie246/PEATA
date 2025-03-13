@@ -98,7 +98,12 @@ class Gui:
                     focusthickness=3,
                     focuscolor="")
         
-        video_btn = ttk.Button(button_frame, text="Video queries", command=video_queries, style="Custom.TButton")
+        video_img = Image.open("images/VideoQueries.png")
+        video_img = video_img.resize((200, 60), Image.LANCZOS)
+        video_btn_image = ImageTk.PhotoImage(video_img)
+        
+        video_btn = ttk.Button(button_frame, command=video_queries, 
+                       style="Custom.TButton", image=video_btn_image, compound="top")
         video_btn.pack(side="left", pady=10, padx=50)
         comment_btn = ttk.Button(button_frame, text="Comments (by video id)", command=comment_queries, style="Custom.TButton")
         comment_btn.pack(side="left", pady=10, padx=50)
