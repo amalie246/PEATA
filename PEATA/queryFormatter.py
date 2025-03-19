@@ -34,12 +34,53 @@ class QueryFormatter:
             }
         return query_body
     
-    def build_query_handling_multiple_bool_operations(self):
-        #Needs to take in a operation for multiple clauses
-        #And it should also be able to take in multiple such operations!
+    #Takes in query clauses, dates, and builds the final query body
+    def query_builder(self, startdate, enddate, *args):
         clause_arr = []
-        query_body = []
         
+        for q in args:
+            clause_arr.append(q)
+            
+        query_body = {
+            "query": clause_arr,
+            "start_date" : f"startdate",
+            "end_date" : f"enddate"
+            }
+        print(query_body)
         return query_body
-
-
+    
+    #Takes in tuples(field_name, field_value, operation) as kwargs
+    #Returns a clause with AND operation
+    def query_AND_clause(self, logic_operation="AND", *args):
+        query_clauses = []
+        print(len(args))
+        
+        for t in args:
+            print("ARG:")
+            print(t)
+            if len(t) != 3:
+                raise ValueError("Invalid condition format")
+            field, value, operation = t
+            
+            clause = {
+                "operation": f"{operation}",
+                "field_name": f"{field}",
+                "field_value": [f"{value}"]
+            }
+            print("CLAUSE")
+            print(clause)
+            query_clauses.append(clause)
+        
+        query = {
+            "and": query_clauses
+        }
+        print("FINISHED:")
+        print(query)
+        return query
+    
+    #Functions below are the same as above, with respective logical operations
+    def query_OR_clause(self, logic_operation="OR", **kwargs):
+        return []
+    
+    def query_NOT_clause(self, logic_operation="NOT", **kwargs):
+        return []

@@ -3,17 +3,24 @@ from queryFormatter import QueryFormatter
 from file_converter import FileConverter
 #from fileHandler import FileHandler
 #from tiktok_login import Login
-#from usageGui import Gui
+from usageGui import Gui
 from tkinter import Tk
 
 def main():
     tiktok_api = TikTokApi()
-    videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
+    #videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
     #Can check if a video query didnt go well by checking if not videos
     #Nothing to download, tell user that they need different arguments
-    if not videos:
-        print("Did not retrieve videos")
-    #query_formatter = QueryFormatter()
+    #if not videos:
+    #    print("Did not retrieve videos")
+    query_formatter = QueryFormatter()
+    t1 = ("username", "izzyandmarysdad", "EQ")
+    t2 = ("keyword", "Chicken", "EQ")
+    and_clause = query_formatter.query_AND_clause(t2, t1)
+    print("Entire query body:")
+    q = query_formatter.query_builder("20250101", "20250129", and_clause)
+    vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250129")
+    print(vids)
     #file_converter = FileConverter()
     #file_handler = FileHandler()
     
