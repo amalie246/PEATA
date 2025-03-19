@@ -57,6 +57,7 @@ class Gui:
             videos = []
         
         def comment_queries():
+            # Fetches comments for a video
             comments = []
         
         def user_queries():
