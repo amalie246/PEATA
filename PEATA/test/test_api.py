@@ -1,7 +1,7 @@
 # pip install pytest mock-api, this uses internet connection
 import pytest
 from unittest.mock import patch, MagicMock
-from api import TikTokApi
+from PEATA.api import TikTokApi
 
 # Mock environment variables
 @patch.dict('os.environ', {'CLIENT_KEY': 'test_key', 'CLIENT_SECRET': 'test_secret'})
