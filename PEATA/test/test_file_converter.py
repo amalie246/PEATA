@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, mock_open
 import json
 import csv
-from file_converter import FileConverter
+from PEATA.file_converter import FileConverter
 
 # Test for saving JSON to file
 @patch("builtins.open", new_callable=mock_open)

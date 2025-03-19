@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from tkinter import Tk
-from usageGui import Gui
+from PEATA.usageGui import Gui
 
 @pytest.fixture
 def app(mocker):
