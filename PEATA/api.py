@@ -11,11 +11,11 @@ BASE_URL = "https://open.tiktokapis.com/v2"
 
 class TikTokApi:
     #TODO - do not use .env, use variables from user instead
-    def __init__(self):
-        self.client_key = os.getenv("CLIENT_KEY")
-        self.client_secret = os.getenv("CLIENT_SECRET")
+    def __init__(self, client_key, client_secret, access_token):
+        self.client_key = client_key
+        self.client_secret = client_secret
         #If access_token = None - invalid parameters or something else is wrong
-        self.access_token = self.obtain_access_token()
+        self.access_token = access_token
         
         self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
         self.USER_INFO_URL = BASE_URL + "/research/user/info/"
@@ -24,32 +24,32 @@ class TikTokApi:
         
     #Obtain a client access token, add this to the authorization header
     #TODO use user parameters instead
-    def obtain_access_token(self):
-        ENDPOINT_URL = "https://open.tiktokapis.com/v2/oauth/token/"
-        access_token_headers = {'Content-Type' : 'application/x-www-form-urlencoded', 
-                                'Cache-Control' : 'no-cache'}
-        req_body_params = {
-            'client_key': self.client_key,
-            'client_secret': self.client_secret,
-            'grant_type': 'client_credentials'
-        }
+    #def obtain_access_token(self):
+        #ENDPOINT_URL = "https://open.tiktokapis.com/v2/oauth/token/"
+        #access_token_headers = {'Content-Type' : 'application/x-www-form-urlencoded', 
+                                #'Cache-Control' : 'no-cache'}
+        #req_body_params = {
+            #'client_key': self.client_key,
+            #'client_secret': self.client_secret,
+            #'grant_type': 'client_credentials'
+       # }
 
-        response = requests.post(ENDPOINT_URL, headers=access_token_headers, data=req_body_params)
+        #response = requests.post(ENDPOINT_URL, headers=access_token_headers, data=req_body_params)
         
-        if response.status_code == 200:
-            try:
-                json_resp = response.json()
-                if "error" in json_resp:
-                    logging.error("Incorrect parameters")
-                    return None
-                return json_resp['access_token']
+        #if response.status_code == 200:
+        #    try:
+         #       json_resp = response.json()
+         #       if "error" in json_resp:
+              #      logging.error("Incorrect parameters")
+             #       return None
+              #  return json_resp['access_token']
             
-            except ValueError:
-                logging.error("Invalid JSON response")
-                return None  
-        else:
-            logging.error("Something went wrong")
-            return None
+            #except ValueError:
+            #    logging.error("Invalid JSON response")
+             #   return None  
+       # else:
+          #  logging.error("Something went wrong")
+           # return None
 
     
     #This method only is able to get username AND keyword, in a EQ operation
