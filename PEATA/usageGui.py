@@ -54,6 +54,15 @@ class Gui:
         button_frame = tk.Frame(top_frame, bg="#D1D1D1")
         button_frame.pack(side="top", pady=70)
         
+        video_btn_frame = tk.Frame(button_frame, bg="#D1D1D1")
+        video_btn_frame.grid(row=0, column=0, padx=60)
+        comment_btn_frame = tk.Frame(button_frame, bg="#D1D1D1")
+        comment_btn_frame.grid(row=0, column=1, padx=60)
+        user_btn_frame = tk.Frame(button_frame, bg="#D1D1D1")
+        user_btn_frame.grid(row=0, column=2, padx=60)
+        
+    
+        
         def video_queries():
             videos = []
         
@@ -91,24 +100,36 @@ class Gui:
         btn_style = ttk.Style()
         btn_style.configure("Custom.TButton",
                     font=("Segoe UI", 10, "bold"),
-                    padding=10,
-                    borderwidth=2,
                     relief="flat",
                     foreground="white",
                     background="black",
                     focusthickness=3,
                     focuscolor="")
         
-        video_img = Image.open("images/VideoQueries.png")
-        video_btn_image = ImageTk.PhotoImage(video_img)
+        btn_image = Image.open("images/GenBtn.png")
+        btn_image = btn_image.crop(btn_image.getbbox())
+        gen_btn_img = ImageTk.PhotoImage(btn_image)
         
-        video_btn = ttk.Button(button_frame, command=video_queries, 
-                       style="Custom.TButton", image=video_btn_image)
-        video_btn.pack(side="left", pady=10, padx=50)
-        comment_btn = ttk.Button(button_frame, text="Comments (by video id)", command=comment_queries, style="Custom.TButton")
-        comment_btn.pack(side="left", pady=10, padx=50)
-        user_btn = ttk.Button(button_frame, text="User info queries", command=user_queries, style="Custom.TButton")
-        user_btn.pack(side="left", pady=10, padx=50)
+        video_btn_bg = tk.Button(video_btn_frame, image=gen_btn_img, command=video_queries)
+        video_btn_bg.image = gen_btn_img
+        video_btn_bg.pack()
+        
+        video_text_label = tk.Label(video_btn_frame, text="Video queries")
+        video_text_label.place(relx=0.5, rely=0.5, anchor="center")
+        
+        comment_btn_bg = tk.Button(comment_btn_frame, image=gen_btn_img, command=comment_queries)
+        comment_btn_bg.image = gen_btn_img
+        comment_btn_bg.pack()
+        
+        comment_text_label = tk.Label(comment_btn_frame, text="Comment queries")
+        comment_text_label.place(relx=0.5, rely=0.5, anchor="center")
+        
+        user_btn_bg = tk.Button(user_btn_frame, image=gen_btn_img, command=user_queries)
+        user_btn_bg.image = gen_btn_img
+        user_btn_bg.pack()
+        
+        user_text_label = tk.Label(user_btn_frame, text="User info queries")
+        user_text_label.place(relx=0.5, rely=0.5, anchor="center")
         
         temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
         temp_label.grid(row=8, column=10, columnspan=3, pady=10)

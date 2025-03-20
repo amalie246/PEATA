@@ -9,18 +9,16 @@ from tkinter import Tk
 def main():
     #tiktok_api = TikTokApi()
     
-    root = Tk()
-    login = Login(root)
-    root.mainloop()
+    #root = Tk()
+    #login = Login(root)
+    #root.mainloop()
     
-    if not login.access_token:
-        print("Access token could not be obtained. Exiting program.")
-        return
+    #if not login.access_token:
+    #    print("Access token could not be obtained. Exiting program.")
+    #    return
     
-    mainroot = Tk()
-    gui = Gui(login.client_secret, login.client_id, login.client_key, login.access_token)
+    gui = Gui("a", "b", "c", "dfghjkl")
     gui.test_page()
-    mainroot.mainloop()
 
     
     
