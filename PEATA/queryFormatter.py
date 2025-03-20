@@ -49,14 +49,15 @@ class QueryFormatter:
         print(query_body)
         return query_body
     
-    #Takes in list of tuples(field_name, field_value, operation)
-    #Returns a clause with AND operation
-    def query_AND_clause(self, conditions):
-        query_clauses = []
+    def build_clause(self, logic_op, conditions):
+        if logic_op not in ["and", "or", "not"]:
+            raise ValueError("Needs logic operations: AND/OR/NOT")
         
+        query_clauses = []
         for i in range(len(conditions)):
-            if len(conditions[i]) != 3:
+            if(len(conditions[i])) != 3:
                 raise ValueError("Invalid condition format")
+            
             condition = conditions[i]
             field = condition[0]
             value = condition[1]
@@ -66,17 +67,21 @@ class QueryFormatter:
                 "operation": f"{operation}",
                 "field_name": f"{field}",
                 "field_values": [f"{value}"]
-            }
+                }
             query_clauses.append(clause)
-        
         query = {
-            "and": query_clauses
-        }
+            f"{logic_op}": query_clauses
+            }
         return query
     
-    #Functions below are the same as above, with respective logical operations
-    def query_OR_clause(self, logic_operation="OR", **kwargs):
-        return []
+    #Takes in list of tuples(field_name, field_value, operation)
+    #Returns a clause with AND operation
+    def query_AND_clause(self, conditions):
+        return self.build_clause("and", conditions)
     
-    def query_NOT_clause(self, logic_operation="NOT", **kwargs):
-        return []
+    #Functions below are the same as above, with respective logical operations
+    def query_OR_clause(self, conditions):
+        return self.build_clause("or", conditions)
+    
+    def query_NOT_clause(self, conditions):
+        return self.build_clause("not", conditions)
