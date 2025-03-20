@@ -10,6 +10,9 @@ class QueryFormatter:
         # Ensure query is structured correctly
         query_structure = {}
         for clause in clause_arr:
+            print("Clause: ")
+            print(clause)
+            print()
             for key, value in clause.items():
                 if key in query_structure:
                     query_structure[key].extend(value)
