@@ -14,7 +14,10 @@ def main():
     args = [t1, t2]
     and_clause = query_formatter.query_AND_clause(args)
     print("Entire query body:")
-    q = query_formatter.query_builder("20250101", "20250129", and_clause)
+    
+    t3 = ("keyword", "Challenge", "EQ")
+    or_clause = query_formatter.query_OR_clause([t3])
+    q = query_formatter.query_builder("20250101", "20250129", and_clause, or_clause)
     vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250129")
     print(vids)
     #Can check if a video query didnt go well by checking if not videos
