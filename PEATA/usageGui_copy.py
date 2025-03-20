@@ -57,8 +57,33 @@ class Gui:
             videos = []
         
         def comment_queries():
-            # Fetches comments for a video
-            comments = []
+            # Fetches comments for a video            
+                if hasattr(comment_queries, "label"):
+                    return
+
+                # Allows users to input a video ID
+                label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments:", font=("Arial", 10, "bold"))
+                label.pack(side="top", pady=10)
+            
+                entry = tk.Entry(left_btm_frame, width=50)
+                entry.pack(side="top", pady=10)
+            
+                comment_queries.label = label
+
+                # Fetch comments form TikTokApi using get_video_comments(video_id)
+                def submit():
+                    video_id = entry.get()
+                    label.config(text=f"Fetching comments for video ID: {video_id}...")
+                    comments = self.tiktok_api.get_video_comments(video_id)
+                    
+                    # Display fetched comments in temp_label (text widget) and disables editing
+                    temp_label.config(state=tk.NORMAL)
+                    temp_label.delete(1.0, tk.END)
+                    temp_label.insert(tk.END, f"Comments:\n{comments}")
+                    temp_label.config(state=tk.DISABLED)
+            
+                submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
+                submit_btn.pack(side="top", pady=5)
         
         def user_queries():
             if hasattr(user_queries, "label"):
@@ -191,4 +216,6 @@ class Gui:
         button.pack(pady=50) 
         
         root.mainloop()
+
+
 
