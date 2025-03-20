@@ -7,7 +7,21 @@ from usageGui import Gui
 from tkinter import Tk
 
 def main():
-    tiktok_api = TikTokApi()
+    #tiktok_api = TikTokApi()
+    
+    root = Tk()
+    login = Login(root)
+    root.mainloop()
+    
+    if not login.access_token:
+        print("Access token could not be obtained. Exiting program.")
+        return
+    
+    gui = Gui(login.client_secret, login.client_id, login.client_key, login.access_token)
+    gui.test_page()
+
+    
+    
     #videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
     #Can check if a video query didnt go well by checking if not videos
     #Nothing to download, tell user that they need different arguments
@@ -23,8 +37,8 @@ def main():
     args2 = [t3]
     not_clause = query_formatter.query_NOT_clause(args2)
     q = query_formatter.query_builder("20250101", "20250103", and_clause, not_clause)
-    vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250103")
-    print(vids)
+    #vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250103")
+    #print(vids)
     tiktok_api = TikTokApi()
     # videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
     #Can check if a video query didnt go well by checking if not videos

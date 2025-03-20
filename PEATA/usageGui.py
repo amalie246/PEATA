@@ -11,11 +11,12 @@ from PIL import Image, ImageTk
 #   4 - A simple query for videos by date and username
 
 class Gui:
-    def __init__(self, cs, ci, ck):
+    def __init__(self, cs, ci, ck, access_token):
         self.client_secret = cs
         self.client_id = ci
         self.client_key = ck
-        self.tiktok_api = TikTokApi()
+        self.access_token = access_token
+        self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
         
     def test_page(self):
         def show_exit():
