@@ -7,7 +7,6 @@ class QueryFormatter:
     def query_builder(self, startdate, enddate, *args):
         clause_arr = list(args)
 
-        # Ensure query is structured correctly
         query_structure = {}
         for clause in clause_arr:
             print("Clause: ")
@@ -24,7 +23,7 @@ class QueryFormatter:
             "start_date": f"{startdate}",
             "end_date": f"{enddate}"
         }
-        print(query_body)  # Debugging
+        print(query_body)
         return query_body
     
     def build_clause(self, logic_op, conditions):
