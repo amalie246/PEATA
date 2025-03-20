@@ -7,7 +7,7 @@ from usageGui import Gui
 from tkinter import Tk
 
 def main():
-    tiktok_api = TikTokApi()
+    #tiktok_api = TikTokApi()
     #videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
     #Can check if a video query didnt go well by checking if not videos
     #Nothing to download, tell user that they need different arguments
@@ -16,11 +16,12 @@ def main():
     query_formatter = QueryFormatter()
     t1 = ("username", "izzyandmarysdad", "EQ")
     t2 = ("keyword", "Chicken", "EQ")
-    and_clause = query_formatter.query_AND_clause(t2, t1)
+    args = [t1, t2]
+    and_clause = query_formatter.query_AND_clause(args)
     print("Entire query body:")
     q = query_formatter.query_builder("20250101", "20250129", and_clause)
-    vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250129")
-    print(vids)
+    #vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250129")
+    #print(vids)
     #file_converter = FileConverter()
     #file_handler = FileHandler()
     

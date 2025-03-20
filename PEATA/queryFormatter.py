@@ -49,33 +49,29 @@ class QueryFormatter:
         print(query_body)
         return query_body
     
-    #Takes in tuples(field_name, field_value, operation) as kwargs
+    #Takes in list of tuples(field_name, field_value, operation)
     #Returns a clause with AND operation
-    def query_AND_clause(self, logic_operation="AND", *args):
+    def query_AND_clause(self, conditions):
         query_clauses = []
-        print(len(args))
         
-        for t in args:
-            print("ARG:")
-            print(t)
-            if len(t) != 3:
+        for i in range(len(conditions)):
+            if len(conditions[i]) != 3:
                 raise ValueError("Invalid condition format")
-            field, value, operation = t
+            condition = conditions[i]
+            field = condition[0]
+            value = condition[1]
+            operation = condition[2]
             
             clause = {
                 "operation": f"{operation}",
                 "field_name": f"{field}",
                 "field_value": [f"{value}"]
             }
-            print("CLAUSE")
-            print(clause)
             query_clauses.append(clause)
         
         query = {
             "and": query_clauses
         }
-        print("FINISHED:")
-        print(query)
         return query
     
     #Functions below are the same as above, with respective logical operations
