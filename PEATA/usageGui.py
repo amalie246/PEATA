@@ -70,6 +70,7 @@ class Gui:
             comments = []
         
         def user_queries():
+            print("Pressed")
             if hasattr(user_queries, "label"):
                 return
             label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
@@ -112,23 +113,23 @@ class Gui:
         
         video_btn_bg = tk.Button(video_btn_frame, image=gen_btn_img, command=video_queries)
         video_btn_bg.image = gen_btn_img
-        video_btn_bg.pack()
+        video_btn_bg.pack(padx=10)
         
-        video_text_label = tk.Label(video_btn_frame, text="Video queries")
+        video_text_label = tk.Label(video_btn_frame, text="Videos", background="#323232", font=("Arial", 10, "bold"), fg="white")
         video_text_label.place(relx=0.5, rely=0.5, anchor="center")
         
         comment_btn_bg = tk.Button(comment_btn_frame, image=gen_btn_img, command=comment_queries)
         comment_btn_bg.image = gen_btn_img
-        comment_btn_bg.pack()
+        comment_btn_bg.pack(padx=10)
         
-        comment_text_label = tk.Label(comment_btn_frame, text="Comment queries")
+        comment_text_label = tk.Label(comment_btn_frame, text="Comments", background="#323232", font=("Arial", 10, "bold"), fg="white")
         comment_text_label.place(relx=0.5, rely=0.5, anchor="center")
         
         user_btn_bg = tk.Button(user_btn_frame, image=gen_btn_img, command=user_queries)
         user_btn_bg.image = gen_btn_img
-        user_btn_bg.pack()
+        user_btn_bg.pack(padx=10)
         
-        user_text_label = tk.Label(user_btn_frame, text="User info queries")
+        user_text_label = tk.Label(user_btn_frame, text="User info", background="#323232", font=("Arial", 10, "bold"), fg="white")
         user_text_label.place(relx=0.5, rely=0.5, anchor="center")
         
         temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
