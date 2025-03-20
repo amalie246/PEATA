@@ -7,13 +7,7 @@ from usageGui import Gui
 from tkinter import Tk
 
 def main():
-<<<<<<< HEAD
-    #tiktok_api = TikTokApi()
-    #videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
-    #Can check if a video query didnt go well by checking if not videos
-    #Nothing to download, tell user that they need different arguments
-    #if not videos:
-    #    print("Did not retrieve videos")
+    tiktok_api = TikTokApi()
     query_formatter = QueryFormatter()
     t1 = ("username", "izzyandmarysdad", "EQ")
     t2 = ("keyword", "Chicken", "EQ")
@@ -21,17 +15,13 @@ def main():
     and_clause = query_formatter.query_AND_clause(args)
     print("Entire query body:")
     q = query_formatter.query_builder("20250101", "20250129", and_clause)
-    #vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250129")
-    #print(vids)
-=======
-    tiktok_api = TikTokApi()
-    # videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
+    vids = tiktok_api.get_videos_by_dynamic_query_body(q, "20250101", "20250129")
+    print(vids)
     #Can check if a video query didnt go well by checking if not videos
     #Nothing to download, tell user that they need different arguments
     # if not videos:
         # print("Did not retrieve videos")
     #query_formatter = QueryFormatter()
->>>>>>> cbd188a4cc85e2fe538e39cfb81991321bcd0dbe
     #file_converter = FileConverter()
     #file_handler = FileHandler()
     
@@ -40,8 +30,8 @@ def main():
     #login = Login(root)
     #root.mainloop()
     #ogin.login()
-    gui = Gui("ghj", "ghjk", "ghjkl")
-    gui.test_page()
+    #gui = Gui("ghj", "ghjk", "ghjkl")
+    #gui.test_page()
     
     #Make login pop up, save the client secrets and stuff to pass into gui
     #

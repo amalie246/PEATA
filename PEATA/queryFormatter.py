@@ -42,9 +42,9 @@ class QueryFormatter:
             clause_arr.append(q)
             
         query_body = {
-            "query": clause_arr,
-            "start_date" : f"startdate",
-            "end_date" : f"enddate"
+            "query": clause_arr[0] if len(clause_arr) == 1 else {"and": clause_arr},
+            "start_date" : f"{startdate}",
+            "end_date" : f"{enddate}"
             }
         print(query_body)
         return query_body
@@ -65,7 +65,7 @@ class QueryFormatter:
             clause = {
                 "operation": f"{operation}",
                 "field_name": f"{field}",
-                "field_value": [f"{value}"]
+                "field_values": [f"{value}"]
             }
             query_clauses.append(clause)
         

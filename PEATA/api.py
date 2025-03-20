@@ -140,6 +140,7 @@ class TikTokApi:
                     break
                 
             else:
+                print(response.json())
                 return None
             
         return all_videos
