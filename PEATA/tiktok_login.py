@@ -41,7 +41,7 @@ class Login:
 
         if success:
             messagebox.showinfo("Login Successful welcome!", message)
-            self.master.withdraw()
+            self.master.destroy()
             self.open_main_window()
         else:
             messagebox.showerror("Login Failed", message)
