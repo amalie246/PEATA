@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from tkinter import Tk
-from login import Login
+from PEATA.tiktok_login import Login
 
 @pytest.fixture
 def app():
