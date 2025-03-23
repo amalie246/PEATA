@@ -66,16 +66,47 @@ class Gui:
                 widget.destroy()
         
         def video_queries():
-            videos = []
+            if hasattr(video_queries, "label"):
+                return
+            
             destroy_children_widgets(left_btm_frame)
+            rows = []
+            label = tk.Label(left_btm_frame, text="Enter parameters for video queries", font=("Arial", 10, "bold"))
+            label.pack(side="top", pady=10)
+            
+            base_container = tk.Frame(left_btm_frame)
+            base_container.pack(side="top", pady=5)
+            #Needs at least one parameter, startdate and enddate
+            #Should set username and keyword as default
+            bool_op = ["AND", "OR", "NOT"]
+            video_fields = ["id", "video_description", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
+            dates = ["startdate", "enddate"]
+            op = ["EQ"]
+            
+            def add_dropdown_row():
+                #This should add another row if "add" button is clicked
+                index = len(rows)
+                container = tk.Frame(left_btm_frame)
+                container.pack(side="top", pady=5)
+                
+                bool_var = tk.OptionMenu(container, bool_option_var, bool_op[0], *bool_op)
+                bool_var.pack(side="left")
+                fields_var = tk.OptionMenu(container, video_fields_option_var, video_fields[0], *video_fields)
+                fields_var.pack(side="left")
+            
+            add_param = tk.Button(left_btm_frame, text="+", command=add_dropdown_row)
+            add_param.pack(side="bottom", pady=5)
         
+            bool_option_var = tk.StringVar()
+            video_fields_option_var = tk.StringVar()
+            
         def comment_queries():
             if hasattr(comment_queries, "label"):
                 return
             
             destroy_children_widgets(left_btm_frame)
             
-            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments:", font=("Arial", 10, "bold"))
+            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments", font=("Arial", 10, "bold"))
             label.pack(side="top", pady=10)
         
             entry = tk.Entry(left_btm_frame, width=50)
@@ -172,72 +203,3 @@ class Gui:
         download_btn.grid(row=9, column=1)
         
         root.mainloop()
-        
-    
-    def page(self):
-        #LT/LTE/GT/GTE must be used for date i think
-        #And i think IN is in a gange of some sort
-        boolean_operations = ["and", "or", "not"]
-        eq_operations = ["EQ", "IN", "LT", "LTE", "GT", "GTE"]
-        
-        def video_queries():
-            #This is where the dynamic query body can be
-           video_fields = ["id", "video_description", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
-           dates = ["startdate", "enddate"]
-        
-        def user_info_queries():
-            username = []
-        
-        def comment_queries():
-            username = []
-        
-        
-        root = tk.Tk()
-        root.title("Packaged Easier to Access APIs: TikTok Research API")
-        root.geometry("1000x1000")
-        root.configure(bg="lightblue")
-        
-        def add_dropdown_row():
-            row_index = len(dropdown_rows)
-            clickedBool = tk.StringVar()
-            clickedBool.set( "and" )
-            clickedEq = tk.StringVar()
-            clickedEq.set("EQ")
-            
-            bool_drop = tk.OptionMenu(dropdown_frame, clickedBool, *boolean_operations)
-            bool_drop.grid(row=row_index, column=0, padx=10)
-            eq_drop = tk.OptionMenu(dropdown_frame, clickedEq, *eq_operations)
-            eq_drop.grid(row=row_index, column=2, padx=10)
-            
-            dropdown_rows.append((clickedBool, clickedEq))
-            
-        def show_selection():
-            selections = []
-            for bool_var, eq_var in dropdown_rows:
-                selections.append(f"{bool_var.get()} - {eq_var.get()}")
-                
-            label.config(text="Your selections: " + ", ".join(selections))
-            
-        dropdown_rows = []
-            
-        dropdown_frame = tk.Frame(root)
-        dropdown_frame.pack(pady=20)
-        
-        add_dropdown_row()
-        add_btn = tk.Button(dropdown_frame, text="+", command=add_dropdown_row)
-        add_btn.grid(row=9, column=0, pady=10)
-        
-        button = tk.Button(dropdown_frame, text="Submit", command=show_selection)
-        button.grid(row=3, column=1, pady=10)
-        label = tk.Label(dropdown_frame, text=" ")
-        label.grid(row=10, column=1, pady=10)
-        
-        
-        def show_popup():
-            messagebox.showinfo("Information", "This is a popup box!")
-
-        button = tk.Button(root, text="Click Me!", command=show_popup)
-        button.pack(pady=50) 
-        
-        root.mainloop()
-
