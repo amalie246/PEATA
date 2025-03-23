@@ -8,22 +8,33 @@ class Login:
     def __init__(self,master):
         self.master = master
         master.title("Tiktok api login")
+        master.configure(bg="grey")
         
-        Label(master, text="Client ID:").grid(row=1, column=0, sticky=W, padx=5, pady=5)
-        Label(master, text="Client Key:").grid(row=2, column=0, sticky=W, padx=5, pady=5)
-        Label(master, text="Client Secret:").grid(row=3, column=0, sticky=W, padx=5, pady=5)
+        main_frame = Frame(master, bg="#3A3A3A", padx=20, pady=20)
+        main_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+        
+        title_label = Label(main_frame, text="Log in", font=("Helvetica", 32, "bold"), fg="white", bg="#3A3A3A")
+        title_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
+        
+        
+        Label(main_frame, text="Client ID:", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A").grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        Label(main_frame, text="Client Key:", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        Label(main_frame, text="Client Secret:", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A").grid(row=3, column=0, sticky=W, padx=5, pady=5)
 
-        self.client_id_entry = Entry(master)
-        self.client_key_entry = Entry(master)
-        self.client_secret_entry = Entry(master, show="*")
+        self.client_id_entry = Entry(main_frame, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white", width=30)
+        self.client_key_entry = Entry(main_frame, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white", width=30)
+        self.client_secret_entry = Entry(main_frame, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white", width=30, show="*")
         
         
-        self.client_id_entry.grid(row=1, column=1, padx=5, pady=5)
-        self.client_key_entry.grid(row=2, column=1, padx=5, pady=5)
-        self.client_secret_entry.grid(row=3, column=1, padx=5, pady=5)
+        self.client_id_entry.grid(row=1, column=1, padx=10, pady=5)
+        self.client_key_entry.grid(row=2, column=1, padx=10, pady=5)
+        self.client_secret_entry.grid(row=3, column=1, padx=10, pady=5)
 
+
+        login_btn = Button(main_frame, text="Log in", command=self.login,
+                           font=("Helvetica", 10, "bold"), bg="lightgrey", fg="black")
+        login_btn.grid(row=4, column=0, columnspan=2, pady=10)
         
-        Button(master, text="Logg inn", command=self.login).grid(row=4, column=0, columnspan=2, pady=10)
         
         
         self.access_token = None
@@ -34,7 +45,7 @@ class Login:
         self.client_secret = self.client_secret_entry.get()
 
         if not self.client_id or not self.client_key or not self.client_secret:
-            messagebox.showwarning("Feil", "Du må fylle inn alle feltene")
+            messagebox.showwarning("Error", "You have to fill out the form")
             return
 
         success, message = self.test_connection(self.client_id, self.client_key, self.client_secret)
@@ -101,7 +112,8 @@ class Login:
         
 if __name__ == "__main__":
     root = Tk()              
-    app = Login(root)      
+    app = Login(root)  
+    root.attributes('-fullscreen', True)
     root.mainloop()
             
 
