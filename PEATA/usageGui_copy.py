@@ -53,6 +53,10 @@ class Gui:
         button_frame = tk.Frame(top_frame, bg="#D1D1D1")
         button_frame.pack(side="top", pady=70)
         
+        def destroy_children_widgets(frame):
+            for widget in frame.winfo_children():
+                widget.destroy()
+        
         def video_queries():
             videos = []
         
@@ -60,7 +64,7 @@ class Gui:
             # Fetches comments for a video            
                 if hasattr(comment_queries, "label"):
                     return
-
+                destroy_children_widgets(left_btm_frame)
                 # Allows users to input a video ID
                 label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments:", font=("Arial", 10, "bold"))
                 label.pack(side="top", pady=10)
@@ -70,13 +74,11 @@ class Gui:
             
                 comment_queries.label = label
 
-                # Fetch comments form TikTokApi using get_video_comments(video_id)
                 def submit():
                     video_id = entry.get()
                     label.config(text=f"Fetching comments for video ID: {video_id}...")
                     comments = self.tiktok_api.get_video_comments(video_id)
                     
-                    # Display fetched comments in temp_label (text widget) and disables editing
                     temp_label.config(state=tk.NORMAL)
                     temp_label.delete(1.0, tk.END)
                     temp_label.insert(tk.END, f"Comments:\n{comments}")

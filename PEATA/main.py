@@ -3,7 +3,7 @@ from queryFormatter import QueryFormatter
 from file_converter import FileConverter
 #from fileHandler import FileHandler
 from tiktok_login import Login
-from usageGui import Gui
+from gui import Gui
 from tkinter import Tk
 
 def main():

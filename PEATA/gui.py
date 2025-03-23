@@ -61,18 +61,46 @@ class Gui:
         user_btn_frame = tk.Frame(button_frame, bg="#D1D1D1")
         user_btn_frame.grid(row=0, column=2, padx=60)
         
-    
+        def destroy_children_widgets(frame):
+            for widget in frame.winfo_children():
+                widget.destroy()
         
         def video_queries():
             videos = []
+            destroy_children_widgets(left_btm_frame)
         
         def comment_queries():
-            comments = []
+            if hasattr(comment_queries, "label"):
+                return
+            
+            destroy_children_widgets(left_btm_frame)
+            
+            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments:", font=("Arial", 10, "bold"))
+            label.pack(side="top", pady=10)
+        
+            entry = tk.Entry(left_btm_frame, width=50)
+            entry.pack(side="top", pady=10)
+        
+            comment_queries.label = label
+
+            def submit():
+                video_id = entry.get()
+                label.config(text=f"Fetching comments for video ID: {video_id}...")
+                comments = self.tiktok_api.get_video_comments(video_id)
+                
+                temp_label.config(state=tk.NORMAL)
+                temp_label.delete(1.0, tk.END)
+                temp_label.insert(tk.END, f"Comments:\n{comments}")
+                temp_label.config(state=tk.DISABLED)
+        
+            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
+            submit_btn.pack(side="top", pady=5)
         
         def user_queries():
-            print("Pressed")
             if hasattr(user_queries, "label"):
                 return
+            
+            destroy_children_widgets(left_btm_frame)
             label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
             label.pack(side="top", pady=10)
             entry = tk.Entry(left_btm_frame, width=50)

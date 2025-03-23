@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import requests
-from usageGui import Gui
+from gui import Gui
 import logging
 
 class Login:
