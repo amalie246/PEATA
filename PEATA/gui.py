@@ -3,12 +3,7 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 from api import TikTokApi
 from PIL import Image, ImageTk
-
-#TODO for this class
-#   1 - Make it so that users can choose between getting videos, user info or comments
-#   2 - Dropdown menu (dynamic) for multiple fields for query
-#   3 - Connect this with TikTokApi class
-#   4 - A simple query for videos by date and username
+from queryFormatter import QueryFormatter
 
 class Gui:
     def __init__(self, cs, ci, ck, access_token):
@@ -17,6 +12,7 @@ class Gui:
         self.client_key = ck
         self.access_token = access_token
         self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
+        self.query_formatter = QueryFormatter()
         
     def test_page(self):
         def show_exit():
@@ -76,29 +72,74 @@ class Gui:
             
             base_container = tk.Frame(left_btm_frame)
             base_container.pack(side="top", pady=5)
+            
+            startdate_label = tk.Label(left_btm_frame, text="Enter startdate (format: YYYYMMDD)")
+            startdate_label.pack(side="top")
+            startdate_var = tk.StringVar()
+            startdate = tk.Entry(left_btm_frame, textvariable=startdate_var)
+            startdate.pack(side="top", pady=5)
+            
+            enddate_label = tk.Label(left_btm_frame, text="Enter enddate, cannot be more than 30 days later than startdate")
+            enddate_label.pack(side="top", pady=5)
+            enddate_var = tk.StringVar()
+            enddate = tk.Entry(left_btm_frame, textvariable=enddate_var)
+            enddate.pack(side="top", pady=5)
             #Needs at least one parameter, startdate and enddate
             #Should set username and keyword as default
             bool_op = ["AND", "OR", "NOT"]
-            video_fields = ["id", "video_description", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
+            #TODO fix this so it is the complete list
+            video_fields = ["id", "video_description", "username", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
             dates = ["startdate", "enddate"]
-            op = ["EQ"]
+            op = ["EQ", "IN", "LTE", "LT", "GT", "GTE"]
+            bool_option_var = tk.StringVar()
+            video_fields_option_var = tk.StringVar()
+            value_var = tk.StringVar()
             
-            def add_dropdown_row():
+            bool_var = tk.OptionMenu(left_btm_frame, bool_option_var, *bool_op)
+            bool_var.pack(side="left")
+            fields_var = tk.OptionMenu(left_btm_frame, video_fields_option_var, *video_fields)
+            fields_var.pack(side="left")
+            #TODO: Add operations (but needs handling for IN/LT/LTE/GT/GTE)
+            value_entry = tk.Entry(left_btm_frame, textvariable=value_var)
+            value_entry.pack(side="left")
+            
+            """def add_dropdown_row():
                 #This should add another row if "add" button is clicked
                 index = len(rows)
                 container = tk.Frame(left_btm_frame)
                 container.pack(side="top", pady=5)
                 
-                bool_var = tk.OptionMenu(container, bool_option_var, bool_op[0], *bool_op)
+                bool_option_var = tk.StringVar()
+                video_fields_option_var = tk.StringVar()
+                value_var = tk.StringVar()
+                
+                bool_var = tk.OptionMenu(container, bool_option_var, *bool_op)
                 bool_var.pack(side="left")
-                fields_var = tk.OptionMenu(container, video_fields_option_var, video_fields[0], *video_fields)
+                fields_var = tk.OptionMenu(container, video_fields_option_var, *video_fields)
                 fields_var.pack(side="left")
+                #TODO: Add operations (but needs handling for IN/LT/LTE/GT/GTE)
+                value_entry = tk.Entry(container, textvariable=value_var)
+                value_entry.pack(side="left")"""
             
-            add_param = tk.Button(left_btm_frame, text="+", command=add_dropdown_row)
-            add_param.pack(side="bottom", pady=5)
+            def submit():
+                #Build query based on inputs above
+                startdate_param = startdate.get()
+                enddate_param = enddate.get()
+                b = bool_option_var.get()
+                f = video_fields_option_var.get()
+                v = value_entry.get()
+                
+                print(b)
+                print(f)
+                print(v)
+                print(startdate_param)
+                print(enddate_param)
+            
+            #add_param = tk.Button(left_btm_frame, text="+", command=add_dropdown_row)
+            #add_param.pack(side="left", pady=5)
+            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
+            submit_btn.pack(side="left", pady=5)
         
-            bool_option_var = tk.StringVar()
-            video_fields_option_var = tk.StringVar()
             
         def comment_queries():
             if hasattr(comment_queries, "label"):
@@ -132,6 +173,7 @@ class Gui:
                 return
             
             destroy_children_widgets(left_btm_frame)
+            
             label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
             label.pack(side="top", pady=10)
             entry = tk.Entry(left_btm_frame, width=50)
