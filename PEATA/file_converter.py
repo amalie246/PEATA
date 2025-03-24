@@ -1,7 +1,7 @@
 import json
 import csv
 import os
-from PEATA.config import JSON_FOLDER, CSV_FOLDER
+from config import JSON_FOLDER, CSV_FOLDER
 
 """Haven't tested with modified code yet, might not work fully."""
 
