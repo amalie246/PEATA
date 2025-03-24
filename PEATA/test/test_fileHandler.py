@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Fix for "CANNOT FIND MODULE"-error!!!
+# Add the parent directory to PYTHONPATH
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 # pip install pytest pytest-mock pandas reportlab xlsxwriter
 import pytest
 from unittest.mock import patch, mock_open, MagicMock

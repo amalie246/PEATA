@@ -1,7 +1,14 @@
+import sys
+import os
+
+# Fix for "CANNOT FIND MODULE"-error!!!
+# Add the parent directory to PYTHONPATH
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import pytest
 from unittest.mock import patch, MagicMock
 from tkinter import Tk
-from PEATA.usageGui import Gui
+from usageGui import Gui
 
 @pytest.fixture
 def app(mocker):
