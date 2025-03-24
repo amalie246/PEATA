@@ -1,7 +1,13 @@
+import sys
+import os
+
+# Fix for "CANNOT FIND MODULE"-error!!!
+# Add the parent directory to PYTHONPATH
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 # pip install pytest mock-api, this uses internet connection
-import pytest
 from unittest.mock import patch, MagicMock
-from PEATA.api import TikTokApi
+from api import TikTokApi
 
 # Mock environment variables
 @patch.dict('os.environ', {'CLIENT_KEY': 'test_key', 'CLIENT_SECRET': 'test_secret'})
