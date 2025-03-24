@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from unittest.mock import patch, mock_open
 import json
 import csv
-from PEATA.file_converter import FileConverter
+from file_converter import FileConverter
 
 # Test for saving JSON to file
 @patch("builtins.open", new_callable=mock_open)

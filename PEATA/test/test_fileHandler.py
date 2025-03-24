@@ -10,7 +10,7 @@ import pytest
 from unittest.mock import patch, mock_open, MagicMock
 import pandas as pd
 from pathlib import Path
-from PEATA.fileHandler import FileHandler
+from fileHandler import FileHandler
 
 # Mock configuration paths
 @pytest.fixture(autouse=True)
