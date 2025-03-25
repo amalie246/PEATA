@@ -8,16 +8,17 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from unittest.mock import patch, mock_open
 import json
 import csv
-from PEATA.file_converter import FileConverter
+from file_converter import FileConverter
 
 # Test for saving JSON to file
 @patch("builtins.open", new_callable=mock_open)
-@patch("os.path.join", return_value="mocked_path/data.json")
-def test_save_json_to_file(mock_path_join, mock_file):
+def test_save_json_to_file(mock_file):
     data = {"name": "Test", "value": 42}
     
+    # Call the function
     FileConverter.save_json_to_file(data, "data.json")
     
+    # Test that it writes to "data.json" directly
     mock_file.assert_called_once_with("data.json", "w", encoding="utf-8")
     handle = mock_file()
     handle.write.assert_called_once_with(json.dumps(data, indent=4, ensure_ascii=False))
