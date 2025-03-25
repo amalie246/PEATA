@@ -26,7 +26,7 @@ class Gui:
         root.attributes("-fullscreen", True)
         root.bind("<Escape>", lambda event: show_exit())
         
-        #FRAMES for content placing
+        #FRAMES for content placing 
         full_frame = tk.Frame(root, bg="#CAE1FF")
         full_frame.pack(fill="both", expand=True)
         
