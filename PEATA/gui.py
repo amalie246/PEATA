@@ -84,62 +84,44 @@ class Gui:
             enddate_var = tk.StringVar()
             enddate = tk.Entry(left_btm_frame, textvariable=enddate_var)
             enddate.pack(side="top", pady=5)
-            #Needs at least one parameter, startdate and enddate
-            #Should set username and keyword as default
-            bool_op = ["AND", "OR", "NOT"]
-            #TODO fix this so it is the complete list
-            video_fields = ["id", "video_description", "username", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
-            dates = ["startdate", "enddate"]
-            op = ["EQ", "IN", "LTE", "LT", "GT", "GTE"]
-            bool_option_var = tk.StringVar()
-            video_fields_option_var = tk.StringVar()
-            value_var = tk.StringVar()
+
             
-            bool_var = tk.OptionMenu(left_btm_frame, bool_option_var, *bool_op)
-            bool_var.pack(side="left")
-            fields_var = tk.OptionMenu(left_btm_frame, video_fields_option_var, *video_fields)
-            fields_var.pack(side="left")
-            #TODO: Add operations (but needs handling for IN/LT/LTE/GT/GTE)
-            value_entry = tk.Entry(left_btm_frame, textvariable=value_var)
-            value_entry.pack(side="left")
-            
-            """def add_dropdown_row():
-                #This should add another row if "add" button is clicked
-                index = len(rows)
+            def add_dropdown_row(default_field=None, default_value=""):
                 container = tk.Frame(left_btm_frame)
                 container.pack(side="top", pady=5)
+                bool_option_var = tk.StringVar(value=bool_op[0])  # Default: "AND"
+                video_fields_option_var = tk.StringVar(value=default_field if default_field else video_fields[0])  
+                value_var = tk.StringVar(value=default_value)
                 
-                bool_option_var = tk.StringVar()
-                video_fields_option_var = tk.StringVar()
-                value_var = tk.StringVar()
+                rows.append((bool_option_var, video_fields_option_var, value_var))
                 
                 bool_var = tk.OptionMenu(container, bool_option_var, *bool_op)
                 bool_var.pack(side="left")
+
                 fields_var = tk.OptionMenu(container, video_fields_option_var, *video_fields)
                 fields_var.pack(side="left")
-                #TODO: Add operations (but needs handling for IN/LT/LTE/GT/GTE)
+
                 value_entry = tk.Entry(container, textvariable=value_var)
-                value_entry.pack(side="left")"""
+                value_entry.pack(side="left")
             
             def submit():
-                #Build query based on inputs above
-                startdate_param = startdate.get()
-                enddate_param = enddate.get()
-                b = bool_option_var.get()
-                f = video_fields_option_var.get()
-                v = value_entry.get()
-                
-                print(b)
-                print(f)
-                print(v)
-                print(startdate_param)
-                print(enddate_param)
+                lol = []
             
             #add_param = tk.Button(left_btm_frame, text="+", command=add_dropdown_row)
             #add_param.pack(side="left", pady=5)
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
             submit_btn.pack(side="left", pady=5)
+            
+            add_dropdown_row(default_field="username", default_value="")
+            add_dropdown_row(default_field="keyword", default_value="")
         
+        
+        bool_op = ["AND", "OR", "NOT"]
+        #TODO fix this so it is the complete list
+        video_fields = ["id", "video_description", "username", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
+        dates = ["startdate", "enddate"]
+        op = ["EQ", "IN", "LTE", "LT", "GT", "GTE"]
+
             
         def comment_queries():
             if hasattr(comment_queries, "label"):
