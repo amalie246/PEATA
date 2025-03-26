@@ -7,8 +7,6 @@ from gui import Gui
 from tkinter import Tk
 
 def main():
-    #tiktok_api = TikTokApi()
-    
     #root = Tk()
     #login = Login(root)
     #root.mainloop()
@@ -17,7 +15,7 @@ def main():
     #    print("Access token could not be obtained. Exiting program.")
     #    return
     
-    gui = Gui("a", "b", "c", "dfghjkl")
+    gui = Gui("a", "b", "c", "d")
     gui.test_page()
 
     

@@ -11,7 +11,8 @@ class Gui:
         self.client_id = ci
         self.client_key = ck
         self.access_token = access_token
-        self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
+        self.tiktok_api = TikTokApi()
+        #self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
         self.query_formatter = QueryFormatter()
         
     def test_page(self):
@@ -105,15 +106,35 @@ class Gui:
                 value_entry.pack(side="left")
             
             def submit():
-                lol = []
-            
-            #add_param = tk.Button(left_btm_frame, text="+", command=add_dropdown_row)
-            #add_param.pack(side="left", pady=5)
-            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
-            submit_btn.pack(side="left", pady=5)
+                start_date = startdate_var.get()
+                end_date = enddate_var.get()
+                
+                submitted_data = []
+                for bool_var, field_var, value_var in rows:
+                    t = (bool_var.get(), field_var.get(), value_var.get())
+                    submitted_data.append(t)
+                print("Submitted Data:", submitted_data)
+                
+                t1 = submitted_data[0]
+                t2 = submitted_data[1]
+                
+                #Optimalize with this:
+                #if "AND" in t1 and "username" in t1:
+                if t1.__contains__("AND") and t1.__contains__("username"):
+                    if t2.__contains__("AND") and t2.__contains__("keyword"):
+                        username = t1[2]
+                        keyword = t2[2]
+                        videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
+                        print(videos)
+                    
             
             add_dropdown_row(default_field="username", default_value="")
             add_dropdown_row(default_field="keyword", default_value="")
+            
+            add_row_btn = tk.Button(left_btm_frame, text="Add row", command=add_dropdown_row)
+            add_row_btn.pack(side="bottom")
+            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
+            submit_btn.pack(side="bottom", pady=5)
         
         
         bool_op = ["AND", "OR", "NOT"]
