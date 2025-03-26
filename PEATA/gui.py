@@ -120,13 +120,41 @@ class Gui:
                 
                 #Optimalize with this:
                 #if "AND" in t1 and "username" in t1:
-                if t1.__contains__("AND") and t1.__contains__("username"):
-                    if t2.__contains__("AND") and t2.__contains__("keyword"):
-                        username = t1[2]
-                        keyword = t2[2]
-                        videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
-                        print(videos)
+                if len(submitted_data) == 2:
+                    if t1.__contains__("AND") and t1.__contains__("username"):
+                        if t2.__contains__("AND") and t2.__contains__("keyword"):
+                            username = t1[2]
+                            keyword = t2[2]
+                            videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
+                            print(videos)
+                else:
+                    #TODO only testing for AND clauses now
+                    #Needs testing for OR and NOT as well
+                    clauses = []
+                    and_clauses = []
+                    for t in submitted_data:
+                        boolean_operator = t[0]
+                        field = t[1]
+                        value = t[2]
+                        operation = "EQ" #TODO fixme
+                        
+                        if boolean_operator == "AND":
+                            and_clauses.append((field, value, operation))
+                        elif boolean_operator == "OR":
+                            clause = []
+                        elif boolean_operator == "NOT":
+                            clause = []
+                        else:
+                            raise ValueError("Needs AND/OR/NOT format")
+                        
+                    #Make one large AND clause
+                    query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
+                    query_body = self.query_formatter.query_builder(start_date, end_date, query_formatted_and_clauses)
+                    print(query_body)
                     
+                    videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
+                    print(videos)
+                        
             
             add_dropdown_row(default_field="username", default_value="")
             add_dropdown_row(default_field="keyword", default_value="")
