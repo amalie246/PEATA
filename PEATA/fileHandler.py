@@ -95,7 +95,7 @@ class FileHandler:
             print("No data available to export.")
             return
         try:
-            output_excel = Path(EXPORTS_FOLDER) / (self.file_path.stem + ".xlsx") # Same name as CSV
+            output_excel = Path(EXPORTS_FOLDER) / (self.file_path.stem + ".xlsx")
             with pd.ExcelWriter(output_excel, engine="xlsxwriter") as writer:
                 self.data.to_excel(writer, sheet_name="Sheet1", index=False)
                 

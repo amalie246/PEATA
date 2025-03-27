@@ -2,7 +2,7 @@ from api import TikTokApi
 from queryFormatter import QueryFormatter
 from file_converter import FileConverter
 #from fileHandler import FileHandler
-from tiktok_login import Login
+#from tiktok_login import Login
 from gui import Gui
 from tkinter import Tk
 
