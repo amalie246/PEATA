@@ -11,8 +11,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'gui')))
 
 from gui.ui.loginUi import Ui_LoginWindow  
 
-#from app.main_app import MainApp
-
 
 
 # Inherite Ui_LoginWindow class from login.py
