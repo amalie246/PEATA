@@ -58,7 +58,7 @@ def test_invalid_data_for_csv(capfd):
     assert "Ingen gyldige data å lagre." in out
 
 # Test for `save_any_json_data` with JSON format
-@patch("PEATA.file_converter.FileConverter.save_json_to_file")
+@patch("file_converter.FileConverter.save_json_to_file")
 def test_save_any_json_data_as_json(mock_save_json):
     data = {"name": "Test", "value": 42}
     converter = FileConverter()
@@ -66,7 +66,7 @@ def test_save_any_json_data_as_json(mock_save_json):
     mock_save_json.assert_called_once_with(data, "output.json")
 
 # Test for `save_any_json_data` with CSV format
-@patch("PEATA.file_converter.FileConverter.save_json_to_csv")
+@patch("file_converter.FileConverter.save_json_to_csv")
 def test_save_any_json_data_as_csv(mock_save_csv):
     data = [
         {"name": "Test1", "value": 42},
