@@ -1,4 +1,4 @@
-QWidget {
+            QWidget {
                 background-color: #121212;
                 font-family: 'Segoe UI';
                 font-size: 30px;

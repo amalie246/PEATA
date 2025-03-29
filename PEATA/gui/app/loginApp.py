@@ -13,7 +13,7 @@ from gui.ui.loginUi import Ui_LoginWindow
 
 
 
-# Inherite Ui_LoginWindow class from login.py
+# Inherite Ui_LoginWindow class from loginUi.py
 class LoginApp(QMainWindow, Ui_LoginWindow):
     def __init__(self):
         super().__init__()
@@ -89,10 +89,12 @@ class LoginApp(QMainWindow, Ui_LoginWindow):
     def show_error_message(self,message):
         QMessageBox(self, "Login Failed", message)
         
-if __name__ == "__main__":
-    app = QApplication(sys.argv) # Initialize PyQt
-    window = LoginApp()
-    window.show() # show the window with UI
-    sys.exit(app.exec())
-
+#if __name__ == "__main__":
     
+    def main():
+        app = QApplication(sys.argv) # Initialize PyQt
+        win = LoginApp()
+        win.show() # show the window with UI
+        sys.exit(app.exec())
+
+    main()  
