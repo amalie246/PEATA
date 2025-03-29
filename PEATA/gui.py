@@ -11,7 +11,8 @@ class Gui:
         self.client_id = ci
         self.client_key = ck
         self.access_token = access_token
-        self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
+        self.tiktok_api = TikTokApi()
+        #self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
         self.query_formatter = QueryFormatter()
         
     def test_page(self):
@@ -26,7 +27,7 @@ class Gui:
         root.attributes("-fullscreen", True)
         root.bind("<Escape>", lambda event: show_exit())
         
-        #FRAMES for content placing
+        #FRAMES for content placing 
         full_frame = tk.Frame(root, bg="#CAE1FF")
         full_frame.pack(fill="both", expand=True)
         
@@ -84,62 +85,92 @@ class Gui:
             enddate_var = tk.StringVar()
             enddate = tk.Entry(left_btm_frame, textvariable=enddate_var)
             enddate.pack(side="top", pady=5)
-            #Needs at least one parameter, startdate and enddate
-            #Should set username and keyword as default
-            bool_op = ["AND", "OR", "NOT"]
-            #TODO fix this so it is the complete list
-            video_fields = ["id", "video_description", "username", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
-            dates = ["startdate", "enddate"]
-            op = ["EQ", "IN", "LTE", "LT", "GT", "GTE"]
-            bool_option_var = tk.StringVar()
-            video_fields_option_var = tk.StringVar()
-            value_var = tk.StringVar()
+
             
-            bool_var = tk.OptionMenu(left_btm_frame, bool_option_var, *bool_op)
-            bool_var.pack(side="left")
-            fields_var = tk.OptionMenu(left_btm_frame, video_fields_option_var, *video_fields)
-            fields_var.pack(side="left")
-            #TODO: Add operations (but needs handling for IN/LT/LTE/GT/GTE)
-            value_entry = tk.Entry(left_btm_frame, textvariable=value_var)
-            value_entry.pack(side="left")
-            
-            """def add_dropdown_row():
-                #This should add another row if "add" button is clicked
-                index = len(rows)
+            def add_dropdown_row(default_field=None, default_value=""):
                 container = tk.Frame(left_btm_frame)
                 container.pack(side="top", pady=5)
+                bool_option_var = tk.StringVar(value=bool_op[0])  # Default: "AND"
+                video_fields_option_var = tk.StringVar(value=default_field if default_field else video_fields[0])  
+                value_var = tk.StringVar(value=default_value)
                 
-                bool_option_var = tk.StringVar()
-                video_fields_option_var = tk.StringVar()
-                value_var = tk.StringVar()
+                rows.append((bool_option_var, video_fields_option_var, value_var))
                 
                 bool_var = tk.OptionMenu(container, bool_option_var, *bool_op)
                 bool_var.pack(side="left")
+
                 fields_var = tk.OptionMenu(container, video_fields_option_var, *video_fields)
                 fields_var.pack(side="left")
-                #TODO: Add operations (but needs handling for IN/LT/LTE/GT/GTE)
+
                 value_entry = tk.Entry(container, textvariable=value_var)
-                value_entry.pack(side="left")"""
+                value_entry.pack(side="left")
             
             def submit():
-                #Build query based on inputs above
-                startdate_param = startdate.get()
-                enddate_param = enddate.get()
-                b = bool_option_var.get()
-                f = video_fields_option_var.get()
-                v = value_entry.get()
+                start_date = startdate_var.get()
+                end_date = enddate_var.get()
                 
-                print(b)
-                print(f)
-                print(v)
-                print(startdate_param)
-                print(enddate_param)
+                submitted_data = []
+                for bool_var, field_var, value_var in rows:
+                    t = (bool_var.get(), field_var.get(), value_var.get())
+                    submitted_data.append(t)
+                print("Submitted Data:", submitted_data)
+                
+                t1 = submitted_data[0]
+                t2 = submitted_data[1]
+                
+                #Optimalize with this:
+                #if "AND" in t1 and "username" in t1:
+                if len(submitted_data) == 2:
+                    if t1.__contains__("AND") and t1.__contains__("username"):
+                        if t2.__contains__("AND") and t2.__contains__("keyword"):
+                            username = t1[2]
+                            keyword = t2[2]
+                            videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
+                            print(videos)
+                else:
+                    #TODO only testing for AND clauses now
+                    #Needs testing for OR and NOT as well
+                    clauses = []
+                    and_clauses = []
+                    for t in submitted_data:
+                        boolean_operator = t[0]
+                        field = t[1]
+                        value = t[2]
+                        operation = "EQ" #TODO fixme
+                        
+                        if boolean_operator == "AND":
+                            and_clauses.append((field, value, operation))
+                        elif boolean_operator == "OR":
+                            clause = []
+                        elif boolean_operator == "NOT":
+                            clause = []
+                        else:
+                            raise ValueError("Needs AND/OR/NOT format")
+                        
+                    #Make one large AND clause
+                    query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
+                    query_body = self.query_formatter.query_builder(start_date, end_date, query_formatted_and_clauses)
+                    print(query_body)
+                    
+                    videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
+                    print(videos)
+                        
             
-            #add_param = tk.Button(left_btm_frame, text="+", command=add_dropdown_row)
-            #add_param.pack(side="left", pady=5)
+            add_dropdown_row(default_field="username", default_value="")
+            add_dropdown_row(default_field="keyword", default_value="")
+            
+            add_row_btn = tk.Button(left_btm_frame, text="Add row", command=add_dropdown_row)
+            add_row_btn.pack(side="bottom")
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
-            submit_btn.pack(side="left", pady=5)
+            submit_btn.pack(side="bottom", pady=5)
         
+        
+        bool_op = ["AND", "OR", "NOT"]
+        #TODO fix this so it is the complete list
+        video_fields = ["id", "video_description", "username", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
+        dates = ["startdate", "enddate"]
+        op = ["EQ", "IN", "LTE", "LT", "GT", "GTE"]
+
             
         def comment_queries():
             if hasattr(comment_queries, "label"):

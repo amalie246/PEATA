@@ -3,15 +3,15 @@ class QueryFormatter:
     #This data should be retrieved from the GUI (or some service between)
     #UNTESTED SO FAR
     
-    #Takes in query clauses, dates, and builds the final query body
+    """ 
+    Takes in clauses from query_AND/OR/NOT_clause
+    And builds a full query body, ready to use in tiktok_api class
+    """
     def query_builder(self, startdate, enddate, *args):
         clause_arr = list(args)
 
         query_structure = {}
         for clause in clause_arr:
-            print("Clause: ")
-            print(clause)
-            print()
             for key, value in clause.items():
                 if key in query_structure:
                     query_structure[key].extend(value)
@@ -23,9 +23,12 @@ class QueryFormatter:
             "start_date": f"{startdate}",
             "end_date": f"{enddate}"
         }
-        print(query_body)
         return query_body
     
+    
+    """ 
+    Builds a clause with conditions and the correct boolean operation
+    """
     def build_clause(self, logic_op, conditions):
         if logic_op not in ["and", "or", "not"]:
             raise ValueError("Needs logic operations: AND/OR/NOT")
@@ -53,6 +56,10 @@ class QueryFormatter:
     
     #Takes in list of tuples(field_name, field_value, operation)
     #Returns a clause with AND operation
+    """ 
+    Takes in list of tuples (field_name, field_value, operation)
+    And sends it to build_clause with correct AND/OR/NOT
+    """
     def query_AND_clause(self, conditions):
         return self.build_clause("and", conditions)
     
