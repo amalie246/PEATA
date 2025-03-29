@@ -1,0 +1,28 @@
+QWidget {
+                background-color: #121212;
+                font-family: 'Segoe UI';
+                font-size: 30px;
+            }
+            QLabel {
+                font-family: 'calibri';
+                font-size: 55px;
+                font-weight: bold;
+                text-align: center;
+                color: #E0E0E0;
+            }
+            QLineEdit {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #fff;
+            }
+            QPushButton {
+                background-color: #0078d7;
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #005a9e;
+            }
