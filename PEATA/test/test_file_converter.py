@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, mock_open
 import json
 import csv
-from PEATA.file_converter import FileConverter
+from file_converter import FileConverter
 
 # NOTE: THIS TEST IS CURRENTLY FAILING INTENTIONALLY.
 # Reason: The function under test (save_json_to_file) constructs a file path using os.path.join,

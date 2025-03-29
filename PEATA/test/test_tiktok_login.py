@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import pytest
 from unittest.mock import patch, MagicMock
 from tkinter import Tk
-from tiktok_login import Login
+from tiktokLogin import Login
 
 @pytest.fixture
 def app():
