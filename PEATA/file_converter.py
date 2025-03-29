@@ -13,7 +13,7 @@ class FileConverter:
         filepath = os.path.join(JSON_FOLDER, filename)
         with open(filename, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
-        print(f"JSON-data lagret i {filename}")
+        print(f"JSON-data lagret i {filename}") # filepath or filename?
 
     def save_json_to_csv(self, data, filename="data.csv"):
         if not data or not isinstance(data, list) or not isinstance(data[0], dict):
