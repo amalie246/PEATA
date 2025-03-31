@@ -26,3 +26,18 @@
             QPushButton:hover {
                 background-color: #005a9e;
             }
+            
+            QLabel#titleLabel {
+                font-size: 60px;
+                font-weight: bold;
+                color: #ff0050;
+                padding:10px 50px 0;             
+            }
+            
+            QLabel#subtitleLabel {
+                font-size: 30px;
+                font-weight: normal;
+                color: #00f2ea;
+                padding: 0;
+                border-bottom: 2px solid #aaa;
+            }

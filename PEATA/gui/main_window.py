@@ -1,4 +1,3 @@
-# main_window.py
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import Qt
@@ -50,7 +49,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("PEATA - Main Window")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 1200, 800)
 
         layout = QVBoxLayout()
 
