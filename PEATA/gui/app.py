@@ -9,7 +9,7 @@ def load_stylesheet(path):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
+    
     stylesheet = load_stylesheet("style.qss")
     app.setStyleSheet(stylesheet)
 
