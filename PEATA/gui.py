@@ -90,7 +90,7 @@ class Gui:
             def add_dropdown_row(default_field=None, default_value=""):
                 container = tk.Frame(left_btm_frame)
                 container.pack(side="top", pady=5)
-                bool_option_var = tk.StringVar(value=bool_op[0])  # Default: "AND"
+                bool_option_var = tk.StringVar(value=bool_op[0])
                 video_fields_option_var = tk.StringVar(value=default_field if default_field else video_fields[0])  
                 value_var = tk.StringVar(value=default_value)
                 
@@ -136,7 +136,7 @@ class Gui:
                         boolean_operator = t[0]
                         field = t[1]
                         value = t[2]
-                        operation = "EQ" #TODO fixme
+                        operation = "EQ"
                         
                         if boolean_operator == "AND":
                             and_clauses.append((field, value, operation))
@@ -167,9 +167,8 @@ class Gui:
         
         bool_op = ["AND", "OR", "NOT"]
         #TODO fix this so it is the complete list
-        video_fields = ["id", "video_description", "username", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
+        video_fields = ["id", "video_description", "username", "keyword", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
         dates = ["startdate", "enddate"]
-        op = ["EQ", "IN", "LTE", "LT", "GT", "GTE"]
 
             
         def comment_queries():

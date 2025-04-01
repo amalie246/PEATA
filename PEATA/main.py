@@ -21,8 +21,8 @@ def main():
     
     username = "izzyandmarysdad"
     keyword = "Chicken"
-    start_date = "20250310"
-    end_date = "20250318"
+    start_date = "20250101"
+    end_date = "20250129"
 
     
     
@@ -69,14 +69,6 @@ def main():
     #login.login()
     
     #Make login pop up, save the client secrets and stuff to pass into gui
-    #
     
-    
-    #   1 - QueryFormatter takes input from GUI, gives to TikTok Api
-    #   2 - TikTokApi takes query, fetches data from endpoint, sends to FileConverter
-    #   3 - FileConverter converts json to csv, and provides json and csv files
-    #   4 - (Optional) FileHandler creates PDF and/or excel sheet
-    
-
 if __name__ == "__main__":
     main()
