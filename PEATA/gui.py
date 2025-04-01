@@ -88,11 +88,15 @@ class Gui:
 
             
             def add_dropdown_row(default_field=None, default_value=""):
+                def remove_row():
+                    destroy_children_widgets(container)
+                    rows.remove((bool_option_var, video_fields_option_var, value_var))
                 container = tk.Frame(left_btm_frame)
                 container.pack(side="top", pady=5)
                 bool_option_var = tk.StringVar(value=bool_op[0])
                 video_fields_option_var = tk.StringVar(value=default_field if default_field else video_fields[0])  
                 value_var = tk.StringVar(value=default_value)
+            
                 
                 rows.append((bool_option_var, video_fields_option_var, value_var))
                 
@@ -104,6 +108,9 @@ class Gui:
 
                 value_entry = tk.Entry(container, textvariable=value_var)
                 value_entry.pack(side="left")
+                
+                remove_btn = tk.Button(container, text="-", command=remove_row)
+                remove_btn.pack(side="left")
             
             def submit():
                 start_date = startdate_var.get()
