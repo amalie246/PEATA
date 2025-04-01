@@ -46,7 +46,7 @@
             
             /* Horizontal line, like <hr> */
             #footerLine {
-                color: #ffffff;
+                color: #444;
                 margin-top: 10px;
                 margin-bottom: 5px;
                 min-height: 1px;
@@ -58,12 +58,12 @@
                 max-height: 1px;
             }
 
-            #welcomeLabel {
+            #gitHubLabel {
                 color: #888;
-                font-size: 12px;
+                font-size: 20px;
             }
 
-            #welcomeLabel:hover {
+            #gitHubLabel:hover {
                 color: #0078d7;
             }
 

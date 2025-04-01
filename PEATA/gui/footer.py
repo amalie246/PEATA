@@ -26,7 +26,7 @@ class Footer(QWidget):
         gitHub_label = QLabel(
             '<a href="https://github.com/amalie246/PEATA.git">GitHub</a>'
         )
-        gitHub_label.setObjectName("welcomeLabel")
+        gitHub_label.setObjectName("gitHubLabel")
         gitHub_label.setAlignment(Qt.AlignCenter)
         gitHub_label.setOpenExternalLinks(True)
         gitHub_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
