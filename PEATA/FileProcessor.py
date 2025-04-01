@@ -93,6 +93,7 @@ class FileProcessor:
             print("No file data to close.")
         
      
+
    
     #chose to remove panda because we dont have big data sets       
     def export_as_excel(self):
@@ -102,8 +103,7 @@ class FileProcessor:
         try:
             wb = Workbook()
             ws = wb.active
-            ws.append(self.data[0].keys()) 
-            
+            ws.append(list(self.data[0].keys()))
             
             for row in self.data:
                 ws.append(list(row.values()))
