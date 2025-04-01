@@ -1,8 +1,4 @@
 class QueryFormatter:
-    
-    #This data should be retrieved from the GUI (or some service between)
-    #UNTESTED SO FAR
-    
     """ 
     Takes in clauses from query_AND/OR/NOT_clause
     And builds a full query body, ready to use in tiktok_api class
@@ -54,8 +50,6 @@ class QueryFormatter:
             }
         return query
     
-    #Takes in list of tuples(field_name, field_value, operation)
-    #Returns a clause with AND operation
     """ 
     Takes in list of tuples (field_name, field_value, operation)
     And sends it to build_clause with correct AND/OR/NOT

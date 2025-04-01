@@ -154,6 +154,13 @@ class Gui:
                     
                     videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
                     print(videos)
+                
+                #Give a sneek peak of the data
+                #inform if error messages
+                temp_label.config(state=tk.NORMAL)
+                temp_label.delete(1.0, tk.END)
+                temp_label.insert(tk.END, f"{videos}")
+                temp_label.config(state=tk.DISABLED)
                         
             
             add_dropdown_row(default_field="username", default_value="")
@@ -192,7 +199,7 @@ class Gui:
                 
                 temp_label.config(state=tk.NORMAL)
                 temp_label.delete(1.0, tk.END)
-                temp_label.insert(tk.END, f"Comments:\n{comments}")
+                temp_label.insert(tk.END, f"{comments}")
                 temp_label.config(state=tk.DISABLED)
         
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)

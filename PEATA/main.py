@@ -14,8 +14,8 @@ def main():
     #    print("Access token could not be obtained. Exiting program.")
     #    return
     
-    #gui = Gui("a", "b", "c", "d")
-    #gui.test_page()
+    gui = Gui("a", "b", "c", "d")
+    gui.test_page()
     
     tiktok_api = TikTokApi()
     
