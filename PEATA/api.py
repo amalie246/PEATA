@@ -62,7 +62,8 @@ class TikTokApi:
                 return None  
         else:
             logging.error("Something went wrong")
-            return None
+            error = response.json()
+            return error
 
     
     #This method only is able to get username AND keyword, in a EQ operation
@@ -116,8 +117,9 @@ class TikTokApi:
                     break
                 
             else:
-                print("Something went wrong")
-                return None
+                logging.error("Somethnig went wrong")
+                error = response.json()
+                return error
             
         return all_videos
         
@@ -155,8 +157,9 @@ class TikTokApi:
                     break
                 
             else:
-                print(response.json())
-                return None
+                logging.error("something went wrong")
+                error = response.json()
+                return error
             
         return all_videos
         
@@ -194,7 +197,10 @@ class TikTokApi:
                 
                 if check_pagination == False:
                     break
-            
+            else:
+                logging.error("Something went wrong")
+                error = response.json()
+                return error
         return all_comments
     
    
@@ -232,9 +238,6 @@ class TikTokApi:
 
     
     def get_public_user_info(self, username):
-        #Get user info with get_videos_dynamic_params
-        
-        #can switch out fields to let user choose this themselves, although not needed at this moment
         url = f"{self.USER_INFO_URL}?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"
         
         headers = {
@@ -255,4 +258,6 @@ class TikTokApi:
             
             return user_info
         else:
-            return None
+            logging.error("Something went wrong")
+            error = response.json()
+            return error
