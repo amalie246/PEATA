@@ -20,8 +20,9 @@ class Header(QWidget):
         layout.addWidget(subtitle)
         self.setLayout(layout)
         
-    # if __name__ == "__main__":
-    #     app = QApplication(sys.argv)
-    #     window = MainWindow()
-    #     window.show()
-    #     sys.exit(app.exec_())
+# For quick test
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    header = Header()
+    header.show()
+    sys.exit(app.exec())

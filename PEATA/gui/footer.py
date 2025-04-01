@@ -1,40 +1,56 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QFrame
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QLabel, QVBoxLayout, QFrame
+)
 from PyQt5.QtCore import Qt
 
-# Footer Class
+
 class Footer(QWidget):
     def __init__(self):
         super().__init__()
+
         layout = QVBoxLayout()
-        
+
         # Horizontal line
         line = QFrame()
         line.setObjectName("footerLine")
         line.setFrameShape(QFrame.HLine)
         line.setFrameShadow(QFrame.Sunken)
         layout.addWidget(line)
-        
-        # Sub-layout just for lablels (vertical)
+
+        # Vertical layout for labels
         text_layout = QVBoxLayout()
         text_layout.setSpacing(0)
-        
-        
-        copyright_label = QLabel("© 2025 PEATA Team")
+
+        # GitHub link label
+        gitHub_label = QLabel(
+            '<a href="https://github.com/amalie246/PEATA.git">GitHub</a>'
+        )
+        gitHub_label.setObjectName("welcomeLabel")
+        gitHub_label.setAlignment(Qt.AlignCenter)
+        gitHub_label.setOpenExternalLinks(True)
+        gitHub_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
+
+        # Copyright label
+        copyright_label = QLabel("v1.0.0 © 2025 PEATA Team")
         copyright_label.setObjectName("copyrightLabel")
-        welcome_label = QLabel("Welcome to PEATA")
-        welcome_label.setObjectName("welcomeLabel")
-        
-        # Center align
         copyright_label.setAlignment(Qt.AlignCenter)
-        welcome_label.setAlignment(Qt.AlignCenter)
-        
+
+        # Add labels to text layout
+        text_layout.addWidget(gitHub_label)
         text_layout.addWidget(copyright_label)
-        text_layout.addWidget(welcome_label)
-        
-        
-        layout.addLayout(text_layout)      
-        layout.setContentsMargins(0, 10, 0, 10)
+
+        # Add to main layout
+        layout.addLayout(text_layout)
+        layout.setContentsMargins(10, 5, 10, 5)
         layout.setSpacing(5)
 
         self.setLayout(layout)
+
+
+# For quick test
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    footer = Footer()
+    footer.show()
+    sys.exit(app.exec())

@@ -52,13 +52,22 @@
                 min-height: 1px;
                 max-height: 1px;
             }
-            
-            /* Copyright and welcome messages */
-            #copyrightLabel, #welcomeLabel {
-                margin: 0;
-                padding: 0;
-                font-size: 30px;
-                font-weight: normal;
-                text-align: center;
-                line-height: 0.2
+            #footerLine {
+                color: #444;
+                background-color: #444;
+                max-height: 1px;
+            }
+
+            #welcomeLabel {
+                color: #888;
+                font-size: 12px;
+            }
+
+            #welcomeLabel:hover {
+                color: #0078d7;
+            }
+
+            #copyrightLabel {
+                color: #aaa;
+                font-size: 11px;
             }
