@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
-from main_window import MainWindow 
+from main_window import MainWindow
 
 class LoginWindow(QWidget):
     def __init__(self, on_login_success):
@@ -37,14 +37,15 @@ class LoginWindow(QWidget):
         layout.addWidget(self.exit_button)
 
         self.setLayout(layout)
-
-        
-
+ 
     def check_login(self):
         if self.client_id_input.text() == "id" and self.client_key_input.text() == "key" and            self.client_secret_input.text() == "secret":
-            self.main_window = MainWindow()
-            self.main_window.show()
-            self.close()
+            self.go_to_main()
         else:
             QMessageBox.warning(self, "Login failed", "Incorrect username or password")
 
+    def go_to_main(self):
+        self.main_window = MainWindow()
+        self.main_window.show()
+        self.close()  
+        
