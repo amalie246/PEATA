@@ -11,52 +11,53 @@ from config import JSON_FOLDER, CSV_FOLDER, EXPORTS_FOLDER
 class FileProcessor: 
     
     def __init__(self):
-        self.data = None # Store the DataFrame
+        self.data = None 
         self.file_path = self.get_latest_csv_file() 
     
     @staticmethod
     def save_json_to_file(data, filename="data.json"):
-        #Save JSON data to a file in the 'json' folder
-        filepath = os.path.join(JSON_FOLDER, filename)
-        with open(filename, "w", encoding="utf-8") as file:
-            json.dump(data, file, indent=4, ensure_ascii=False)
-        print(f"JSON-data lagret i {filename}")
+        try:
+            with open(Path(JSON_FOLDER) / filename, "w", encoding="utf-8") as file:
+                json.dump(data, file, indent=4, ensure_ascii=False)
+                print(f"JSON-data lagret i {filename}")
+        except Exception as e:
+            print(f"Error while saving JSON file: {e}")
 
 
     
     @staticmethod
     def save_json_to_csv(data, filename="data.csv"):
         if not data or not isinstance(data, list) or not isinstance(data[0], dict):
-            print("Ingen gyldige data å lagre.")
+            print("No valid data to save")
             return
         
-        fieldnames = set()
-        for item in data:
-            fieldnames.update(item.keys())
+        try: 
+            filepath = Path(CSV_FOLDER) / filename
+            with open(filepath, mode="w", newline="", encoding="utf-8") as file:
+                writer = csv.DictWriter(file, fieldnames=data[0].keys())
+                writer.writerows(data)
 
-        #Save CSV file in the 'csv' folder
-        filepath = os.path.join(CSV_FOLDER, filename)
-        with open(filepath, mode="w", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=sorted(fieldnames))
-            writer.writeheader()
-            for item in data:
-                writer.writerow(item) 
-
-        print(f"JSON-data lagret i CSV-fil: {filename}")
+            print(f"JSON-data lagret i CSV-fil: {filename}")
+        except Exception as e:
+            print(f"Error while saving CSV file: {e}")
 
 
     @staticmethod
     def save_any_json_data(data, filename="output", file_format="json"):
-        filename = f"{filename}.{file_format}"
-        if file_format == "json":
-            FileProcessor.save_json_to_file(data, filename)
-        elif file_format == "csv":
-            FileProcessor.save_json_to_csv(data, filename)
+        try:
+           if file_format == "json":
+               FileProcessor.save_json_to_file(data, f"{filename}.json")
+               
+           elif file_format == "csv":      
+               FileProcessor.save_json_to_csv(data, f"{filename}.csv")
+               
+           else:
+               print("Invalid file format.")
+        except Exception as e:
+           print(f"Error while saving data: {e}")
             
     
-    # No need to manually specify the filename each time
     def get_latest_csv_file(self):
-        # Find the most recently modified CSV file in the CSV folder
         csv_files = list(Path(CSV_FOLDER).glob("*.csv"))
         if not csv_files:
             print("No CSV files found.")
@@ -67,7 +68,6 @@ class FileProcessor:
         return latest_file
     
     def open_file(self):
-        # Opens the latest CSV file and returns the data as a list
         if not self.file_path:
             print("No CSV file to open.")
             return None
@@ -86,35 +86,13 @@ class FileProcessor:
         
         
     def close_file(self):
-       # Closes the file by deleting the stored DataFrame reference.
         if self.data is not None:
-            self.data = None # Clear the DataFrame from memory
+            self.data = None
             print("File data has been cleared from memory.")
         else: 
             print("No file data to close.")
         
      
-        
-     
-    @staticmethod
-    def csv_to_excel(csv_file, excel_file):
-        csv_data = []
-        with open(csv_file) as file_obj:
-            reader = csv.reader(file_obj)
-            for row in reader: 
-                csv_data.append(row)
-                
-        #creating excel
-        workbook = openpyxl.Workbook()
-        sheet = workbook.active
-                
-                
-        #adding rows from csv to excel
-        for row in csv_data: 
-            sheet.append(row)
-        workbook.save(excel_file)
-   
-        
    
     #chose to remove panda because we dont have big data sets       
     def export_as_excel(self):
@@ -124,6 +102,7 @@ class FileProcessor:
         try:
             wb = Workbook()
             ws = wb.active
+            ws.append(self.data[0].keys()) 
             
             
             for row in self.data:
