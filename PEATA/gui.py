@@ -104,12 +104,12 @@ class Gui:
         def api_call(endpoint, data, start_date, end_date):
             print("Trying to call api")
             try:
-                videos = []  # Initialize videos to avoid issues if API fails
-                submitted_data = data
-                t1 = submitted_data[0]
-                t2 = submitted_data[1]
-                
                 if endpoint == Endpoints.VIDEOS.name:
+                    videos = []
+                    submitted_data = data
+                    
+                    t1 = submitted_data[0]
+                    t2 = submitted_data[1]
                     
                     if len(submitted_data) == 2:
                         if "AND" in t1 and "username" in t1:
@@ -127,6 +127,16 @@ class Gui:
 
 
                     temp_label.after(0, update_ui, videos)
+                elif endpoint == Endpoints.COMMENTS.name:
+                    comments = self.tiktok_api.get_video_comments(data)
+                    temp_label.after(0, update_ui, comments)
+                    
+                elif endpoint == Endpoints.USER_INFO.name:
+                    user_info = self.tiktok_api.get_public_user_info(data)
+                    temp_label.after(0, update_ui, user_info)
+                    
+                else:
+                    raise ValueError("invalid endpoint type")
 
             except Exception as e:
                 print(f"Error fetching videos: {e}")
@@ -196,13 +206,11 @@ class Gui:
                 for bool_var, field_var, value_var in rows:
                     t = (bool_var.get(), field_var.get(), value_var.get())
                     submitted_data.append(t)
-                print("Submitted Data:", submitted_data)
                 
-                #TODO fix me
+                #TODO fix me ( the progress bar )
                 progress_bar.start(10)
                 thread = threading.Thread(target=api_call, args=(Endpoints.VIDEOS.name, submitted_data, start_date, end_date), daemon=True)
                 thread.start()
-                print("Thread started")
                 progress_bar.stop()
                         
             
@@ -237,12 +245,11 @@ class Gui:
             def submit():
                 video_id = entry.get()
                 label.config(text=f"Fetching comments for video ID: {video_id}...")
-                comments = self.tiktok_api.get_video_comments(video_id)
-                
-                temp_label.config(state=tk.NORMAL)
-                temp_label.delete(1.0, tk.END)
-                temp_label.insert(tk.END, f"{comments}")
-                temp_label.config(state=tk.DISABLED)
+                #TODO needs multithreading because it is insane
+                progress_bar.start(10)
+                thread = threading.Thread(target=api_call, args=(Endpoints.COMMENTS.name, video_id, None, None), daemon=True)
+                thread.start()
+                progress_bar.stop()
         
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
             submit_btn.pack(side="top", pady=5)
@@ -263,11 +270,11 @@ class Gui:
             def submit():
                 username = entry.get()
                 label.config(text=f"Fetching info about {username}...")
-                user_info = self.tiktok_api.get_public_user_info(username)
-                temp_label.config(state=tk.NORMAL)
-                temp_label.delete(1.0, tk.END)
-                temp_label.insert(tk.END, f"{user_info}")
-                temp_label.config(state=tk.DISABLED)
+                
+                progress_bar.start(10)
+                thread = threading.Thread(target=api_call, args=(Endpoints.USER_INFO.name, username, None, None), daemon=True)
+                thread.start()
+                progress_bar.stop()
                 
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
             submit_btn.pack(side="top", pady=5)
