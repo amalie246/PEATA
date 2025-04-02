@@ -218,9 +218,10 @@ class TikTokApi:
         }
         
         response = requests.post(url, headers=headers, json=data)
+        print(response.json())
         
         if(response.status_code == 200):
-            user_info = response.json().get("data", [])
+            user_info = response.json().get("data", None)
             if not user_info:
                 return None
             
