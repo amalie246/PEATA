@@ -12,8 +12,7 @@ class Endpoints(Enum):
     COMMENTS = 2,
     USER_INFO = 3
 
-
-#TODO must fetch from API ina seperate thread
+#TODO fix progress bar
 #TODO must fix OR and NOT operations as well
 #TODO refactor code because this is a mess
 
@@ -211,7 +210,6 @@ class Gui:
                 progress_bar.start(10)
                 thread = threading.Thread(target=api_call, args=(Endpoints.VIDEOS.name, submitted_data, start_date, end_date), daemon=True)
                 thread.start()
-                progress_bar.stop()
                         
             
             add_dropdown_row(default_field="username", default_value="")
@@ -249,7 +247,6 @@ class Gui:
                 progress_bar.start(10)
                 thread = threading.Thread(target=api_call, args=(Endpoints.COMMENTS.name, video_id, None, None), daemon=True)
                 thread.start()
-                progress_bar.stop()
         
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
             submit_btn.pack(side="top", pady=5)
@@ -274,7 +271,6 @@ class Gui:
                 progress_bar.start(10)
                 thread = threading.Thread(target=api_call, args=(Endpoints.USER_INFO.name, username, None, None), daemon=True)
                 thread.start()
-                progress_bar.stop()
                 
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
             submit_btn.pack(side="top", pady=5)
