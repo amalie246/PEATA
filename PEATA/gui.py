@@ -40,8 +40,23 @@ class Gui:
         
         return button
     
-    def setup_ui(self):
-        return
+    def update_ui(self, data, label):
+        label.config(state=tk.NORMAL)
+        label.delete(1.0, tk.END)
+        
+        if "error" in data:
+            message = "Error occured during fetching:"
+            label.insert(tk.END, f"{message}\n{data}")
+            return
+        
+        elif isinstance(data, list):
+            label.insert(tk.END, f"{data}")
+            return
+        
+        else:
+            message = "No data was found with your parameters"
+            label.insert(tk.END, f"{message}")
+        label.config(state=tk.DISABLED)
         
     def main_frame(self):
         def show_exit():
@@ -89,24 +104,6 @@ class Gui:
         def destroy_children_widgets(frame):
             for widget in frame.winfo_children():
                 widget.destroy()
-        
-        def update_ui(data):
-            temp_label.config(state=tk.NORMAL)
-            temp_label.delete(1.0, tk.END)
-            
-            if "error" in data:
-                message = "Error occured during fetching:"
-                temp_label.insert(tk.END, f"{message}\n{data}")
-                return
-            
-            elif isinstance(data, list):
-                temp_label.insert(tk.END, f"{data}")
-                return
-            
-            else:
-                message = "No data was found with your parameters"
-                temp_label.insert(tk.END, f"{message}")
-            temp_label.config(state=tk.DISABLED)
             
         
         def api_call(endpoint, data, start_date, end_date):
@@ -148,21 +145,21 @@ class Gui:
                             print(videos)
 
 
-                    temp_label.after(0, update_ui, videos)
+                    output.after(0, self.update_ui, videos, output)
                 elif endpoint == Endpoints.COMMENTS.name:
                     comments = self.tiktok_api.get_video_comments(data)
-                    temp_label.after(0, update_ui, comments)
+                    output.after(0, self.update_ui, comments, output)
                     
                 elif endpoint == Endpoints.USER_INFO.name:
                     user_info = self.tiktok_api.get_public_user_info(data)
-                    temp_label.after(0, update_ui, user_info)
+                    output.after(0, self.update_ui, user_info, output)
                     
                 else:
                     raise ValueError("invalid endpoint type")
 
             except Exception as e:
                 print(f"Error fetching videos: {e}")
-                temp_label.after(0, update_ui, f"Error: {e}")
+                output.after(0, self.update_ui, f"Error: {e}", output)
 
             finally:
                 progress_bar.stop()
@@ -327,13 +324,13 @@ class Gui:
         progress_bar.grid(row=0, column=0, padx=10, pady=10)
         
         #Data sneak peak
-        temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
-        temp_label.grid(row=8, column=10, columnspan=3, pady=10)
-        temp_label.config(state=tk.DISABLED)#Editing is disabled
+        output = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
+        output.grid(row=8, column=10, columnspan=3, pady=10)
+        output.config(state=tk.DISABLED)#Editing is disabled
 
-        scrollbar = tk.Scrollbar(right_btm_frame, command=temp_label.yview)
+        scrollbar = tk.Scrollbar(right_btm_frame, command=output.yview)
         scrollbar.grid(row=8, column=13, sticky="ns")
-        temp_label.config(yscrollcommand=scrollbar.set)
+        output.config(yscrollcommand=scrollbar.set)
         
         download_btn = tk.Button(right_btm_frame, text="Download as CSV file", command=download)
         download_btn.grid(row=9, column=1)
