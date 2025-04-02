@@ -187,7 +187,7 @@ class TikTokApi:
             response = requests.post(url, headers=headers, json=data)
             
             if response.status_code == 200:
-                comments = response.json()
+                comments = response.json().get("data", [])
                 all_comments.extend(comments["data"]["comments"])
                 
                 if not len(all_comments):
@@ -220,7 +220,7 @@ class TikTokApi:
         response = requests.post(url, headers=headers, json=data)
         
         if(response.status_code == 200):
-            user_info = response.json();
+            user_info = response.json().get("data", [])
             if not user_info:
                 return None
             
