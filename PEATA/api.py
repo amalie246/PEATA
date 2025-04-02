@@ -202,38 +202,6 @@ class TikTokApi:
                 error = response.json()
                 return error
         return all_comments
-    
-   
-    
-   #har lyst til å få denne til å funke
-    def get_music_info(self, music_id):
-        url = f"{BASE_URL}/research/music/query/"
-        headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {self.access_token}"
-    }
-        data = {
-        "query": {
-            "and": [
-                {"operation": "EQ", "field_name": "id", "field_values": [music_id]}
-            ]
-        },
-        "fields": "id,title,author_name,album_name,cover_url,duration",
-        "max_count": 1 
-    }
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code != 200:
-            return None
-        try:
-            json_response = response.json()
-            if not json_response or "data" not in json_response:
-                return None
-            music_data = json_response["data"].get("music", [])
-            if not music_data:
-                return None
-            return music_data[0]
-        except requests.exceptions.JSONDecodeError:
-            return None
 
 
     

@@ -14,10 +14,10 @@ def main():
     #    print("Access token could not be obtained. Exiting program.")
     #    return
     
-    #gui = Gui("a", "b", "c", "d")
-    #gui.test_page()
+    gui = Gui("a", "b", "c", "d")
+    gui.test_page()
     
-    tiktok_api = TikTokApi()
+    """tiktok_api = TikTokApi()
     
     username = "izzyandmarysdad"
     keyword = "Chicken"
@@ -60,7 +60,7 @@ def main():
     #Nothing to download, tell user that they need different arguments
     # if not videos:
         # print("Did not retrieve videos")
-    #query_formatter = QueryFormatter()
+    #query_formatter = QueryFormatter()"""
   
     
     #In login, check if client secret stuff are valid by fetching access token

@@ -1,9 +1,21 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+import threading
 from tkinter import messagebox
+from enum import Enum
 from api import TikTokApi
 from PIL import Image, ImageTk
 from queryFormatter import QueryFormatter
+
+class Endpoints(Enum):
+    VIDEOS = 1,
+    COMMENTS = 2,
+    USER_INFO = 3
+
+
+#TODO must fetch from API ina seperate thread
+#TODO must fix OR and NOT operations as well
+#TODO refactor code because this is a mess
 
 class Gui:
     def __init__(self, cs, ci, ck, access_token):
@@ -61,6 +73,68 @@ class Gui:
         def destroy_children_widgets(frame):
             for widget in frame.winfo_children():
                 widget.destroy()
+        
+        def update_ui(data):
+            #Needs a thread to execute, NOT the main thread
+            if "error" in data:
+                message = "Error occured during fetching:"
+                temp_label.config(state=tk.NORMAL)
+                temp_label.delete(1.0, tk.END)
+                temp_label.insert(tk.END, f"{message}\n{data}")
+                temp_label.config(state=tk.DISABLED)
+                return
+            
+            elif isinstance(data, list):
+                temp_label.config(state=tk.NORMAL)
+                temp_label.delete(1.0, tk.END)
+                temp_label.insert(tk.END, f"{data}")
+                temp_label.config(state=tk.DISABLED)
+                return
+            
+            else:
+                message = "No data was found with your given parameters"
+                temp_label.config(state=tk.NORMAL)
+                temp_label.delete(1.0, tk.END)
+                temp_label.insert(tk.END, f"{message}")
+                temp_label.config(state=tk.DISABLED)
+            
+            
+            return
+        
+        def api_call(endpoint, data, start_date, end_date):
+            print("Trying to call api")
+            try:
+                videos = []  # Initialize videos to avoid issues if API fails
+                submitted_data = data
+                t1 = submitted_data[0]
+                t2 = submitted_data[1]
+                
+                if endpoint == Endpoints.VIDEOS.name:
+                    
+                    if len(submitted_data) == 2:
+                        if "AND" in t1 and "username" in t1:
+                            if "AND" in t2 and "keyword" in t2:
+                                username = t1[2]
+                                keyword = t2[2]
+                                videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
+                                print("Called api")
+                        else:
+                            and_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "AND"]
+                            query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
+                            query_body = self.query_formatter.query_builder(start_date, end_date, query_formatted_and_clauses)
+                            videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
+                            print(videos)
+
+
+                    temp_label.after(0, update_ui, videos)
+
+            except Exception as e:
+                print(f"Error fetching videos: {e}")
+                temp_label.after(0, update_ui, f"Error: {e}")
+
+            finally:
+                progress_bar.stop()
+
         
         def video_queries():
             if hasattr(video_queries, "label"):
@@ -124,52 +198,12 @@ class Gui:
                     submitted_data.append(t)
                 print("Submitted Data:", submitted_data)
                 
-                t1 = submitted_data[0]
-                t2 = submitted_data[1]
-                
-                #Optimalize with this:
-                #if "AND" in t1 and "username" in t1:
-                if len(submitted_data) == 2:
-                    if t1.__contains__("AND") and t1.__contains__("username"):
-                        if t2.__contains__("AND") and t2.__contains__("keyword"):
-                            username = t1[2]
-                            keyword = t2[2]
-                            videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
-                            print(videos)
-                else:
-                    #TODO only testing for AND clauses now
-                    #Needs testing for OR and NOT as well
-                    clauses = []
-                    and_clauses = []
-                    for t in submitted_data:
-                        boolean_operator = t[0]
-                        field = t[1]
-                        value = t[2]
-                        operation = "EQ"
-                        
-                        if boolean_operator == "AND":
-                            and_clauses.append((field, value, operation))
-                        elif boolean_operator == "OR":
-                            clause = []
-                        elif boolean_operator == "NOT":
-                            clause = []
-                        else:
-                            raise ValueError("Needs AND/OR/NOT format")
-                        
-                    #Make one large AND clause
-                    query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
-                    query_body = self.query_formatter.query_builder(start_date, end_date, query_formatted_and_clauses)
-                    print(query_body)
-                    
-                    videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
-                    print(videos)
-                
-                #Give a sneek peak of the data
-                #inform if error messages
-                temp_label.config(state=tk.NORMAL)
-                temp_label.delete(1.0, tk.END)
-                temp_label.insert(tk.END, f"{videos}")
-                temp_label.config(state=tk.DISABLED)
+                #TODO fix me
+                progress_bar.start(10)
+                thread = threading.Thread(target=api_call, args=(Endpoints.VIDEOS.name, submitted_data, start_date, end_date), daemon=True)
+                thread.start()
+                print("Thread started")
+                progress_bar.stop()
                         
             
             add_dropdown_row(default_field="username", default_value="")
@@ -184,7 +218,6 @@ class Gui:
         bool_op = ["AND", "OR", "NOT"]
         #TODO fix this so it is the complete list
         video_fields = ["id", "video_description", "username", "keyword", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
-        dates = ["startdate", "enddate"]
 
             
         def comment_queries():
@@ -280,8 +313,6 @@ class Gui:
         user_text_label = tk.Label(user_btn_frame, text="User info", background="#323232", font=("Arial", 10, "bold"), fg="white")
         user_text_label.place(relx=0.5, rely=0.5, anchor="center")
         
-        
-        #Progress bar (in progress)
         progress_bar = ttk.Progressbar(
             right_btm_frame,
             orient="horizontal",
