@@ -1,12 +1,9 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QFrame, QPushButton
-from PyQt5.QtCore import Qt
-<<<<<<< Updated upstream
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize
-=======
 from progress_bar import ProgressBar
->>>>>>> Stashed changes
+
 
 # Main Content Class
 class MainSection(QWidget):
