@@ -15,7 +15,7 @@ def main():
     #    return
     
     gui = Gui("a", "b", "c", "d")
-    gui.test_page()
+    gui.main_frame()
     
     """tiktok_api = TikTokApi()
     

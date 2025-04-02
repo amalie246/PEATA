@@ -12,9 +12,9 @@ class Endpoints(Enum):
     COMMENTS = 2,
     USER_INFO = 3
 
-#TODO fix progress bar
 #TODO must fix OR and NOT operations as well
 #TODO refactor code because this is a mess
+#Refactor code by splitting it into smaller classes
 
 class Gui:
     def __init__(self, cs, ci, ck, access_token):
@@ -25,8 +25,25 @@ class Gui:
         self.tiktok_api = TikTokApi()
         #self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
         self.query_formatter = QueryFormatter()
+    
+    def create_button_with_image(self, text, command, frame):
+        btn_image = Image.open("images/GenBtn.png")
+        btn_image = btn_image.crop(btn_image.getbbox())
+        gen_btn_img = ImageTk.PhotoImage(btn_image)
         
-    def test_page(self):
+        button = tk.Button(frame, image=gen_btn_img, command=command)
+        button.image = gen_btn_img
+        button.pack(padx=10)
+        
+        text_label = tk.Label(frame, text=text, background="#323232", font=("Arial", 10, "bold"), fg="white")
+        text_label.place(relx=0.5, rely=0.5, anchor="center")
+        
+        return button
+    
+    def setup_ui(self):
+        return
+        
+    def main_frame(self):
         def show_exit():
             if messagebox.askyesno("Exit Program", "Are you sure you want to quit your session?"):
                 root.destroy()
@@ -74,31 +91,23 @@ class Gui:
                 widget.destroy()
         
         def update_ui(data):
-            #Needs a thread to execute, NOT the main thread
+            temp_label.config(state=tk.NORMAL)
+            temp_label.delete(1.0, tk.END)
+            
             if "error" in data:
                 message = "Error occured during fetching:"
-                temp_label.config(state=tk.NORMAL)
-                temp_label.delete(1.0, tk.END)
                 temp_label.insert(tk.END, f"{message}\n{data}")
-                temp_label.config(state=tk.DISABLED)
                 return
             
             elif isinstance(data, list):
-                temp_label.config(state=tk.NORMAL)
-                temp_label.delete(1.0, tk.END)
                 temp_label.insert(tk.END, f"{data}")
-                temp_label.config(state=tk.DISABLED)
                 return
             
             else:
-                message = "No data was found with your given parameters"
-                temp_label.config(state=tk.NORMAL)
-                temp_label.delete(1.0, tk.END)
+                message = "No data was found with your parameters"
                 temp_label.insert(tk.END, f"{message}")
-                temp_label.config(state=tk.DISABLED)
+            temp_label.config(state=tk.DISABLED)
             
-            
-            return
         
         def api_call(endpoint, data, start_date, end_date):
             print("Trying to call api")
@@ -119,8 +128,22 @@ class Gui:
                                 print("Called api")
                         else:
                             and_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "AND"]
-                            query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
+                            or_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "OR"]
+                            not_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "NOT"]
+                            
+                            args = []
+                            if len(and_clauses) > 0:
+                                query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
+                                args.append(query_formatted_and_clauses)
+                            if len(or_clauses) > 0:
+                                query_formatted_or_clauses = self.query_formatter.query_OR_clause(or_clauses)
+                                args.append(query_formatted_or_clauses)
+                            if len(not_clauses) > 0:
+                                query_formatted_not_clauses = self.query_formatter.query_NOT_clause(not_clauses)
+                                args.append(query_formatted_not_clauses)
+                            
                             query_body = self.query_formatter.query_builder(start_date, end_date, query_formatted_and_clauses)
+                            print(query_body)
                             videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
                             print(videos)
 
@@ -291,30 +314,9 @@ class Gui:
                     focuscolor="")
         
         #Buttons
-        btn_image = Image.open("images/GenBtn.png")
-        btn_image = btn_image.crop(btn_image.getbbox())
-        gen_btn_img = ImageTk.PhotoImage(btn_image)
-        
-        video_btn_bg = tk.Button(video_btn_frame, image=gen_btn_img, command=video_queries)
-        video_btn_bg.image = gen_btn_img
-        video_btn_bg.pack(padx=10)
-        
-        video_text_label = tk.Label(video_btn_frame, text="Videos", background="#323232", font=("Arial", 10, "bold"), fg="white")
-        video_text_label.place(relx=0.5, rely=0.5, anchor="center")
-        
-        comment_btn_bg = tk.Button(comment_btn_frame, image=gen_btn_img, command=comment_queries)
-        comment_btn_bg.image = gen_btn_img
-        comment_btn_bg.pack(padx=10)
-        
-        comment_text_label = tk.Label(comment_btn_frame, text="Comments", background="#323232", font=("Arial", 10, "bold"), fg="white")
-        comment_text_label.place(relx=0.5, rely=0.5, anchor="center")
-        
-        user_btn_bg = tk.Button(user_btn_frame, image=gen_btn_img, command=user_queries)
-        user_btn_bg.image = gen_btn_img
-        user_btn_bg.pack(padx=10)
-        
-        user_text_label = tk.Label(user_btn_frame, text="User info", background="#323232", font=("Arial", 10, "bold"), fg="white")
-        user_text_label.place(relx=0.5, rely=0.5, anchor="center")
+        self.create_button_with_image("Videos", video_queries, video_btn_frame)
+        self.create_button_with_image("Comments", comment_queries, comment_btn_frame)
+        self.create_button_with_image("User info", user_queries, user_btn_frame)
         
         progress_bar = ttk.Progressbar(
             right_btm_frame,
