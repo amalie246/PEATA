@@ -1,14 +1,9 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from PIL import Image, ImageTk
-from enum import Enum
 from api import TikTokApi
+from endpoint_type import Endpoints
 
-class Endpoints(Enum):
-    VIDEOS = 1,
-    COMMENTS = 2,
-    USER_INFO = 3
-    
 class UiHelper:
     def __init__(self):
         self.tiktok_api = TikTokApi()

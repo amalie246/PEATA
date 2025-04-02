@@ -7,15 +7,7 @@ from api import TikTokApi
 from ui_helper import UiHelper
 from PIL import Image, ImageTk
 from queryFormatter import QueryFormatter
-
-class Endpoints(Enum):
-    VIDEOS = 1,
-    COMMENTS = 2,
-    USER_INFO = 3
-
-#TODO must fix OR and NOT operations as well
-#TODO refactor code because this is a mess
-#Refactor code by splitting it into smaller classes
+from endpoint_type import Endpoints
 
 class Gui:
     def __init__(self, cs, ci, ck, access_token):
