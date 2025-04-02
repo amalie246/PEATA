@@ -4,6 +4,7 @@ import json
 import csv
 import os
 import openpyxl
+import pandas as pd
 from openpyxl import Workbook
 from pathlib import Path
 from config import JSON_FOLDER, CSV_FOLDER, EXPORTS_FOLDER
@@ -116,8 +117,32 @@ class FileProcessor:
             print(f"Error occured while exporting file: {e}")
 
 
+    def export_data(self, filename, data):
+        if filename is None:
+            raise ValueError("Needs a filename")
+            return
+        
+        #removes .csv or .json if that is in the filename
+        filename = filename.rsplit(".", 1)[0] 
+        #save data as csv
+        try: 
+            csv_filepath = Path(CSV_FOLDER) / f"{filename}.csv"
+            with open(csv_filepath, mode="w", newline="", encoding="utf-8") as file:
+                writer = csv.DictWriter(file, fieldnames=data[0].keys())
+                writer.writeheader()
+                writer.writerows(data)
+
+            print(f"JSON-data lagret i CSV-fil: {filename}")
             
+            excel_filepath = Path(EXPORTS_FOLDER) / f"{filename}.xlsx"
+            df = pd.read_csv(csv_filepath)
+            df.to_excel(excel_filepath, index=False, engine='openpyxl')
             
+            print(f"Excel data saved: {excel_filepath}")
+        except Exception as e:
+            print(f"Error while saving CSV file: {e}")
+        
+        
             
 if __name__ == "__main__":
     file_processor = FileProcessor()

@@ -91,6 +91,7 @@ class Gui:
                 def remove_row():
                     destroy_children_widgets(container)
                     rows.remove((bool_option_var, video_fields_option_var, value_var))
+                    
                 container = tk.Frame(left_btm_frame)
                 container.pack(side="top", pady=5)
                 bool_option_var = tk.StringVar(value=bool_op[0])
@@ -109,6 +110,7 @@ class Gui:
                 value_entry = tk.Entry(container, textvariable=value_var)
                 value_entry.pack(side="left")
                 
+                #TODO not working as expected
                 remove_btn = tk.Button(container, text="-", command=remove_row)
                 remove_btn.pack(side="left")
             
@@ -252,6 +254,7 @@ class Gui:
                     focusthickness=3,
                     focuscolor="")
         
+        #Buttons
         btn_image = Image.open("images/GenBtn.png")
         btn_image = btn_image.crop(btn_image.getbbox())
         gen_btn_img = ImageTk.PhotoImage(btn_image)
@@ -277,6 +280,17 @@ class Gui:
         user_text_label = tk.Label(user_btn_frame, text="User info", background="#323232", font=("Arial", 10, "bold"), fg="white")
         user_text_label.place(relx=0.5, rely=0.5, anchor="center")
         
+        
+        #Progress bar (in progress)
+        progress_bar = ttk.Progressbar(
+            right_btm_frame,
+            orient="horizontal",
+            mode="indeterminate",
+            length=100
+            )
+        progress_bar.grid(row=0, column=0, padx=10, pady=10)
+        
+        #Data sneak peak
         temp_label = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
         temp_label.grid(row=8, column=10, columnspan=3, pady=10)
         temp_label.config(state=tk.DISABLED)#Editing is disabled

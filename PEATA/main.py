@@ -14,8 +14,8 @@ def main():
     #    print("Access token could not be obtained. Exiting program.")
     #    return
     
-    gui = Gui("a", "b", "c", "d")
-    gui.test_page()
+    #gui = Gui("a", "b", "c", "d")
+    #gui.test_page()
     
     tiktok_api = TikTokApi()
     
@@ -44,15 +44,16 @@ def main():
     
   
     file_processor = FileProcessor()
-    file_processor.save_any_json_data(videos, filename="tiktok_videos", file_format="json")
-    file_processor.save_any_json_data(videos, filename="tiktok_videos", file_format="csv")
+    file_processor.export_data("test", videos)
+    #file_processor.save_any_json_data(videos, filename="tiktok_videos", file_format="json")
+    #file_processor.save_any_json_data(videos, filename="tiktok_videos", file_format="csv")
     
-    data = file_processor.open_file()
+    #data = file_processor.open_file()
     
-    if data is not None:
-        file_processor.export_as_excel()
+    #if data is not None:
+    #    file_processor.export_as_excel()
         
-        file_processor.close_file()
+    #    file_processor.close_file()
 
     #videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
     #Can check if a video query didnt go well by checking if not videos
