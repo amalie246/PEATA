@@ -40,6 +40,8 @@ class MainWindow(QMainWindow):
         except:
             print("style.qss not found")
 
+# for testing
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
