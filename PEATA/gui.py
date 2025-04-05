@@ -229,15 +229,15 @@ class Gui:
         progress_bar.grid(row=0, column=0, padx=10, pady=10)
         
         #Data sneak peak
-        output = tk.Text(right_btm_frame, height=10, width=80, wrap=tk.WORD, bg="pink", font=("Arial", 10))
-        output.grid(row=8, column=10, columnspan=3, pady=10)
+        output = tk.Text(right_btm_frame, height=45, width=120, wrap=tk.WORD, bg="black", font=("Arial", 10))
+        output.grid(row=9, column=10, columnspan=3, pady=10)
         output.config(state=tk.DISABLED)#Editing is disabled
 
         scrollbar = tk.Scrollbar(right_btm_frame, command=output.yview)
-        scrollbar.grid(row=8, column=13, sticky="ns")
+        scrollbar.grid(row=9, column=13, sticky="ns")
         output.config(yscrollcommand=scrollbar.set)
         
         download_btn = tk.Button(right_btm_frame, text="Download as CSV file", command=download)
-        download_btn.grid(row=9, column=1)
+        download_btn.grid(row=14, column=11)
         
         root.mainloop()
