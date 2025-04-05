@@ -1,13 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
-# from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication, QPushButton
+from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
 from header import Header
+
 from main_section import MainSection
 from footer import Footer
 
 # Main_window.py divided into header.py, main_window.py and footer.py. Might move all balck into main_window.py for simpler code & structure.
 
-       
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
