@@ -1,0 +1,17 @@
+TODO
+Login window
+    sign in / log in
+Main window
+    Navigation bar / toolbar
+        File (Open, save, export)
+    Progress bar
+    data viewer (table)
+        sort
+        filter
+        search
+        edit / Save
+    about us / information
+User experience
+    status bar (loading, saved .....)
+    Error messages
+    progress bar
