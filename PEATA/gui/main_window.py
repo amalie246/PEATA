@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication, QPushButton
 from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
 from header import Header
+from widget_navbar import WidgetNavbar
 
 from main_section import MainSection
 from footer import Footer
