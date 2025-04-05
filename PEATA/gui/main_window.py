@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
+from PyQt5.QtWidgets import ( QMainWindow, QWidget, QVBoxLayout, QApplication )
 # from PyQt5.QtCore import Qt
 from header import Header
 from main_section import MainSection
