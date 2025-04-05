@@ -1,87 +1,87 @@
-            QWidget {
-                background-color: #121212;
-                font-family: 'Segoe UI';
-                font-size: 30px;
-                margin: 0px;
-                padding: 0px;
-            }
-            
-            QLabel {
-                font-family: 'calibri';
-                font-size: 55px;
-                font-weight: bold;
-                text-align: center;
-                color: #E0E0E0;
-            }
-            
-            QLineEdit {
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                background-color: #fff;
-            }
-            
-            QPushButton {
-                background-color: #0078d7;
-                color: white;
-                padding: 10px;
-                border: none;
-                border-radius: 5px;
-            }
-            
-            QPushButton:hover {
-                background-color: #005a9e;
-            }
-            
-            QProgressBar {
-                border: 2px solid #bbb;
-                border-radius: 10px;
-                background-color: #f0f0f0;
-                height: 30px;
-                text-align: center;
-                font: bold 14px;
-            }
-            
-            QProgressBar::chunk {
-                background: qlineargradient(
-                    spread:pad,
-                    x1:0, y1:0, x2:1, y2:0,
-                    stop:0 #76c7c0,
-                    stop:1 #67a6f7
-                );
-                border-radius: 10px;
-            }
-            
-            #titleLabel {
-                font-size: 60px;
-                font-weight: bold;
-                color: #ff0050;
-                padding:10px 50px 0;             
-            }
-            
-            #subtitleLabel {
-                font-size: 30px;
-                font-weight: normal;
-                color: #00f2ea;
-                padding: 0;
-                border-bottom: 2px solid #aaa;
-            }
-            
-            /* Horizontal line, like <hr> */
-            #footerLine {
-                color: #ffffff;
-                margin-top: 10px;
-                margin-bottom: 5px;
-                min-height: 1px;
-                max-height: 1px;
-            }
-            
-            /* Copyright and welcome messages */
-            #copyrightLabel, #welcomeLabel {
-                margin: 0;
-                padding: 0;
-                font-size: 30px;
-                font-weight: normal;
-                text-align: center;
-                line-height: 0.2
-            }
+QWidget {
+    background-color: #121212;
+    font-family: 'Segoe UI';
+    font-size: 30px;
+    margin: 0px;
+    padding: 0px;
+}
+
+QLabel {
+    font-family: 'calibri';
+    font-size: 55px;
+    font-weight: bold;
+    text-align: center;
+    color: #E0E0E0;
+}
+
+QLineEdit {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+QPushButton {
+    background-color: #0078d7;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: #005a9e;
+}
+
+QProgressBar {
+    border: 2px solid #bbb;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    height: 30px;
+    text-align: center;
+    font: bold 14px;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(
+        spread:pad,
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #76c7c0,
+        stop:1 #67a6f7
+    );
+    border-radius: 10px;
+}
+
+#titleLabel {
+    font-size: 60px;
+    font-weight: bold;
+    color: #ff0050;
+    padding:10px 50px 0;             
+}
+
+#subtitleLabel {
+    font-size: 30px;
+    font-weight: normal;
+    color: #00f2ea;
+    padding: 0;
+    border-bottom: 2px solid #aaa;
+}
+
+/* Horizontal line, like <hr> */
+#footerLine {
+    color: #ffffff;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    min-height: 1px;
+    max-height: 1px;
+}
+
+/* Copyright and welcome messages */
+#copyrightLabel, #welcomeLabel {
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
+    font-weight: normal;
+    text-align: center;
+    line-height: 0.2
+}
