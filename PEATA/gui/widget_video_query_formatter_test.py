@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QComboBox, QDateEdit, QCheckBox, QSpinBox, QTextEdit
 )
 from PyQt5.QtCore import QDate, Qt
-from PyQt5.QtGui import QIcon
+
 
 # # Path for testing (Not working yet!)
 # import sys
@@ -89,6 +89,7 @@ class VideoQueryFormatter(QWidget):
         
         return layout, stem_checkbox    
 
+# This method is a small helper, not part of the public interface. It's only used inside this class.
     def _labeled_row(self, label_text, widget):
         row = QHBoxLayout()
         row.addWidget(QLabel(label_text))
@@ -117,20 +118,20 @@ class VideoQueryFormatter(QWidget):
         if self.music_checkbox.isChecked():
             conditions.append(("music_id", "", "NE"))  # example logic
 
-        # Simulate queryFormatter logic
-        query_formatter = QueryFormatter()
-        if logic == "AND":
-            clause = query_formatter.query_AND_clause(conditions)
-        elif logic == "OR":
-            clause = query_formatter.query_OR_clause(conditions)
-        else:
-            clause = query_formatter.query_NOT_clause(conditions)
+        # # Simulate queryFormatter logic
+        # query_formatter = QueryFormatter()
+        # if logic == "AND":
+        #     clause = query_formatter.query_AND_clause(conditions)
+        # elif logic == "OR":
+        #     clause = query_formatter.query_OR_clause(conditions)
+        # else:
+        #     clause = query_formatter.query_NOT_clause(conditions)
 
-        query_body = query_formatter.query_builder(start, end, clause)
+        # query_body = query_formatter.query_builder(start, end, clause)
 
-        # Show the query preview
-        import json
-        self.query_preview.setPlainText(json.dumps(query_body, indent=2))
+        # # Show the query preview
+        # import json
+        # self.query_preview.setPlainText(json.dumps(query_body, indent=2))
 
 # For testing
 if __name__ == "__main__":
