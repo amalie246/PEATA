@@ -1,14 +1,14 @@
 QWidget {
     background-color: #121212;
     font-family: 'Segoe UI';
-    font-size: 30px;
+    font-size: 15px;
     margin: 0px;
     padding: 0px;
 }
 
 QLabel {
     font-family: 'calibri';
-    font-size: 55px;
+    font-size: 25px;
     font-weight: bold;
     text-align: center;
     color: #E0E0E0;

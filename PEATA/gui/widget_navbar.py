@@ -11,7 +11,7 @@ class WidgetNavbar(QWidget):
 
         # Burger button (top-left)
         self.burger_button = QPushButton("☰", self)
-        self.burger_button.setGeometry(20, 20, 100, 100)
+        self.burger_button.setGeometry(20, 20, 50, 50)
         self.burger_button.clicked.connect(self.show_menu)
 
         # Side menu panel
@@ -21,7 +21,7 @@ class WidgetNavbar(QWidget):
 
         # Close button inside menu
         self.close_button = QPushButton("←", self.menu)
-        self.close_button.setGeometry(20, 20, 100, 100)
+        self.close_button.setGeometry(20, 20, 50, 50)
         # NB: Let this QSS style be, the global values don't work here
         self.close_button.setStyleSheet("""
             QPushButton {
