@@ -1,8 +1,10 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
-# from PyQt5.QtCore import Qt
-from header import Header
+
+from PyQt5.QtCore import Qt
+from widget_navbar import WidgetNavbar
 from main_section import MainSection
+from header import Header
 from footer import Footer
 
 # Main_window.py divided into header.py, main_window.py and footer.py. Might move all balck into main_window.py for simpler code & structure.
@@ -22,6 +24,7 @@ class MainWindow(QMainWindow):
         self.header = Header()
         self.main_section = MainSection()
         self.footer = Footer()
+        
        
         layout.addWidget(self.header)
         layout.addWidget(self.main_section)
@@ -31,8 +34,19 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
         
+        # Navigation bar as overlay
+        self.navbar = WidgetNavbar(self)
+        self.navbar.setGeometry(0, 0, self.width(), self.height())
+        self.navbar.show()
+        self.navbar.raise_()
+
         self.load_stylesheet()
         
+    def resizeEvent(self, event):
+        if self.navbar:
+            self.navbar.setGeometry(0, 0, self.width(), self.height())
+        return super().resizeEvent(event)
+
     def load_stylesheet(self):
         try:
             with open("style.qss", "r") as file:

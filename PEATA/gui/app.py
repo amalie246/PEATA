@@ -11,7 +11,7 @@ def load_stylesheet(path):
       
 def main():
     app = QApplication(sys.argv)
-    
+     
     stylesheet = load_stylesheet("style.qss")
     app.setStyleSheet(stylesheet)
     
