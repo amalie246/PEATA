@@ -2,10 +2,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import threading
 from tkinter import messagebox
-from enum import Enum
 from api import TikTokApi
 from ui_helper import UiHelper
-from PIL import Image, ImageTk
 from queryFormatter import QueryFormatter
 from endpoint_type import Endpoints
 
@@ -94,31 +92,41 @@ class Gui:
             enddate = tk.Entry(left_btm_frame, textvariable=enddate_var)
             enddate.pack(side="top", pady=5)
 
-            
+            rows = []
+            containers = []
+
             def add_dropdown_row(default_field=None, default_value=""):
                 def remove_row():
-                    destroy_children_widgets(container)
-                    rows.remove((bool_option_var, video_fields_option_var, value_var))
+                    # Remove this row's data and container
+                    idx = containers.index(container)
+                    containers.pop(idx)
+                    rows.pop(idx)
+                    container.destroy()
                     
+        # Re-pack all remaining containers
+                for cont in containers:
+                    cont.pack_forget()
+                    cont.pack(side="top", pady=5)
+
                 container = tk.Frame(left_btm_frame)
                 container.pack(side="top", pady=5)
+        
                 bool_option_var = tk.StringVar(value=bool_op[0])
                 video_fields_option_var = tk.StringVar(value=default_field if default_field else video_fields[0])  
                 value_var = tk.StringVar(value=default_value)
             
-                
                 rows.append((bool_option_var, video_fields_option_var, value_var))
-                
+                containers.append(container)
+        
                 bool_var = tk.OptionMenu(container, bool_option_var, *bool_op)
                 bool_var.pack(side="left")
 
                 fields_var = tk.OptionMenu(container, video_fields_option_var, *video_fields)
                 fields_var.pack(side="left")
-
+        
                 value_entry = tk.Entry(container, textvariable=value_var)
                 value_entry.pack(side="left")
-                
-                #TODO not working as expected
+        
                 remove_btn = tk.Button(container, text="-", command=remove_row)
                 remove_btn.pack(side="left")
             
@@ -229,7 +237,7 @@ class Gui:
         progress_bar.grid(row=0, column=0, padx=10, pady=10)
         
         #Data sneak peak
-        output = tk.Text(right_btm_frame, height=45, width=120, wrap=tk.WORD, bg="black", font=("Arial", 10))
+        output = tk.Text(right_btm_frame, height=45, width=120, wrap=tk.WORD, fg="white", bg="black", font=("Arial", 10))
         output.grid(row=9, column=10, columnspan=3, pady=10)
         output.config(state=tk.DISABLED)#Editing is disabled
 
