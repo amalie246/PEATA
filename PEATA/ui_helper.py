@@ -1,12 +1,18 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+import json
 from PIL import Image, ImageTk
 from api import TikTokApi
 from endpoint_type import Endpoints
+from FileProcessor import FileProcessor
+from datetime import datetime
 
 class UiHelper:
     def __init__(self):
         self.tiktok_api = TikTokApi()
+        self.file_processor = FileProcessor()
+        self.latest_data = None
+        
     
     def create_button_with_image(self, text, command, frame):
         btn_image = Image.open("images/GenBtn.png")
@@ -76,15 +82,18 @@ class UiHelper:
                     print(query_body)
                     videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
                     print(videos)
+                    self.latest_data = videos
 
 
                 output.after(0, self.update_ui, videos, output)
             elif endpoint == Endpoints.COMMENTS.name:
                 comments = self.tiktok_api.get_video_comments(data)
+                self.latest_data = comments
                 output.after(0, self.update_ui, comments, output)
                 
             elif endpoint == Endpoints.USER_INFO.name:
                 user_info = self.tiktok_api.get_public_user_info(data)
+                self.latest_data = user_info
                 output.after(0, self.update_ui, user_info, output)
                 
             else:
@@ -96,3 +105,10 @@ class UiHelper:
 
         finally:
             progress_bar.stop()
+        
+    
+    def download(self, endpoint_type_name):
+        now = datetime.now()
+        timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"{endpoint_type_name}{timestamp}.csv"
+        self.file_processor.export_data(filename, self.latest_data)

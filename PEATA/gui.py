@@ -15,8 +15,8 @@ class Gui:
         self.access_token = access_token
         self.tiktok_api = TikTokApi()
         #self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
-        self.query_formatter = QueryFormatter()
         self.ui = UiHelper()
+        self.track_type = None
     
 
         
@@ -72,6 +72,7 @@ class Gui:
             if hasattr(video_queries, "label"):
                 return
             
+            self.track_type = Endpoints.VIDEOS.name
             destroy_children_widgets(left_btm_frame)
             rows = []
             label = tk.Label(left_btm_frame, text="Enter parameters for video queries", font=("Arial", 10, "bold"))
@@ -163,6 +164,7 @@ class Gui:
             if hasattr(comment_queries, "label"):
                 return
             
+            self.track_type = Endpoints.COMMENTS.name
             destroy_children_widgets(left_btm_frame)
             
             label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments", font=("Arial", 10, "bold"))
@@ -188,6 +190,7 @@ class Gui:
             if hasattr(user_queries, "label"):
                 return
             
+            self.track_type = Endpoints.USER_INFO.name
             destroy_children_widgets(left_btm_frame)
             
             label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
@@ -209,7 +212,9 @@ class Gui:
             submit_btn.pack(side="top", pady=5)
         
         def download():
-            download = []
+            self.ui.download(self.track_type)            
+            
+        
         #CONTENT in frames
         title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#FFFFFF")
         title.pack(fill="both")
@@ -237,7 +242,7 @@ class Gui:
         progress_bar.grid(row=0, column=0, padx=10, pady=10)
         
         #Data sneak peak
-        output = tk.Text(right_btm_frame, height=45, width=120, wrap=tk.WORD, fg="white", bg="black", font=("Arial", 10))
+        output = tk.Text(right_btm_frame, height=25, width=90, wrap=tk.WORD, fg="white", bg="black", font=("Arial", 10))
         output.grid(row=9, column=10, columnspan=3, pady=10)
         output.config(state=tk.DISABLED)#Editing is disabled
 
