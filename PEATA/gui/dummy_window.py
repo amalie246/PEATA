@@ -1,7 +1,7 @@
 import sys
 import os
 
-from PyQt6.QtWidgets import (
+from PyQt5.QtWidgets import (
     QApplication,
     QWidget,
     QPushButton,
@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QFrame
 )
-from PyQt6.QtGui import QIcon, QFontDatabase, QFont
+from PyQt6.QtGui import QIcon
 
 # ───── Widgets ─────
 from navbar import Navbar
