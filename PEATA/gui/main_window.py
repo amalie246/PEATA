@@ -1,8 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
-
 from PyQt5.QtCore import Qt
-from widget_navbar import WidgetNavbar
+from PyQt5.QtGui import QIcon
+from navbar import Navbar
 from main_section import MainSection
 from header import Header
 from footer import Footer
@@ -13,6 +13,8 @@ from footer import Footer
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        # Icon for window
+        #self.setWindowIcon(QIcon("icon.jpg"))
         self.setWindowTitle("PEATA - Main Window")
         self.setGeometry(100, 100, 1200, 800)
         
@@ -35,16 +37,16 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         
         # Navigation bar as overlay
-        self.navbar = WidgetNavbar(self)
-        self.navbar.setGeometry(0, 0, self.width(), self.height())
+        self.navbar = Navbar(self)
         self.navbar.show()
-        self.navbar.raise_()
+        self.navbar.raise_()  # Only needed if overlapping other widgets
+
 
         self.load_stylesheet()
         
     def resizeEvent(self, event):
-        if self.navbar:
-            self.navbar.setGeometry(0, 0, self.width(), self.height())
+        self.navbar.setGeometry(0, 0, 200, self.height())
+        self.main_section.setGeometry(200, 0, self.width() - 200, self.height())
         return super().resizeEvent(event)
 
     def load_stylesheet(self):
