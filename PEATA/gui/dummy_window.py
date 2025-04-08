@@ -7,9 +7,13 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QLineEdit,
     QVBoxLayout,
-    QHBoxLayout
+    QHBoxLayout,
+    QFrame
 )
 from PyQt6.QtGui import QIcon
+
+# ───── Widgets ─────
+from navbar import Navbar
 
 class Window(QWidget):
     def __init__(self):
@@ -18,7 +22,7 @@ class Window(QWidget):
         # Set window icon and title
         icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
         self.setWindowIcon(QIcon(icon_path))
-        self.setWindowTitle("Dummy Window")
+        self.setWindowTitle("Project PEATA")
         self.setGeometry(100, 100, 700, 700)
 
         # ───── Main horizontal layout (left + right) ─────
@@ -28,11 +32,8 @@ class Window(QWidget):
         main_layout.setStretch(1,1)
 
         # ───── Left box (navbar) ─────
-        navbar = QVBoxLayout()
-        navbar.addWidget(QPushButton("USERS"))
-        navbar.addWidget(QPushButton("VIDEOS"))
-        navbar.addWidget(QPushButton("COMMENTS"))
-        main_layout.addLayout(navbar)
+        self.navbar = Navbar()
+        main_layout.addWidget(self.navbar)
 
         # ───── Right box (content) ─────
         content_window = QVBoxLayout()

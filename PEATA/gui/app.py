@@ -2,8 +2,6 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from login_window import LoginWindow
 
-
-
 # Exteral stylesheet (QSS-file)
 def load_stylesheet(path):
     with open(path, "r") as file:

@@ -1,37 +1,56 @@
-from PyQt5.QtWidgets import QWidget, QPushButton
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 
 class Navbar(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        # Fixed width for sidebar
-        self.menu_width = 200
+        layout = QVBoxLayout(self)
 
-        if parent:
-            self.setGeometry(0, 0, self.menu_width, parent.height())
+        # Style
+        button_height = 50
+        style = """
+        QPushButton {
+            background-color: #0078d7;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
 
-        # Set background color (or use style.qss later)
-        self.setStyleSheet("background-color: #333;")
+        QPushButton:hover {
+            background-color: #005a9e;
+            font-style: italic;
+        }
+        QPushButton:pressed {
+        background-color: #003f7d;
+        padding-left: 12px;  /* Simulate a press-in effect */
+        padding-top: 12px;
+        }
+        """
 
-        # Example button (←) inside navbar
-        self.close_button = QPushButton("←", self)
-        self.close_button.setGeometry(20, 20, 100, 100)
-        self.close_button.setStyleSheet("""
-            QPushButton {
-                background-color: #0078d7;
-                color: white;
-                padding: 10px;
-                border: none;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #005a9e;
-            }
-        """)
+        # Buttons
+        btn_users = QPushButton("USERS")
+        btn_users.setFixedHeight(button_height)
+        btn_users.setStyleSheet(style)
 
-    def resizeEvent(self, event):
-        """Keep the navbar height in sync with parent window."""
-        if self.parent():
-            self.setGeometry(0, 0, self.menu_width, self.parent().height())
-        return super().resizeEvent(event)
+        btn_videos = QPushButton("VIDEOS")
+        btn_videos.setFixedHeight(button_height)
+        btn_videos.setStyleSheet(style)
+
+        btn_comments = QPushButton("COMMENTS")
+        btn_comments.setFixedHeight(button_height)
+        btn_comments.setStyleSheet(style)
+
+        btn_about = QPushButton("ABOUT US")
+        btn_about.setFixedHeight(button_height)
+        btn_about.setStyleSheet(style)
+
+        # Add to layout
+        layout.addWidget(btn_users)
+        layout.addWidget(btn_videos)
+        layout.addWidget(btn_comments)
+        layout.addWidget(btn_about)
+
+        self.setLayout(layout)
+        self.setFixedWidth(150)

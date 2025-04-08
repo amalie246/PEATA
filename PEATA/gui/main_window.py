@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from navbar import Navbar
 from main_section import MainSection
 from header import Header
 from footer import Footer
@@ -15,7 +14,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         # Icon for window
         #self.setWindowIcon(QIcon("icon.jpg"))
-        self.setWindowTitle("PEATA - Main Window")
+        self.setWindowTitle("Project PEATA")
         self.setGeometry(100, 100, 1200, 800)
         
         # Create central widget and layout (Important!)
