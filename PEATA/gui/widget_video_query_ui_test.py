@@ -3,16 +3,18 @@ from PyQt5.QtWidgets import (
     QPushButton, QComboBox, QDateEdit, QCheckBox, QSpinBox, QTextEdit
 )
 from PyQt5.QtCore import QDate, Qt
+#from queryFormatter import QueryFormatter
 
+# This handels only the visual interface and form inputs for building a video query, missing connection to backend logic (queryFormatter, Api, etc)
 
-# # Path for testing (Not working yet!)
-# import sys
-# import os
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-# from queryFormatter import QueryFormatter
+#TODO
+# 1. Accept user input from GUI (condition, logic, data range)
+# 2. Format query
+# 3. Send query to backend
+# 4. Return data (as pandas DataFrame or list of dicts)
+# 5. Expose status to GUI (for progress bar)
 
-
-class VideoQueryFormatter(QWidget):
+class VideoQueryUI(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -139,7 +141,7 @@ if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication
 
     app = QApplication(sys.argv)
-    window = VideoQueryFormatter()
+    window = VideoQueryUI()
     window.setWindowTitle("Video Query Builder")
     window.show()
     sys.exit(app.exec())
