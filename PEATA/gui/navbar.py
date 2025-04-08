@@ -1,18 +1,45 @@
 import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QToolButton
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QToolButton, QSizePolicy, QSpacerItem
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize, Qt
 
+# ───── HoverIconButton class ─────
+class HoverIconButton(QToolButton):
+    def __init__(self, label, icon_default_path, icon_hover_path, icon_size, style, height):
+        super().__init__()
+        self.icon_default = QIcon(icon_default_path)
+        self.icon_hover = QIcon(icon_hover_path)
+
+        self.setText(label)
+        self.setIcon(self.icon_default)
+        self.setIconSize(icon_size)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        self.setMinimumHeight(height)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.setStyleSheet(style)
+
+    def enterEvent(self, event):
+        self.setIcon(self.icon_hover)
+        super().enterEvent(event)
+
+    def leaveEvent(self, event):
+        self.setIcon(self.icon_default)
+        super().leaveEvent(event)
+
+# ───── Navbar Widget ─────
 class Navbar(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
         layout = QVBoxLayout(self)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
+        layout.setSpacing(15)
 
         # ───── Style and Paths ─────
-        button_height = 70
-        icon_size = QSize(32, 32)
-        icon_path = lambda name: os.path.join(os.path.dirname(__file__), "assets", f"{name}.svg")
+        button_height = 80
+        icon_size = QSize(64, 64)
+        base_path = os.path.join(os.path.dirname(__file__), "assets")
+        icon_path = lambda name, theme: os.path.join(base_path, f"{name}_{theme}.svg")
 
         style = """
         QToolButton {
@@ -22,33 +49,36 @@ class Navbar(QWidget):
             border: none;
             border-radius: 5px;
             font-weight: bold;
+            text-align: center;
         }
-
         QToolButton:hover {
             background-color: #005a9e;
             font-style: italic;
         }
-
         QToolButton:pressed {
             background-color: #003f7d;
         }
         """
 
-        def create_button(label, icon_file):
-            btn = QToolButton()
-            btn.setText(label)
-            btn.setIcon(QIcon(icon_path(icon_file)))
-            btn.setIconSize(icon_size)
-            btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-            btn.setFixedHeight(button_height)
-            btn.setStyleSheet(style)
-            return btn
+        def create_hover_button(label, icon_name):
+            return HoverIconButton(
+                label=label,
+                icon_default_path=icon_path(icon_name, "dark"),
+                icon_hover_path=icon_path(icon_name, "light"),
+                icon_size=icon_size,
+                style=style,
+                height=button_height
+            )
 
         # ───── Buttons ─────
-        layout.addWidget(create_button("USERS", "icon_user"))
-        layout.addWidget(create_button("VIDEOS", "icon_video"))
-        layout.addWidget(create_button("COMMENTS", "icon_comments"))
-        layout.addWidget(create_button("ABOUT US", "icon_info"))
+        layout.addWidget(create_hover_button("USER QUERY", "icon_user"))
+        layout.addWidget(create_hover_button("VIDEO QUERY", "icon_video"))
+        layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments"))
+
+        # Extra space before ABOUT US
+        layout.addSpacerItem(QSpacerItem(0, 80, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
+
+        layout.addWidget(create_hover_button("ABOUT US", "icon_info"))
 
         self.setLayout(layout)
         self.setFixedWidth(150)
