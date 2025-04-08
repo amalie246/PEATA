@@ -1,7 +1,7 @@
 import sys
 import os
 
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
     QPushButton,
