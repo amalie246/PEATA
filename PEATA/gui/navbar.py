@@ -1,4 +1,7 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton
+import os
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QToolButton
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import QSize, Qt
 
 class Navbar(QWidget):
     def __init__(self, parent=None):
@@ -6,10 +9,13 @@ class Navbar(QWidget):
 
         layout = QVBoxLayout(self)
 
-        # Style
-        button_height = 50
+        # ───── Style and Paths ─────
+        button_height = 70
+        icon_size = QSize(32, 32)
+        icon_path = lambda name: os.path.join(os.path.dirname(__file__), "assets", f"{name}.svg")
+
         style = """
-        QPushButton {
+        QToolButton {
             background-color: #0078d7;
             color: white;
             padding: 10px;
@@ -18,39 +24,31 @@ class Navbar(QWidget):
             font-weight: bold;
         }
 
-        QPushButton:hover {
+        QToolButton:hover {
             background-color: #005a9e;
             font-style: italic;
         }
-        QPushButton:pressed {
-        background-color: #003f7d;
-        padding-left: 12px;  /* Simulate a press-in effect */
-        padding-top: 12px;
+
+        QToolButton:pressed {
+            background-color: #003f7d;
         }
         """
 
-        # Buttons
-        btn_users = QPushButton("USERS")
-        btn_users.setFixedHeight(button_height)
-        btn_users.setStyleSheet(style)
+        def create_button(label, icon_file):
+            btn = QToolButton()
+            btn.setText(label)
+            btn.setIcon(QIcon(icon_path(icon_file)))
+            btn.setIconSize(icon_size)
+            btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+            btn.setFixedHeight(button_height)
+            btn.setStyleSheet(style)
+            return btn
 
-        btn_videos = QPushButton("VIDEOS")
-        btn_videos.setFixedHeight(button_height)
-        btn_videos.setStyleSheet(style)
-
-        btn_comments = QPushButton("COMMENTS")
-        btn_comments.setFixedHeight(button_height)
-        btn_comments.setStyleSheet(style)
-
-        btn_about = QPushButton("ABOUT US")
-        btn_about.setFixedHeight(button_height)
-        btn_about.setStyleSheet(style)
-
-        # Add to layout
-        layout.addWidget(btn_users)
-        layout.addWidget(btn_videos)
-        layout.addWidget(btn_comments)
-        layout.addWidget(btn_about)
+        # ───── Buttons ─────
+        layout.addWidget(create_button("USERS", "icon_user"))
+        layout.addWidget(create_button("VIDEOS", "icon_video"))
+        layout.addWidget(create_button("COMMENTS", "icon_comments"))
+        layout.addWidget(create_button("ABOUT US", "icon_info"))
 
         self.setLayout(layout)
         self.setFixedWidth(150)
