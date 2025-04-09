@@ -1,7 +1,6 @@
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import (
-    QWidget, QLabel, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton, QTextEdit,
-    QDateEdit, QComboBox, QScrollArea, QGroupBox, QFrame, QSpinBox, QLineEdit, QListWidget, QListWidgetItem
+    QWidget, QLabel, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton, QTextEdit, QDateEdit, QComboBox, QScrollArea, QGroupBox, QFrame, QSpinBox, QLineEdit, QListWidget, QListWidgetItem, QTabWidget
 )
 from PyQt5.QtCore import QDate, Qt
 from region_codes import REGION_CODES
@@ -32,6 +31,7 @@ def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str,
 class VideoQueryUI(QWidget):
     def __init__(self):
         super().__init__()
+        # self.setWindowTitle("Video Query Builder")
 
         self.logic_ops = {
             "Equals": "EQ",
