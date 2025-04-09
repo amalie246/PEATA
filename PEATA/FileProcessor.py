@@ -122,6 +122,8 @@ class FileProcessor:
             raise ValueError("Needs a filename")
             return
         
+        if isinstance(data, dict):
+            data = [data]
         #removes .csv or .json if that is in the filename
         filename = filename.rsplit(".", 1)[0] 
         #save data as csv
@@ -132,7 +134,7 @@ class FileProcessor:
                 writer.writeheader()
                 writer.writerows(data)
 
-            print(f"JSON-data lagret i CSV-fil: {filename}")
+            print(f"JSON-data saved in CSV-file: {filename}")
             
             excel_filepath = Path(EXPORTS_FOLDER) / f"{filename}.xlsx"
             df = pd.read_csv(csv_filepath)
