@@ -79,12 +79,9 @@ class UiHelper:
                         args.append(query_formatted_not_clauses)
                         
                     query_body = self.query_formatter.query_builder(start_date, end_date, query_formatted_and_clauses)
-                    print(query_body)
                     videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
-                    print(videos)
-                    self.latest_data = videos
 
-
+                self.latest_data = videos
                 output.after(0, self.update_ui, videos, output)
             elif endpoint == Endpoints.COMMENTS.name:
                 comments = self.tiktok_api.get_video_comments(data)
@@ -94,6 +91,7 @@ class UiHelper:
             elif endpoint == Endpoints.USER_INFO.name:
                 user_info = self.tiktok_api.get_public_user_info(data)
                 self.latest_data = user_info
+                print(f"Latest data{self.latest_data}\n")
                 output.after(0, self.update_ui, user_info, output)
                 
             else:

@@ -144,13 +144,13 @@ class FileProcessor:
         
         
             
-if __name__ == "__main__":
-    file_processor = FileProcessor()
-    data = file_processor.open_file()
+#if __name__ == "__main__":
+    #file_processor = FileProcessor()
+    #data = file_processor.open_file()
     
-    if data is not None:
-        file_processor.export_as_excel()
-        file_processor.close_file()
+    #if data is not None:
+     #   file_processor.export_as_excel()
+      #  file_processor.close_file()
             
             
             

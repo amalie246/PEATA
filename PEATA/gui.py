@@ -7,6 +7,11 @@ from ui_helper import UiHelper
 from queryFormatter import QueryFormatter
 from endpoint_type import Endpoints
 
+#TODO  below
+# 1 - Check that ALL FUNCTIONALITY WORKS
+#       - AND/OR/NOT
+#       - Download button
+# 2 - Stabilize threads
 class Gui:
     def __init__(self, cs, ci, ck, access_token):
         self.client_secret = cs
@@ -104,7 +109,6 @@ class Gui:
                     rows.pop(idx)
                     container.destroy()
                     
-        # Re-pack all remaining containers
                 for cont in containers:
                     cont.pack_forget()
                     cont.pack(side="top", pady=5)
@@ -140,7 +144,6 @@ class Gui:
                     t = (bool_var.get(), field_var.get(), value_var.get())
                     submitted_data.append(t)
                 
-                #TODO fix me ( the progress bar )
                 progress_bar.start(10)
                 thread = threading.Thread(target=self.ui.api_call, args=(Endpoints.VIDEOS.name, submitted_data, start_date, end_date, output, progress_bar), daemon=True)
                 thread.start()
