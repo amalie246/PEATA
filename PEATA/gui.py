@@ -12,6 +12,7 @@ from endpoint_type import Endpoints
 #       - AND/OR/NOT
 #       - Download button
 # 2 - Stabilize threads
+
 class Gui:
     def __init__(self, cs, ci, ck, access_token):
         self.client_secret = cs

@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 from api import TikTokApi
 from endpoint_type import Endpoints
 from FileProcessor import FileProcessor
+from queryFormatter import QueryFormatter
 from datetime import datetime
 
 class UiHelper:
@@ -12,6 +13,7 @@ class UiHelper:
         self.tiktok_api = TikTokApi()
         self.file_processor = FileProcessor()
         self.latest_data = None
+        self.query_formatter = QueryFormatter()
         
     
     def create_button_with_image(self, text, command, frame):
@@ -53,21 +55,24 @@ class UiHelper:
             if endpoint == Endpoints.VIDEOS.name:
                 videos = []
                 submitted_data = data
-                
-                t1 = submitted_data[0]
-                t2 = submitted_data[1]
-                
+            
                 if len(submitted_data) == 2:
-                        if "AND" in t1 and "username" in t1:
-                            if "AND" in t2 and "keyword" in t2:
-                                username = t1[2]
-                                keyword = t2[2]
-                                videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
+                    t1 = submitted_data[0]
+                    t2 = submitted_data[1]
+                    
+                    if "AND" in t1 and "username" in t1:
+                        if "AND" in t2 and "keyword" in t2:
+                            username = t1[2]
+                            keyword = t2[2]
+                            videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
                                 
                 else:
                     and_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "AND"]
+                    print("and created")
                     or_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "OR"]
+                    print("or created")
                     not_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "NOT"]
+                    print("not created")
                         
                     args = []
                     if len(and_clauses) > 0:
@@ -79,8 +84,10 @@ class UiHelper:
                     if len(not_clauses) > 0:
                         query_formatted_not_clauses = self.query_formatter.query_NOT_clause(not_clauses)
                         args.append(query_formatted_not_clauses)
-                        
-                    query_body = self.query_formatter.query_builder(start_date, end_date, query_formatted_and_clauses)
+                      
+                    print("len: ", len(args))
+                    query_body = self.query_formatter.query_builder(start_date, end_date, args)
+                    print("made query body")
                     videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
 
                 self.latest_data = videos

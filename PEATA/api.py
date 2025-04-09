@@ -145,6 +145,7 @@ class TikTokApi:
                 "Authorization" : f"Bearer {self.access_token}"
         }
         
+        print("body: ", query_body)
         does_have_more = True
         all_videos = []
         
@@ -153,6 +154,7 @@ class TikTokApi:
             
             if response.status_code == 200:
                 data = response.json().get("data", [])
+                print("resp: ", data)
                 videos = data.get("videos", [])
                 all_videos.extend(videos)
                 
@@ -167,7 +169,8 @@ class TikTokApi:
                 logging.error("something went wrong")
                 error = response.json()
                 return error
-            
+        
+        print("videos: ", all_videos)
         return all_videos
         
 

@@ -3,8 +3,8 @@ class QueryFormatter:
     Takes in clauses from query_AND/OR/NOT_clause
     And builds a full query body, ready to use in tiktok_api class
     """
-    def query_builder(self, startdate, enddate, *args):
-        clause_arr = list(args)
+    def query_builder(self, startdate, enddate, args):
+        clause_arr = args
 
         query_structure = {}
         for clause in clause_arr:
