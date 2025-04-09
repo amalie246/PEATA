@@ -1,7 +1,7 @@
 import os
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QToolButton, QSizePolicy, QSpacerItem
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
 
 # ───── HoverIconButton class ─────
 class HoverIconButton(QToolButton):
@@ -28,6 +28,8 @@ class HoverIconButton(QToolButton):
 
 # ───── Navbar Widget ─────
 class Navbar(QWidget):
+    about_clicked = pyqtSignal()  # ✅ Signal
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -60,8 +62,8 @@ class Navbar(QWidget):
         }
         """
 
-        def create_hover_button(label, icon_name):
-            return HoverIconButton(
+        def create_hover_button(label, icon_name, on_click=None):
+            btn = HoverIconButton(
                 label=label,
                 icon_default_path=icon_path(icon_name, "dark"),
                 icon_hover_path=icon_path(icon_name, "light"),
@@ -69,6 +71,9 @@ class Navbar(QWidget):
                 style=style,
                 height=button_height
             )
+            if on_click:
+                btn.clicked.connect(on_click)
+            return btn
 
         # ───── Buttons ─────
         layout.addWidget(create_hover_button("USER QUERY", "icon_user"))
@@ -78,7 +83,9 @@ class Navbar(QWidget):
         # Extra space before ABOUT US
         layout.addSpacerItem(QSpacerItem(0, 80, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
 
-        layout.addWidget(create_hover_button("ABOUT US", "icon_info"))
+        # ABOUT US button with signal
+        about_button = create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit)
+        layout.addWidget(about_button)
 
         self.setLayout(layout)
         self.setFixedWidth(150)
