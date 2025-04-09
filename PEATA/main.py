@@ -57,7 +57,7 @@ def main():
 
     #videos = tiktok_api.get_videos("izzyandmarysdad", "keyword", "20250310", "20250318")
     #Can check if a video query didnt go well by checking if not videos
-    #Nothing to download, tell user that they need different arguments
+        #Nothing to download, tell user that they need different arguments
     # if not videos:
         # print("Did not retrieve videos")
     #query_formatter = QueryFormatter()"""

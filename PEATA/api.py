@@ -101,15 +101,22 @@ class TikTokApi:
         
         while does_have_more:
             response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
-            print(response.json())
+
             if response.status_code == 200:
-                data = response.json().get("data", [])
+                response_json = response.json()
+                error = response_json.get("error", {})
+                if error.get("code") == "daily_quota_limit_exceeded":
+                    print("API quota exceeded. Stopping fetch.")
+                    break
+                
+                data = response_json().get("data", [])
                 videos = data.get("videos", [])
                 all_videos.extend(videos)
                 
+                
                 if not len(all_videos):
                     print("No videos to return")
-                    return None
+                    break
                 
                 check_pagination = data["has_more"]
                 
@@ -181,27 +188,38 @@ class TikTokApi:
         }
         all_comments = []
         
-        #TODO this is a max count for comments set at 400..
         does_have_more = True
         while does_have_more:
             response = requests.post(url, headers=headers, json=data)
-            
+
             if response.status_code == 200:
-                comments = response.json().get("data", [])
-                all_comments.extend(comments["data"]["comments"])
+                response_json = response.json()
+                error = response_json.get("error", {})
+                if error.get("code") == "daily_quota_limit_exceeded":
+                    print("API quota exceeded. Stopping fetch.")
+                    does_have_more = False
+                    break
                 
+                comments_data = response_json.get("data", {})
+
+                comments = comments_data.get("comments", [])
+                if len(comments) < 1:
+                    does_have_more = False
+                    break
+                    
+                all_comments.extend(comments)
+                
+
+                does_have_more = comments_data.get("has_more", False)
+        
                 if not len(all_comments):
-                    return None
-                
-                check_pagination = comments["data"]["has_more"]
-                
-                if check_pagination == False:
                     break
             else:
                 logging.error("Something went wrong")
-                error = response.json()
-                return error
-        return all_comments
+                print("Error response:", response.json())
+                break
+        return response.json()
+
 
 
     

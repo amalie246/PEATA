@@ -32,18 +32,20 @@ class UiHelper:
         label.config(state=tk.NORMAL)
         label.delete(1.0, tk.END)
         
+        if not len(data):
+            message = "No data was found with your parameters"
+            label.insert(tk.END, f"{message}")
+            
         if "error" in data:
             message = "Error occured during fetching:"
             label.insert(tk.END, f"{message}\n{data}")
             return
         
-        elif len(data) > 0:
+        else:
             label.insert(tk.END, f"{data}")
             return
         
-        else:
-            message = "No data was found with your parameters"
-            label.insert(tk.END, f"{message}")
+        
         label.config(state=tk.DISABLED)
         
     def api_call(self, endpoint, data, start_date, end_date, output, progress_bar):
@@ -83,6 +85,7 @@ class UiHelper:
 
                 self.latest_data = videos
                 output.after(0, self.update_ui, videos, output)
+                
             elif endpoint == Endpoints.COMMENTS.name:
                 comments = self.tiktok_api.get_video_comments(data)
                 self.latest_data = comments
@@ -91,14 +94,13 @@ class UiHelper:
             elif endpoint == Endpoints.USER_INFO.name:
                 user_info = self.tiktok_api.get_public_user_info(data)
                 self.latest_data = user_info
-                print(f"Latest data{self.latest_data}\n")
                 output.after(0, self.update_ui, user_info, output)
                 
             else:
                 raise ValueError("invalid endpoint type")
 
         except Exception as e:
-            print(f"Error fetching videos: {e}")
+            print(f"Error fetching data: {e}")
             output.after(0, self.update_ui, f"Error: {e}", output)
 
         finally:
