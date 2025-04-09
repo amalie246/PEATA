@@ -28,7 +28,8 @@ class HoverIconButton(QToolButton):
 
 # ───── Navbar Widget ─────
 class Navbar(QWidget):
-    about_clicked = pyqtSignal()  # ✅ Signal
+    about_clicked = pyqtSignal()
+    exit_clicked = pyqtSignal()  # ✅ Signal for Exit
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -55,7 +56,6 @@ class Navbar(QWidget):
         }
         QToolButton:hover {
             background-color: #005a9e;
-            font-style: italic;
         }
         QToolButton:pressed {
             background-color: #003f7d;
@@ -81,11 +81,15 @@ class Navbar(QWidget):
         layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments"))
 
         # Extra space before ABOUT US
-        layout.addSpacerItem(QSpacerItem(0, 80, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
+        layout.addSpacerItem(QSpacerItem(0, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
 
-        # ABOUT US button with signal
-        about_button = create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit)
-        layout.addWidget(about_button)
+        layout.addWidget(create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit))
+
+        # Extra space before EXIT
+        layout.addSpacerItem(QSpacerItem(0, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
+
+        # EXIT button
+        layout.addWidget(create_hover_button("EXIT", "icon_exit", self.exit_clicked.emit))
 
         self.setLayout(layout)
         self.setFixedWidth(150)

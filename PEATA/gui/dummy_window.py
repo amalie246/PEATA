@@ -33,7 +33,8 @@ class Window(QWidget):
 
         # ───── Left box (navbar) ─────
         self.navbar = Navbar()
-        self.navbar.about_clicked.connect(self.show_about_us)  # ✅ connect signal
+        self.navbar.about_clicked.connect(self.show_about_us)  #  connect PyQT signal
+        self.navbar.exit_clicked.connect(self.close)
         main_layout.addWidget(self.navbar)
 
         # ───── Right box (content) ─────

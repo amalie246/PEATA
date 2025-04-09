@@ -11,15 +11,15 @@ class AboutUs(QWidget):
         layout.setSpacing(20)
 
         # ───── Header ─────
-        header = QLabel("About This App")
+        header = QLabel("Project PEATA")
         header.setStyleSheet("font-size: 24px; font-weight: bold;")
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # ───── Thank You Message ─────
-        thank_you = QLabel("Thank you for using this application!")
-        thank_you.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # ───── About the app ─────
+        about_us = QLabel("Thank you for using this application!")
+        about_us.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # ───── Author ─────
+        # ───── Author and link ─────
         author = QLabel("Created by: Ibrahim")
         author.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -31,7 +31,7 @@ class AboutUs(QWidget):
 
         # ───── Add All to Layout ─────
         layout.addWidget(header)
-        layout.addWidget(thank_you)
+        layout.addWidget(about_us)
         layout.addWidget(author)
         layout.addWidget(github)
 
