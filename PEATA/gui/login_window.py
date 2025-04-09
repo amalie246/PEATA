@@ -1,4 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
+from PyQt5.QtWidgets import (
+    QWidget, QLabel, QLineEdit, QPushButton,
+    QFormLayout, QMessageBox, QHBoxLayout
+)
 from main_window import MainWindow
 
 class LoginWindow(QWidget):
@@ -8,38 +11,46 @@ class LoginWindow(QWidget):
         self.setWindowTitle("PEATA-login: Enter credentials")
         self.setFixedSize(800, 600)
 
+        # ───── Form Fields ─────
         self.client_id_input = QLineEdit()
         self.client_id_input.setPlaceholderText("Client ID = id")
 
         self.client_key_input = QLineEdit()
         self.client_key_input.setPlaceholderText("Client Key = key")
         self.client_key_input.setEchoMode(QLineEdit.Password)
-        
+
         self.client_secret_input = QLineEdit()
         self.client_secret_input.setPlaceholderText("Client Secret = secret")
         self.client_secret_input.setEchoMode(QLineEdit.Password)
 
+        # ───── Buttons ─────
         self.login_button = QPushButton("Login")
         self.login_button.clicked.connect(self.check_login)
 
         self.exit_button = QPushButton("Exit")
         self.exit_button.clicked.connect(self.close)
 
+        # ───── Form Layout ─────
+        form_layout = QFormLayout()
+        form_layout.addRow("Client ID", self.client_id_input)
+        form_layout.addRow("Client Key", self.client_key_input)
+        form_layout.addRow("Client Secret", self.client_secret_input)
 
-        layout = QVBoxLayout()
-        layout.addWidget(QLabel("Client ID"))
-        layout.addWidget(self.client_id_input)
-        layout.addWidget(QLabel("Client Key"))
-        layout.addWidget(self.client_key_input)
-        layout.addWidget(QLabel("Client Secret"))
-        layout.addWidget(self.client_secret_input)
-        layout.addWidget(self.login_button)
-        layout.addWidget(self.exit_button)
+        # ───── Button Row Layout ─────
+        button_row = QHBoxLayout()
+        button_row.addWidget(self.login_button)
+        button_row.addWidget(self.exit_button)
 
-        self.setLayout(layout)
- 
+        form_layout.addRow(button_row)
+
+        self.setLayout(form_layout)
+
     def check_login(self):
-        if self.client_id_input.text() == "id" and self.client_key_input.text() == "key" and            self.client_secret_input.text() == "secret":
+        if (
+            self.client_id_input.text() == "id"
+            and self.client_key_input.text() == "key"
+            and self.client_secret_input.text() == "secret"
+        ):
             self.go_to_main()
         else:
             QMessageBox.warning(self, "Login failed", "Incorrect username or password")
@@ -47,5 +58,4 @@ class LoginWindow(QWidget):
     def go_to_main(self):
         self.main_window = MainWindow()
         self.main_window.show()
-        self.close()  
-        
+        self.close()
