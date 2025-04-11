@@ -160,8 +160,7 @@ class Gui:
         
         
         bool_op = ["AND", "OR", "NOT"]
-        #TODO fix this so it is the complete list
-        video_fields = ["id", "video_description", "username", "keyword", "create_time", "region_code", "share_count", "view_count", "like_count", "comment_count", "music_id", "effects_ids", "playlist_id", "voice_to_text", "is_stem_verified", "video_duration", "hashtag_info_list", "video_mention_list", "video_label"]
+        video_fields = ["username", "keyword", "create_date", "region_code", "video_id", "hadhtag_name", "music_id", "effect_id", "video_length"]
 
             
         def comment_queries():
