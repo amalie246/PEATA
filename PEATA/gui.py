@@ -160,7 +160,7 @@ class Gui:
         
         
         bool_op = ["AND", "OR", "NOT"]
-        video_fields = ["username", "keyword", "create_date", "region_code", "video_id", "hadhtag_name", "music_id", "effect_id", "video_length"]
+        video_fields = ["username", "keyword", "create_date", "region_code", "video_id", "hashtag_name", "music_id", "effect_id", "video_length"]
 
             
         def comment_queries():

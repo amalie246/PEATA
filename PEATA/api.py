@@ -99,8 +99,13 @@ class TikTokApi:
         
         does_have_more = True
         all_videos = []
-        cursor_count = 0
+        cursor = 0
+        search_id = None
         while does_have_more:
+            query_body["cursor"] = cursor
+            if search_id:
+                query_body["search_id"] = search_id
+                
             response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
 
             if response.status_code == 200:
@@ -119,18 +124,22 @@ class TikTokApi:
                     print("No videos to return")
                     break
                 
+                search_id = data.get("search_id", search_id)                
                 check_pagination = data["has_more"]
                 if check_pagination == False:
-                    break
+                    return all_videos
+                
+                if "cursor" in data:
+                    cursor = data["cursor"]
                 else:
-                    cursor_count = len(all_videos)
-                    query_body["cursor"] = cursor_count
+                    does_have_more = False
                 
             else:
                 logging.error("Somethnig went wrong")
                 error = response.json()
                 return error
             
+        print(query_body)
         return all_videos
         
 
@@ -148,36 +157,42 @@ class TikTokApi:
                 "Authorization" : f"Bearer {self.access_token}"
         }
         
-        print("body: ", query_body)
         does_have_more = True
         all_videos = []
+        cursor = 0
+        search_id = None
         
-        cursor_count = 0
         while does_have_more:
+            query_body["cursor"] = cursor
+            
+            if search_id:
+                query_body["search_id"] = search_id
             response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
             
             if response.status_code == 200:
                 data = response.json().get("data", [])
-                print("resp: ", data)
                 videos = data.get("videos", [])
                 all_videos.extend(videos)
                 
                 if len(all_videos) == 0:
-                    return None
+                    return all_videos
                 
+                search_id = data.get("search_id", search_id)                
                 check_pagination = data["has_more"]
                 if check_pagination == False:
-                    break
+                    return all_videos
+                
+                if "cursor" in data:
+                    cursor = data["cursor"]
                 else:
-                    cursor_count = len(all_videos)
-                    query_body["cursor"] = cursor_count
+                    does_have_more = False
                 
             else:
                 logging.error("something went wrong")
                 error = response.json()
+                print(error)
                 return error
         
-        print("videos: ", all_videos)
         return all_videos
         
 
