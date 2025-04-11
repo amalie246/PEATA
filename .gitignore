@@ -170,3 +170,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 .env
+
+PEATA/data/csv
+PEATA/data/exports
+PEATA/data/json

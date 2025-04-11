@@ -65,7 +65,6 @@ class FileProcessor:
             return None
         
         latest_file = max(csv_files, key=os.path.getmtime) 
-        print(f"Latest CSV file detected: {latest_file}")
         return latest_file
     
     def open_file(self):

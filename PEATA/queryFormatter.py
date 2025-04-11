@@ -17,7 +17,8 @@ class QueryFormatter:
         query_body = {
             "query": query_structure,
             "start_date": f"{startdate}",
-            "end_date": f"{enddate}"
+            "end_date": f"{enddate}",
+            "cursor": 0
         }
         return query_body
     

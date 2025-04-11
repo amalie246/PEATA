@@ -88,7 +88,8 @@ class TikTokApi:
                         }]
                 },
                 "start_date" : startdate,
-                "end_date" : enddate
+                "end_date" : enddate,
+                "cursor": 0
         }
                             
         headers = {
@@ -98,7 +99,7 @@ class TikTokApi:
         
         does_have_more = True
         all_videos = []
-        
+        cursor_count = 0
         while does_have_more:
             response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
 
@@ -119,9 +120,11 @@ class TikTokApi:
                     break
                 
                 check_pagination = data["has_more"]
-                
                 if check_pagination == False:
                     break
+                else:
+                    cursor_count = len(all_videos)
+                    query_body["cursor"] = cursor_count
                 
             else:
                 logging.error("Somethnig went wrong")
@@ -149,6 +152,7 @@ class TikTokApi:
         does_have_more = True
         all_videos = []
         
+        cursor_count = 0
         while does_have_more:
             response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
             
@@ -164,6 +168,9 @@ class TikTokApi:
                 check_pagination = data["has_more"]
                 if check_pagination == False:
                     break
+                else:
+                    cursor_count = len(all_videos)
+                    query_body["cursor"] = cursor_count
                 
             else:
                 logging.error("something went wrong")
@@ -192,6 +199,7 @@ class TikTokApi:
         all_comments = []
         
         does_have_more = True
+        cursor_count = 0
         while does_have_more:
             response = requests.post(url, headers=headers, json=data)
 
@@ -206,6 +214,7 @@ class TikTokApi:
                 comments_data = response_json.get("data", {})
 
                 comments = comments_data.get("comments", [])
+                print(comments)
                 if len(comments) < 1:
                     does_have_more = False
                     break
@@ -214,6 +223,9 @@ class TikTokApi:
                 
 
                 does_have_more = comments_data.get("has_more", False)
+                cursor_count = len(all_comments)
+                if does_have_more:
+                    data["cursor"] = cursor_count
         
                 if not len(all_comments):
                     break
@@ -221,7 +233,8 @@ class TikTokApi:
                 logging.error("Something went wrong")
                 print("Error response:", response.json())
                 break
-        return response.json()
+            
+        return all_comments
 
 
 
