@@ -1,12 +1,24 @@
 from PyQt5.QtWidgets import (
     QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, QTableView,
-    QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, QFrame
+    QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, QFrame, QSpinBox, QComboBox
 )
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QIcon
 import os
 
 # For general structure styling. Created this for reusable components in UI
+
+def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str, checked=True):
+    layout = QHBoxLayout()
+    layout.setContentsMargins(0, 0, 0, 0)
+    checkbox = QCheckBox(f"{emoji} {label_text}")
+    checkbox.setChecked(checked)
+    checkbox.setToolTip(tooltip_text)
+    layout.addWidget(checkbox)
+    layout.addStretch()
+    container = QWidget()
+    container.setLayout(layout)
+    return container, checkbox
 
 def create_date_range_widget():
     start_label = QLabel("Start Date:")
@@ -101,3 +113,53 @@ def create_button(text: str, object_name: str = "", tooltip: str = "", icon_path
     if click_callback:
         button.clicked.connect(click_callback)
     return button
+
+def create_field_group_with_emojis(title: str, fields: dict, store_dict: dict):
+    group = QGroupBox(title)
+    vbox = QVBoxLayout()
+    for field, (emoji, tooltip) in fields.items():
+        checkbox = QCheckBox(f"{emoji} {field.replace('_', ' ').title()}")
+        checkbox.setToolTip(tooltip)
+        checkbox.setChecked(True)
+        store_dict[field] = checkbox
+        vbox.addWidget(checkbox)
+    group.setLayout(vbox)
+    return group
+
+def create_enum_checkbox_group(title: str, enum_values: list, default_checked=True):
+    group_box = QGroupBox(title)
+    layout = QVBoxLayout()
+    checkboxes = {}
+    for val in enum_values:
+        cb = QCheckBox(val)
+        cb.setChecked(default_checked)
+        layout.addWidget(cb)
+        checkboxes[val] = cb
+    group_box.setLayout(layout)
+    return group_box, checkboxes
+
+def create_numeric_filter_group(fields: list, operators: list, default_op="GT"):
+    numeric_inputs = {}
+    layout = QVBoxLayout()
+    
+    for field in fields:
+        hbox = QHBoxLayout()
+        label = QLabel(field.replace("_", " ").title())
+        spinbox = QSpinBox()
+        spinbox.setMaximum(1_000_000)
+        spinbox.setMinimum(0)
+        
+        op_selector = QComboBox()
+        op_selector.addItems(operators)
+        op_selector.setCurrentText(default_op)
+        
+        hbox.addWidget(label)
+        hbox.addWidget(spinbox)
+        hbox.addWidget(op_selector)
+        container = QWidget()
+        container.setLayout(hbox)
+        layout.addWidget(container)
+        numeric_inputs[field] = (spinbox, op_selector)
+    container_widget = QWidget()
+    container_widget.setLayout(layout)
+    return container_widget, numeric_inputs
