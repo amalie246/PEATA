@@ -14,7 +14,8 @@ from endpoint_type import Endpoints
 # 2 - Stabilize threads
 
 class Gui:
-    def __init__(self, cs, ci, ck, access_token):
+    def __init__(self, master, cs, ci, ck, access_token):
+        self.master = master
         self.client_secret = cs
         self.client_id = ci
         self.client_key = ck

@@ -52,7 +52,7 @@ class Login:
 
         if success:
             messagebox.showinfo("Login Successful welcome!", message)
-            self.master.destroy()
+            self.master.withdraw()
             self.open_main_window()
         else:
             messagebox.showerror("Login Failed", message)
@@ -101,17 +101,15 @@ class Login:
 
         
     def open_main_window(self):
-        main_window = Toplevel(self.master)
-        Label(main_window, text="Velkommen!").pack(pady=20)
         if self.access_token:
-            gui = Gui(self.client_secret, self.client_id, self.client_key, self.access_token)
-            gui.test_page()
+            gui = Gui(self.master, self.client_secret, self.client_id, self.client_key, self.access_token)
+            gui.main_frame()
         else:
             messagebox.showerror("Error", "No access token found. Please try again.")
         
         
 if __name__ == "__main__":
-    root = Tk()              
+    root = Tk()           
     app = Login(root)  
     root.attributes('-fullscreen', True)
     root.mainloop()
