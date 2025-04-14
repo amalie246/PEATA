@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import (
     QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, QTableView,
     QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, QFrame, QSpinBox, QComboBox
 )
-from PyQt5.QtCore import QDate
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QDate, QTimer
+from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
 import os
 
 # For general structure styling. Created this for reusable components in UI
@@ -69,13 +69,24 @@ def create_progress_bar():
     return bar
 
 # For Advanced filters (less used options)
-def create_collapsible_section(title: str, widget: QWidget):
+def create_collapsible_section(title: str, widget: QWidget, checked =True, on_toggle_callback=None):
     container = QGroupBox(title)
     container.setCheckable(True)
-    container.setChecked(False)
+    container.setChecked(checked)
+    
     layout = QVBoxLayout()
     layout.addWidget(widget)
     container.setLayout(layout)
+    
+    # Connect to Signal : If main advanced filter are unchecked, all children checkboxes are unchecked and update live query preview
+    def handle_groupbox_toggled(state):
+        for cb in widget.findChildren(QCheckBox):
+            cb.setChecked(state)
+        if on_toggle_callback:
+            on_toggle_callback()
+            
+    container.toggled.connect(handle_groupbox_toggled)        
+        
     return container
 
 # For various fields (text box, dropdown etc)
@@ -114,13 +125,13 @@ def create_button(text: str, object_name: str = "", tooltip: str = "", icon_path
         button.clicked.connect(click_callback)
     return button
 
-def create_field_group_with_emojis(title: str, fields: dict, store_dict: dict):
+def create_field_group_with_emojis(title: str, fields: dict, store_dict: dict, default_checked=True):
     group = QGroupBox(title)
     vbox = QVBoxLayout()
     for field, (emoji, tooltip) in fields.items():
         checkbox = QCheckBox(f"{emoji} {field.replace('_', ' ').title()}")
         checkbox.setToolTip(tooltip)
-        checkbox.setChecked(True)
+        checkbox.setChecked(default_checked)
         store_dict[field] = checkbox
         vbox.addWidget(checkbox)
     group.setLayout(vbox)
@@ -163,3 +174,44 @@ def create_numeric_filter_group(fields: list, operators: list, default_op="GT"):
     container_widget = QWidget()
     container_widget.setLayout(layout)
     return container_widget, numeric_inputs
+
+def focus_on_query_value(text_edit, value_str):
+    """
+    Scroll to new added value inside the Live Query View, add on hightlight effect with red color
+    - text_edit: QTextEdit instance
+    - value_str: new added value"
+    """
+    
+    if not value_str or not value_str.strip():
+        return # Ignore empty space or empty string
+    
+    text = text_edit.toPlainText()
+    target = f'"{value_str.strip()}"'
+    index = text.find(target)
+    
+    if index == -1:
+        return # No change if there is no relevant value
+
+    # Select exact range
+    cursor = text_edit.textCursor()
+    cursor.setPosition(index)
+    cursor.setPosition(index + len(target), QTextCursor.KeepAnchor)
+    
+    # Highlight format (Red)
+    highlight_format = QTextCharFormat()
+    highlight_format.setBackground(QColor("red"))
+    cursor.mergeCharFormat(highlight_format)
+    
+    # Move Scroll 
+    text_edit.setTextCursor(cursor)
+    text_edit.ensureCursorVisible()   
+
+    # Remove highlight effect after 1 sec
+    def clear_highlight():
+        cursor.setPosition(index)
+        cursor.setPosition(index + len(target), QTextCursor.KeepAnchor)
+        clear_format = QTextCharFormat()
+        clear_format.setBackground(QColor("transparent"))
+        cursor.mergeCharFormat(clear_format)
+
+    QTimer.singleShot(1000, clear_highlight)

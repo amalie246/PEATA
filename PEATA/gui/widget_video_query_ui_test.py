@@ -10,9 +10,21 @@ from common_ui_elements import (
     create_collapsible_section, create_labeled_input,
     create_checkbox_with_tooltip, create_button,
     create_field_group_with_emojis, create_enum_checkbox_group, 
-    create_numeric_filter_group, create_horizontal_line
+    create_numeric_filter_group, create_horizontal_line,
+    create_scrollable_area, focus_on_query_value
 )
 from region_codes import REGION_CODES
+import json
+
+#TODO
+# 1. Update Region Code in Filters (Individual selection?)
+# 2. Fix problem that auto added advanced fields in query builder
+# 3. Fix Tooltip for Music ID (do broad search include Music IDs)
+# 4. Work with Live Query Preview - update query preview()
+# 5. run_query() -> TiktokApi.get_video_by_dynamic_query_body() + progress_bar.py
+# 6. Show result using data_viewer.py
+# 5. Consider Pagination (Max 100 video)
+
 
 class VideoQueryUI(QWidget):
     def __init__(self):
@@ -37,8 +49,12 @@ class VideoQueryUI(QWidget):
         self.init_ui()
     
     def init_ui(self):           
-        main_layout = QVBoxLayout()
+        main_layout = QHBoxLayout()
+        
+        # Left panel : Tabs + Run/Clear buttons
+        left_panel = QVBoxLayout()
         self.tabs = QTabWidget()
+        left_panel.addWidget(self.tabs)
         
         self.field_tab = self.create_field_selection_tab()
         self.filter_tab = self.create_filter_tab()
@@ -46,22 +62,99 @@ class VideoQueryUI(QWidget):
         self.tabs.addTab(self.field_tab, "Fields")
         self.tabs.addTab(self.filter_tab, "Filters")
         
-        self.query_preview = QTextEdit()
-        self.query_preview.setReadOnly(True)
+        
         self.run_button = create_button("Run Query", click_callback = self.run_query)
         self.clear_button = create_button("Clear Query", click_callback = self.clear_query)
         
-        main_layout.addWidget(self.tabs)
-        
-        # Add buttons
         btn_layout = QHBoxLayout()
         btn_layout.addWidget(self.run_button)
         btn_layout.addWidget(self.clear_button)
-        main_layout.addLayout(btn_layout)
+        left_panel.addLayout(btn_layout)
         
-        main_layout.addWidget(QLabel("Generated Query Preview"))
-        main_layout.addWidget(self.query_preview)
+        # Right panel: Scrollable Query Preview
+        right_panel = QVBoxLayout()        
+        right_panel.addWidget(QLabel("Live Query Preview"))
+        
+        self.query_preview = QTextEdit()
+        self.query_preview.setReadOnly(True)
+        self.query_preview.setMinimumHeight(200)
+        
+        
+        scroll_area = create_scrollable_area(self.query_preview)
+        right_panel.addWidget(scroll_area)
+        
+        # Wrap panels into main layout
+        main_layout.addLayout(left_panel, stretch=2)
+        main_layout.addLayout(right_panel, stretch=3) # Wider preview area
+        
         self.setLayout(main_layout)
+        
+        # Link to Live Query update (with highlight effect)
+        self.username_input.textChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.username_input.text().split(",")[-1].strip())          
+            ))
+        
+        self.keyword_input.textChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.keyword_input.text().split(",")[-1].strip())          
+            ))
+           
+        self.hashtag_input.textChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.hashtag_input.text().split(",")[-1].strip())          
+            ))
+        
+        self.music_input.textChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.music_input.text().split(",")[-1].strip()) 
+            ))
+        
+        self.effect_input.textChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.effect_input.text().split(",")[-1].strip())
+            ))
+        
+        self.start_date.dateChanged.connect(lambda: (           
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.start_date.text())
+            ))
+        
+        self.end_date.dateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.end_date.text())
+            ))
+        
+        self.length_checkboxes["SHORT"].stateChanged.connect(lambda: (
+        self.update_query_preview(),
+        focus_on_query_value(self.query_preview, "SHORT")
+    ))
+        self.length_checkboxes["MID"].stateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, "MID")
+        ))
+        self.length_checkboxes["LONG"].stateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, "LONG")
+        ))
+        self.length_checkboxes["EXTRA_LONG"].stateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, "EXTRA_LONG")
+        ))
+        
+        for cb in self.main_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+        for cb in self.advanced_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+        for cb in self.length_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+        
+        for spinbox, combo in self.numeric_inputs.values():
+            spinbox.valueChanged.connect(self.update_query_preview)
+            combo.currentIndexChanged.connect(self.update_query_preview)
+            
+        self.update_query_preview()    # Update defalt view of Live Query Preview
+     
 
     def create_field_selection_tab(self):
         tab = QWidget()
@@ -94,9 +187,11 @@ class VideoQueryUI(QWidget):
         self.main_checkboxes = {}
         self.advanced_checkboxes = {}
         
-        layout.addWidget(create_field_group_with_emojis("Main Fields", MAIN_FIELDS, self.main_checkboxes))
-        adv_group = create_field_group_with_emojis("", ADVANCED_FIELDS, self.advanced_checkboxes)
-        layout.addWidget(create_collapsible_section("Advanced Fields", adv_group))
+        layout.addWidget(create_field_group_with_emojis("Main Fields", MAIN_FIELDS, self.main_checkboxes, default_checked=True))
+        
+        adv_group = create_field_group_with_emojis("", ADVANCED_FIELDS, self.advanced_checkboxes, default_checked=True)
+        adv_section = create_collapsible_section("Advanced Fields", adv_group, checked=True, on_toggle_callback=self.update_query_preview)
+        layout.addWidget(adv_section)
    
         tab.setLayout(layout)
         return tab
@@ -149,49 +244,63 @@ class VideoQueryUI(QWidget):
         tab.setLayout(layout)
         return tab
 
-    def run_query(self):
-        import json
+    def build_query(self):
+        
+        # Selected Fields
         included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
                           [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
-
+    
+        # Filter conditions
         conditions = []
         add_condition = lambda f, vals: conditions.append({
-       "field_name": f, "operation": "IN", "field_values": vals
-   }) if vals else None
-        
-        # logic_op = self.logic_ops[self.logic_selector.currentText()]
-        # add_condition = lambda f, vals: conditions.append({
-        #     "field_name": f, "operation": "IN", "field_values": vals
-        # }) if vals else None
-        
-        # -------------Add by order------------------
+            "field_name": f,
+            "operation": "IN",
+            "field_values": vals
+        }) if vals else None
+    
         add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
         add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
         add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
+        add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
+        add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
+        add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
     
         for field, (spinbox, combo) in self.numeric_inputs.items():
             val = spinbox.value()
-            op = combo.currentText()
+            op_label = combo.currentText()
+            op_code = self.condition_ops.get(op_label, "GT")
             if val > 0:
                 conditions.append({
                     "field_name": field,
-                    "operation": op,
+                    "operation": op_code,
                     "field_values": [str(val)]
                 })
     
-        selected_lengths = [k for k, cb in self.length_checkboxes.items() if cb.isChecked()]
-        add_condition("video_length", selected_lengths)   
-        add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
-        add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
+        # Date Range
+        start_date = self.start_date.date().toString("yyyyMMdd")
+        end_date = self.end_date.date().toString("yyyyMMdd")
     
+        # Final Query
         query = {
             "fields": included_fields,
             "query": {"and": conditions},
-            "start_date": self.start_date.date().toString("yyyyMMdd"),
-            "end_date": self.end_date.date().toString("yyyyMMdd")
+            "start_date": start_date,
+            "end_date": end_date
         }
+    
+        return query    
+    
+    def update_query_preview(self):    
+        query = self.build_query()
         self.query_preview.setPlainText(json.dumps(query, indent=2))
+    
+    def run_query(self):
+        query = self.build_query()
+        self.query_preview.setPlainText(json.dumps(query, indent=2)) # Just for checking
         
+        # Send query to API
+        # TikTokApi().get_video_by_dynamic_query_body(P()
+         
     def clear_query(self):
         # Clear QLineEdit fields
         self.username_input.clear()
@@ -203,7 +312,7 @@ class VideoQueryUI(QWidget):
         # Reset data pickers
         self.start_date.setDate(QDate.currentDate().addDays(-7))
         self.end_date.setDate(QDate.currentDate())
-
+    
         # Uncheck advanced field checkboxes only
         for field, cb in self.main_checkboxes.items():
             cb.setChecked(True)
@@ -216,10 +325,10 @@ class VideoQueryUI(QWidget):
         for spinbox, combo in self.numeric_inputs.values():
             spinbox.setValue(0)
             combo.setCurrentText("Greater than")  # default value
-
+    
         # Clear preview
         self.query_preview.clear()
-
+    
 
 # For testing
 if __name__ == "__main__":

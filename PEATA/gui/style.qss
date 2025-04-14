@@ -33,6 +33,13 @@ QPushButton:hover {
     background-color: #005a9e;
 }
 
+QTextEdit {
+    font-family: "Courier New";
+    font-size: 11pt;
+    color: #333;
+    background-color: #f9f9f9;    
+}
+
 QProgressBar {
     border: 2px solid #bbb;
     border-radius: 10px;
@@ -85,3 +92,49 @@ QProgressBar::chunk {
     text-align: center;
     line-height: 0.2
 }
+
+/* ScrollBar - Vertical */
+QScrollBar:vertical {
+    background: #f0f0f0;
+    width: 12px;
+    margin: 2px 0 2px 0;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #a0a0a0;
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #888888;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: none;
+    height: 0px;
+}
+
+/* ScrollBar - Horizontal */
+QScrollBar:horizontal {
+    background: #f0f0f0;
+    height: 12px;
+    margin: 0 2px 0 2px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #a0a0a0;
+    min-width: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #888888;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    background: none;
+    width: 0px;
+}
+
