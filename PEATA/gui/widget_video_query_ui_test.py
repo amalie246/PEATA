@@ -17,15 +17,13 @@ from common_ui_elements import (
 from region_codes import REGION_CODES
 import json
 
-#TODO
-# 1. Update Region Code in Filters (Individual selection?)
-# 2. Fix problem that auto added advanced fields in query builder
-# 3. Fix Tooltip for Music ID (do broad search include Music IDs)
-# 4. Work with Live Query Preview - update query preview()
-# 5. run_query() -> TiktokApi.get_video_by_dynamic_query_body() + progress_bar.py
-# 6. Show result using data_viewer.py
-# 5. Consider Pagination (Max 100 video)
-
+""" TODO
+# Fix Tooltip for Music ID (do broad search include Music IDs)
+# Work with Live Query Preview - update query preview()
+# run_query() -> TiktokApi.get_video_by_dynamic_query_body() + progress_bar.py
+# Show result using data_viewer.py
+# Consider Pagination (Max 100 video)
+"""
 
 class VideoQueryUI(QWidget):
     def __init__(self):
