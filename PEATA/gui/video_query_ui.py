@@ -24,6 +24,7 @@ import json
 """ TODO
 Top Priorities
 - run_query() -> TiktokApi.get_video_by_dynamic_query_body() + progress_bar.py
+- download button
 - Show result -> file_converter.save_jason_to_csv()
 -  After saving -> progress_bar, data_viewer
 - Consider Pagination (Max 100 video)

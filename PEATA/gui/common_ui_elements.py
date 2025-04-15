@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import (
-    QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, QTableView,
-    QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, QFrame, QSpinBox, QComboBox
+    QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, 
+    QTableView, QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
+    QFrame, QSpinBox, QComboBox
 )
 from PyQt5.QtCore import QDate, QTimer
-from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor, QFont
+from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
 from region_codes import get_flag_emoji
 import os
 
@@ -114,7 +115,14 @@ def create_horizontal_line():
     line.setFrameShadow(QFrame.Sunken)
     return line
 
-def create_button(text: str, object_name: str = "", tooltip: str = "", icon_path: str = "", click_callback=None):
+def create_button(
+        text: str, 
+        object_name: str = "", 
+        tooltip: str = "", 
+        icon_path: str = "", 
+        click_callback=None
+        ):
+    
     button = QPushButton(text)
     if object_name:
         button.setObjectName(object_name)
@@ -126,7 +134,10 @@ def create_button(text: str, object_name: str = "", tooltip: str = "", icon_path
         button.clicked.connect(click_callback)
     return button
 
-def create_field_group_with_emojis(title: str, fields: dict, store_dict: dict, default_checked=True):
+def create_field_group_with_emojis(
+        title: str, fields: dict, store_dict: dict, default_checked=True
+        ):
+    
     group = QGroupBox(title)
     vbox = QVBoxLayout()
     for field, (emoji, tooltip) in fields.items():

@@ -5,7 +5,7 @@ Main window
     Navigation bar / toolbar
         File (Open, save, export)
     Progress bar
-    data viewer (table)
+    data viewer (table) - Optional
         sort
         filter
         search
