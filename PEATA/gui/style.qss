@@ -74,6 +74,11 @@ QProgressBar::chunk {
     border-bottom: 2px solid #aaa;
 }
 
+QLabel#selectedRegionLabel {
+    font-style: italic;
+    color: #7A5E99; 
+}
+
 /* Horizontal line, like <hr> */
 #footerLine {
     color: #ffffff;

@@ -11,7 +11,8 @@ from common_ui_elements import (
     create_checkbox_with_tooltip, create_button,
     create_field_group_with_emojis, create_enum_checkbox_group, 
     create_numeric_filter_group, create_horizontal_line,
-    create_scrollable_area, focus_on_query_value
+    create_scrollable_area, focus_on_query_value,
+    create_multi_select_input_with_labels
 )
 from region_codes import REGION_CODES
 import json
@@ -46,6 +47,7 @@ class VideoQueryUI(QWidget):
         }
 
         self.region_codes = REGION_CODES
+        
         self.init_ui()
     
     def init_ui(self):           
@@ -216,10 +218,16 @@ class VideoQueryUI(QWidget):
         self.date_widget, self.start_date, self.end_date = create_date_range_widget()
         layout.addWidget(self.date_widget)
         
+        # 5. Region Code (Multi-Select)
+        self.region_widget, self.region_combo, self.region_display, self.selected_region_codes = create_multi_select_input_with_labels(
+            "Select Region(s):", self.region_codes, on_add_callback=self.update_query_preview
+            )
+        layout.addWidget(self.region_widget)
+        
         # Horizontal Line before numeric filters
         layout.addWidget(create_horizontal_line())
     
-        # 5. Numeric Filters
+        # 6. Numeric Filters
         self.numeric_fields = ["like_count", "view_count", "comment_count", "share_count"]
         layout.addWidget(QLabel("Numeric Filters:"))
         numeric_widget, self.numeric_inputs = create_numeric_filter_group(self.numeric_fields, list(self.condition_ops.keys()), default_op = "Greater than")
@@ -228,15 +236,15 @@ class VideoQueryUI(QWidget):
         # Horizontal Line after numeric filters
         layout.addWidget(create_horizontal_line())
         
-        # 6. Video Length
+        # 7. Video Length
         length_group, self.length_checkboxes = create_enum_checkbox_group("Video Length", ["SHORT", "MID", "LONG", "EXTRA_LONG"])
         layout.addWidget(length_group)
     
-        # 7. Music ID
+        # 8. Music ID
         self.music_input = QLineEdit()
         layout.addWidget(create_labeled_input("Music IDs (comma-separated):", self.music_input))
     
-        # 8. Effect ID
+        # 9. Effect ID
         self.effect_input = QLineEdit()
         layout.addWidget(create_labeled_input("Effect IDs (comma-separated):", self.effect_input))
 
@@ -265,6 +273,11 @@ class VideoQueryUI(QWidget):
         add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
         add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
     
+        # region_code (Select all if nothing has selected)
+        region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
+        add_condition("region_code", region_codes_to_use)
+            
+        # Numeric filters
         for field, (spinbox, combo) in self.numeric_inputs.items():
             val = spinbox.value()
             op_label = combo.currentText()
@@ -312,6 +325,11 @@ class VideoQueryUI(QWidget):
         # Reset data pickers
         self.start_date.setDate(QDate.currentDate().addDays(-7))
         self.end_date.setDate(QDate.currentDate())
+        
+        # Clear region codes
+        self.selected_regions_codes.clear()
+        self.region_display.setText("Selected: ")
+        self.region_combo.setCurrentIndex(0)
     
         # Uncheck advanced field checkboxes only
         for field, cb in self.main_checkboxes.items():

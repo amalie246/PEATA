@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import (
     QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, QFrame, QSpinBox, QComboBox
 )
 from PyQt5.QtCore import QDate, QTimer
-from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
+from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor, QFont
+from region_codes import get_flag_emoji
 import os
 
 # For general structure styling. Created this for reusable components in UI
@@ -215,3 +216,80 @@ def focus_on_query_value(text_edit, value_str):
         cursor.mergeCharFormat(clear_format)
 
     QTimer.singleShot(1000, clear_highlight)
+
+# Multi-select using QComboBox + Add button + Selected Display Label
+def create_multi_select_input_with_labels(label_text: str, name_code_map: dict, on_add_callback=None):
+    
+    combo = QComboBox()
+    combo.setEditable(True) # Available to search
+    
+    display_to_code = {}
+    for name, code in name_code_map.items():
+        display_text = f"{get_flag_emoji(code)} {name}"
+        combo.addItem(display_text)
+        display_to_code[display_text] = code  # internal map
+        
+    add_btn = QPushButton("Add")
+    remove_btn = QPushButton("Remove")
+    clear_all_btn = QPushButton("Clear All")
+    selected_label = QLabel("Selected: ALL") # Default
+    selected_label.setObjectName("SelectedRegionLabel")
+    
+    
+    selected_codes = []
+    
+    def update_label():
+        if selected_codes:
+            selected_label.setText("Selected: " + ", ".join(selected_codes))
+        else:
+            selected_label.setText("Selected: All")
+    
+    def add_value():
+        display_text = combo.currentText().strip()
+        if display_text in display_to_code:
+             code = display_to_code[display_text]
+             if code not in selected_codes:
+                 selected_codes.append(code)
+                 selected_label.setText("Selected: " + ", ".join(selected_codes))
+                 if on_add_callback:
+                    on_add_callback()
+     
+    def remove_value():
+        display_text = combo.currentText().strip()
+        if display_text in display_to_code:
+            code = display_to_code[display_text]
+            if code in selected_codes:
+                selected_codes.remove(code)
+                update_label()
+                if on_add_callback:
+                    on_add_callback()
+     
+    def clear_all():
+        selected_codes.clear()
+        update_label()
+        if on_add_callback:
+            on_add_callback()
+        
+    add_btn.clicked.connect(add_value)
+    remove_btn.clicked.connect(remove_value)
+    clear_all_btn.clicked.connect(clear_all)
+    
+    hbox = QHBoxLayout()
+    hbox.addWidget(combo)
+    hbox.addWidget(add_btn)
+    hbox.addWidget(remove_btn)
+    hbox.addWidget(clear_all_btn)
+    
+    container = QWidget()
+    container.setLayout(hbox)
+    
+    outer_layout = QVBoxLayout()
+    outer_layout.addWidget(QLabel(label_text))
+    outer_layout.addWidget(container)
+    outer_layout.addWidget(selected_label)
+    
+    outer_container = QWidget()
+    outer_container.setLayout(outer_layout)
+    
+    return outer_container, combo, selected_label, selected_codes
+    
