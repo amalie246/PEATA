@@ -1,70 +1,74 @@
 import sys
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QProgressBar
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel
 )
-
 from PyQt5.QtCore import Qt, QTimer
+from common_ui_elements import create_button, create_progress_bar
+
+"""
+Progress bar work flow
+
+- Show progress indicator
+- Avalible to stop processing (_cancelled = True)
+- After processing (fetching data), run callback function (on_finished(result)) 
+"""
 
 class ProgressBar(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Data Processing Progress")
+        self.setWindowTitle("Fetching data...")
         self.setGeometry(100, 100, 500, 150)
-
-        self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-
-        # Create progress bar
-        self.progress = QProgressBar()
-        self.progress.setMinimum(0)
-        self.progress.setMaximum(100)
-        self.progress.setValue(0)
-        self.progress.setTextVisible(True)
-        self.progress.setAlignment(Qt.AlignCenter)
-
-        # Buttons (start, cancle btns)
-        button_layout = QHBoxLayout()
-        self.start_button = QPushButton("Start Processing")
-        self.cancel_button = QPushButton("Cancel")
+        layout = QVBoxLayout()
         
         
-        self.start_button.clicked.connect(self.start_processing)
-        self.cancel_button.clicked.connect(self.cancel_processing)
-        self.cancel_button.setEnabled(False)
+        self.label = QLabel("Please wait while we fetch your data.")
+        self.label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.label)
+        
+        self.progress = create_progress_bar()
+        layout.addWidget(self.progress)
+        
+        # Cancle button using common ui elements
+        self.cancle_button = create_button("Cancle", click_callback=self.cancel)
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+        btn_layout.addWidget(self.cancle_button)
+        layout.addLayout(btn_layout)
+        
+        self.setLayout(layout)
+        self._cancelled = False
+
+        
+    def cancel(self):
+        self._cancelled = True
+        self.close()
+        
+    @staticmethod # avalible to call with class name e.g, PrgressBar.run_with_progress
+    def run_with_progress(parent, task_function, on_finished=None):
+        """
+        Show the progress bar while executing a long-running task.
+        - task_function: the function to run
+        - on_finished: optional callback to run when done, receives the result
+        """
+        progress_window = ProgressBar()
+        progress_window.setParent(parent)
+        progress_window.setWindowModality(Qt.ApplicationModal)
+        progress_window.show()
+
+        def start_work():
+            result = None
+            if not progress_window._cancelled:
+                result = task_function()
+            progress_window.close()
+            if not progress_window._cancelled and on_finished:
+                on_finished(result)
+
+        QTimer.singleShot(100, start_work) 
+      
   
-        
-        button_layout.addWidget(self.start_button)
-        button_layout.addWidget(self.cancel_button)
-        
-        # Add to layout
-        self.layout.addWidget(self.progress)
-        self.layout.addLayout(button_layout)
-        
-        # Timer for simulating processing (Delete later! )
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.update_progress)
-
-    def start_processing(self):
-        self.progress.setValue(0)
-        self.timer.start(50)  # update every 50ms
-        self.start_button.setEnabled(False)
-        self.cancel_button.setEnabled(True)
-        
-    def cancel_processing(self):
-        self.timer.stop()
-        self.start_button.setEnabled(True)
-        self.cancel_button.setEnabled(False)
-
-    def update_progress(self):
-        current_value = self.progress.value()
-        if current_value < 100:
-            self.progress.setValue(current_value + 1)
-        else:
-            self.timer.stop()
-            self.start_button.setEnabled(True)
-            self.cancle_button.setEnabled(False)
 
 if __name__ == '__main__':
+    from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
     window = ProgressBar()
     window.show()

@@ -83,6 +83,7 @@ QLabel#HelperLabel {
     color: gray;
     font-size: 11px;
     font-style: italic;
+    margin-bottom: 8px;
 }
 
 /* Horizontal line, like <hr> */

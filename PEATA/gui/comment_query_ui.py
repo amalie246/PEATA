@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
 # from api import TikTokApi
 # from data_viewer import DataViewer
 # from file_converter import FileConverter
-from progress_bar import ProgressBar
+from widget_progress_bar import ProgressBar
 from common_ui_elements import focus_on_query_value, create_button
 import json
 
@@ -14,8 +14,10 @@ import json
 # api = TikTokApi(CLIENT_KEY, CLIENT_SECRET, ACCESS_TOKEN)
 
 """
+Comment query ui work flow
+
 - Input: Video ID
-- Call API: get_video_comments(video_id)
+- Call API: get_video_comments(video_id) + Progress bar 
 - Treat result: save CSV, show comments in the view
 - Additional: show result with DataViewer
 """
@@ -37,7 +39,7 @@ class CommentQueryUI(QWidget):
         self.input_field.setPlaceholderText("Enter a TikTok Video ID (e.g., 702874395068494965)")
         self.input_field.textChanged.connect(self.update_preview)
         
-        # Give user hint
+        # Give user hint (style added in style.qss)
         self.helper_label = QLabel(
         "Example URL: https://www.tiktok.com/@username/video/702874395068494965\n"
         "→ Copy only the last number as Video ID: 702874395068494965"
@@ -98,16 +100,20 @@ class CommentQueryUI(QWidget):
             QMessageBox.warning(self, "Input Error", "Please enter a Video ID.")
             return
 
-        comments = api.get_video_comments(video_id)
-        if not comments:
-            QMessageBox.information(self, "No Results", "No comments found.")
-            return
+        def fetch_comments():
+            return api.get_video_comments(video_id)
+        
+        def after_fetch(comments):       
+            if not comments:
+                QMessageBox.information(self, "No Results", "No comments found.")
+                return
 
-        FileConverter().save_json_to_csv(comments, "comments_result.csv")
-        self.result_box.setPlainText(f"{len(comments)} comments fetched and saved.")
-
-        self.viewer = DataViewer()
-        self.viewer.show()
+            FileConverter().save_json_to_csv(comments, "comments_result.csv")
+            self.result_box.setPlainText(f"{len(comments)} comments fetched and saved.")   
+            self.viewer = DataViewer()
+            self.viewer.show()
+        
+        ProgressBar.run_with_progress(self, fetch_comments, after_fetch)
         
     def clear_all(self):
        self.input_field.clear()

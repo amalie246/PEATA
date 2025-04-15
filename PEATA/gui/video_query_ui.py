@@ -2,8 +2,8 @@
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout,
-    QTextEdit, QLineEdit, QComboBox, QTabWidget
-)
+    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox
+    )
 from common_ui_elements import (
     create_date_range_widget, create_field_checkbox_group,
     create_progress_bar, create_result_table,
@@ -13,8 +13,12 @@ from common_ui_elements import (
     create_numeric_filter_group, create_horizontal_line,
     create_scrollable_area, focus_on_query_value,
     create_multi_select_input_with_labels
-)
+    )
 from region_codes import REGION_CODES
+from progress_bar import ProgressBar
+# from api import TikTokApi
+# from file_converter import FileConverter
+# from data_viewer import DataViewer
 import json
 
 """ TODO
@@ -27,6 +31,7 @@ Top Priorities
 Others
 - Add operation parameter in query (not, or)
 - Fix Tooltip for Music ID (do broad search include Music IDs)
+- Add placeholder text in the input field
 - Work with Live Query Preview - update query preview()
 
 
@@ -36,12 +41,17 @@ class VideoQueryUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Video Query Builder")
+        self.region_codes = REGION_CODES
+        
+        # # Replace with actual credentials in real usage
+        # self.api = TikTokApi("your_client_key", "your_client_secret", "your_access_token")
         
         # self.logic_ops = {
         #     "AND (All must match)": "and",
         #     "OR (Any can match)": "or",
         #     "NOT (Exclude)": "not"
         # }
+        
         
         self.condition_ops = {
             "Equals": "EQ",
@@ -51,7 +61,7 @@ class VideoQueryUI(QWidget):
             "Less or equal": "LTE"
         }
 
-        self.region_codes = REGION_CODES
+        
         
         self.init_ui()
     
@@ -162,7 +172,6 @@ class VideoQueryUI(QWidget):
             
         self.update_query_preview()    # Update defalt view of Live Query Preview
      
-
     def create_field_selection_tab(self):
         tab = QWidget()
         layout = QVBoxLayout()
@@ -331,9 +340,23 @@ class VideoQueryUI(QWidget):
         query = self.build_query()
         self.query_preview.setPlainText(json.dumps(query, indent=2)) # Just for checking
         
-        # Send query to API
-        # TikTokApi().get_video_by_dynamic_query_body(P()
-         
+        def fetch_videos():
+            return self.api.get_video_by_dynamic_query_body(
+                {"query": query["query"]},
+                query["start_date"],
+                query["end_date"]
+                )
+        
+        def after_fetch(result):
+            if not result:
+                QMessageBox.information(self, "No Results", "No videos found.")
+                return
+            FileConverter().save_jason_to_csv(result, "video_result.csv")
+            self.viewer = DataViewer()
+            self.viewer.show()
+        
+        ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
+        
     def clear_query(self):
         # Clear QLineEdit fields
         self.username_input.clear()

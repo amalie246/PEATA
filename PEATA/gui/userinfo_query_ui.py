@@ -17,9 +17,9 @@ import json
 Todo:
 - Consider better file name
 
-UserInfo Query Ui flow   
+UserInfo Query Ui work flow   
 - Input : Username
-- Call Api : get_public_user_info(username)
+- Call Api : get_public_user_info(username) + Progress bar
 - Treat result: Print result with JSON on text view
 """
 
@@ -104,12 +104,18 @@ class UserInfoQueryUI(QWidget):
             QMessageBox.warning(self, "Input Error", "Please enter a username.")
             return
         
-        info = api.get_public_user_info(username)
-        if not info:
-            QMessageBox.information(self, "No Results", "No user found.")
-            return
-
-        self.result_box.setPlainText(json.dumps(info, indent=2))
+        def fetch_user():
+            return api.get_public_user_info(username)
+        
+        
+        def after_fetch(info):
+            if not info:
+                QMessageBox.information(self, "No Results", "No user found.")
+                return
+    
+            self.result_box.setPlainText(json.dumps(info, indent=2))
+            
+        ProgressBar.run_with_progress(self, fetch_user, after_fetch)
     
     def clear_all(self):
        self.input_field.clear()
