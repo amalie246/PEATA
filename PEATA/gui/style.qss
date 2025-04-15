@@ -79,6 +79,12 @@ QLabel#selectedRegionLabel {
     color: #7A5E99; 
 }
 
+QLabel#HelperLabel {
+    color: gray;
+    font-size: 11px;
+    font-style: italic;
+}
+
 /* Horizontal line, like <hr> */
 #footerLine {
     color: #ffffff;

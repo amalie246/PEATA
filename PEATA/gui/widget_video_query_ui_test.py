@@ -18,11 +18,18 @@ from region_codes import REGION_CODES
 import json
 
 """ TODO
-# Fix Tooltip for Music ID (do broad search include Music IDs)
-# Work with Live Query Preview - update query preview()
-# run_query() -> TiktokApi.get_video_by_dynamic_query_body() + progress_bar.py
-# Show result using data_viewer.py
-# Consider Pagination (Max 100 video)
+Top Priorities
+- run_query() -> TiktokApi.get_video_by_dynamic_query_body() + progress_bar.py
+- Show result -> file_converter.save_jason_to_csv()
+-  After saving -> progress_bar, data_viewer
+- Consider Pagination (Max 100 video)
+
+Others
+- Add operation parameter in query (not, or)
+- Fix Tooltip for Music ID (do broad search include Music IDs)
+- Work with Live Query Preview - update query preview()
+
+
 """
 
 class VideoQueryUI(QWidget):
@@ -204,17 +211,29 @@ class VideoQueryUI(QWidget):
         self.username_input = QLineEdit()
         layout.addWidget(create_labeled_input("Username(s) (comma-separated):", self.username_input))
     
+        # Horizontal Line before Keyword filters        
+        layout.addWidget(create_horizontal_line())
+        
         # 2. Keyword
         self.keyword_input = QLineEdit()
         layout.addWidget(create_labeled_input("Keywords (comma-separated):", self.keyword_input))
     
+        # Horizontal Line before Hashtag filters
+        layout.addWidget(create_horizontal_line())
+        
         # 3. Hashtag
         self.hashtag_input = QLineEdit()
         layout.addWidget(create_labeled_input("Hashtags (comma-separated):", self.hashtag_input))
+        
+        # Horizontal Line before Date Range filters
+        layout.addWidget(create_horizontal_line())
     
         # 4. Date Range
         self.date_widget, self.start_date, self.end_date = create_date_range_widget()
         layout.addWidget(self.date_widget)
+        
+        # Horizontal Line before Region filters
+        layout.addWidget(create_horizontal_line())
         
         # 5. Region Code (Multi-Select)
         self.region_widget, self.region_combo, self.region_display, self.selected_region_codes = create_multi_select_input_with_labels(
@@ -241,6 +260,9 @@ class VideoQueryUI(QWidget):
         # 8. Music ID
         self.music_input = QLineEdit()
         layout.addWidget(create_labeled_input("Music IDs (comma-separated):", self.music_input))
+        
+        # Horizontal Line before Effect ID filters
+        layout.addWidget(create_horizontal_line())
     
         # 9. Effect ID
         self.effect_input = QLineEdit()
