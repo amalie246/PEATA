@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox
 #from api import TikTokApi
 from data_viewer import DataViewer
-#from file_converter import FileConverter
 from progress_bar import ProgressBar
 from common_ui_elements import focus_on_query_value, create_button
 import json
@@ -15,6 +14,10 @@ import json
 
 """
 Todo:
+<<<<<<< Updated upstream
+=======
+- Check (username) value before excute run_query()
+>>>>>>> Stashed changes
 - Consider better file name
 
 UserInfo Query Ui work flow   

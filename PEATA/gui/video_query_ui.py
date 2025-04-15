@@ -23,18 +23,23 @@ import json
 
 """ TODO
 Top Priorities
-- run_query() -> TiktokApi.get_video_by_dynamic_query_body() + progress_bar.py
-- download button
+
 - Show result -> file_converter.save_jason_to_csv()
--  After saving -> progress_bar, data_viewer
+- download button with csv/xlx options
+- data viewer
 - Consider Pagination (Max 100 video)
 
 Others
+
+- Adapt async/thread for Cancel button/function
+- Check value before excute run_query()
 - Add operation parameter in query (not, or)
 - Fix Tooltip for Music ID (do broad search include Music IDs)
 - Add placeholder text in the input field
-- Work with Live Query Preview - update query preview()
-
+- Work with Live Query Preview - fix highlighter range
+- Fix styling
+- Add field name explanation in Live Query Preview
+>>>>>>> Stashed changes
 
 """
 
