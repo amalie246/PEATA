@@ -92,8 +92,10 @@ def create_collapsible_section(title: str, widget: QWidget, checked =True, on_to
     return container
 
 # For various fields (text box, dropdown etc)
-def create_labeled_input(label_text: str, input_widget: QWidget):
+def create_labeled_input(label_text: str, input_widget: QWidget, placeholder: str = ""):
     label = QLabel(label_text)
+    if hasattr(input_widget, 'setPlaceholderText'):
+        input_widget.setPlaceholderText(placeholder)
     layout = QHBoxLayout()
     layout.addWidget(label)
     layout.addWidget(input_widget)

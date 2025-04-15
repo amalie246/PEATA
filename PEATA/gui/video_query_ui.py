@@ -17,7 +17,7 @@ from common_ui_elements import (
 from region_codes import REGION_CODES
 from progress_bar import ProgressBar
 # from api import TikTokApi
-# from file_converter import FileConverter
+# from FileProcessor import FileProcessor
 # from data_viewer import DataViewer
 import json
 
@@ -35,12 +35,9 @@ Others
 - Check value before excute run_query()
 - Add operation parameter in query (not, or)
 - Fix Tooltip for Music ID (do broad search include Music IDs)
-- Add placeholder text in the input field
 - Work with Live Query Preview - fix highlighter range
 - Fix styling
 - Add field name explanation in Live Query Preview
->>>>>>> Stashed changes
-
 """
 
 class VideoQueryUI(QWidget):
@@ -224,21 +221,21 @@ class VideoQueryUI(QWidget):
         
         # 1. Username
         self.username_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Username(s) (comma-separated):", self.username_input))
+        layout.addWidget(create_labeled_input("Username(s) (comma-separated):", self.username_input, "e.g. joe123, jimin456"))
     
         # Horizontal Line before Keyword filters        
         layout.addWidget(create_horizontal_line())
         
         # 2. Keyword
         self.keyword_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Keywords (comma-separated):", self.keyword_input))
+        layout.addWidget(create_labeled_input("Keywords (comma-separated):", self.keyword_input, "e.g. coffee, tea"))
     
         # Horizontal Line before Hashtag filters
         layout.addWidget(create_horizontal_line())
         
         # 3. Hashtag
         self.hashtag_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Hashtags (comma-separated):", self.hashtag_input))
+        layout.addWidget(create_labeled_input("Hashtags (comma-separated):", self.hashtag_input, "e.g. music, dance"))
         
         # Horizontal Line before Date Range filters
         layout.addWidget(create_horizontal_line())
@@ -274,14 +271,14 @@ class VideoQueryUI(QWidget):
     
         # 8. Music ID
         self.music_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Music IDs (comma-separated):", self.music_input))
+        layout.addWidget(create_labeled_input("Music IDs (comma-separated):", self.music_input, "e.g. 678123, 894562"))
         
         # Horizontal Line before Effect ID filters
         layout.addWidget(create_horizontal_line())
     
         # 9. Effect ID
         self.effect_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Effect IDs (comma-separated):", self.effect_input))
+        layout.addWidget(create_labeled_input("Effect IDs (comma-separated):", self.effect_input, "e.g. 9876, 1012"))
 
       
         tab.setLayout(layout)
@@ -357,7 +354,7 @@ class VideoQueryUI(QWidget):
             if not result:
                 QMessageBox.information(self, "No Results", "No videos found.")
                 return
-            FileConverter().save_jason_to_csv(result, "video_result.csv")
+            FileProcessor().save_jason_to_csv(result, "video_result.csv")
             self.viewer = DataViewer()
             self.viewer.show()
         

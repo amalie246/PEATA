@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox
 # from api import TikTokApi
 # from data_viewer import DataViewer
-# from file_converter import FileConverter
-from widget_progress_bar import ProgressBar
-from common_ui_elements import focus_on_query_value, create_button
+# from FileProcessor import FileProcessor
+from progress_bar import ProgressBar
+from common_ui_elements import focus_on_query_value, create_button, create_scrollable_area                               
 import json
 
 # # Replace with actual values or pass dynamically
@@ -51,6 +51,7 @@ class CommentQueryUI(QWidget):
         self.preview_box = QTextEdit()
         self.preview_box.setReadOnly(True)
         self.preview_box.setMinimumHeight(150)
+        preview_area = create_scrollable_area(self.preview_box)
 
         # Buttons
         self.run_button = create_button("Run Query", click_callback=self.run_query)
@@ -64,7 +65,7 @@ class CommentQueryUI(QWidget):
         left_panel.addWidget(self.input_field)
         left_panel.addWidget(self.helper_label)
         left_panel.addWidget(QLabel("Live Query Preview:"))
-        left_panel.addWidget(self.preview_box)
+        left_panel.addWidget(preview_area)
         left_panel.addLayout(btn_layout)
 
         # Right panel
@@ -99,16 +100,19 @@ class CommentQueryUI(QWidget):
         if not video_id:
             QMessageBox.warning(self, "Input Error", "Please enter a Video ID.")
             return
+        
+        self.setWindowOpacity(0.3) # UI dim effect
 
         def fetch_comments():
             return api.get_video_comments(video_id)
         
-        def after_fetch(comments):       
+        def after_fetch(comments):
+            self.setWindowOpacity(1.0) # restore full opacity
             if not comments:
                 QMessageBox.information(self, "No Results", "No comments found.")
                 return
 
-            FileConverter().save_json_to_csv(comments, "comments_result.csv")
+            FileProcessor().save_json_to_csv(comments, "comments_result.csv")
             self.result_box.setPlainText(f"{len(comments)} comments fetched and saved.")   
             self.viewer = DataViewer()
             self.viewer.show()
