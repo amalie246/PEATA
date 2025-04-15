@@ -9,8 +9,8 @@ from queryFormatter import QueryFormatter
 from datetime import datetime
 
 class UiHelper:
-    def __init__(self):
-        self.tiktok_api = TikTokApi()
+    def __init__(self, client_key, client_secret, access_token):
+        self.tiktok_api = TikTokApi(client_key, client_secret, access_token)
         self.file_processor = FileProcessor()
         self.latest_data = None
         self.query_formatter = QueryFormatter()
@@ -20,7 +20,6 @@ class UiHelper:
     def create_button_with_image(self, text, command, frame):
         btn_image = Image.open("images/GenBtn.png")
         btn_image = btn_image.crop(btn_image.getbbox())
-        gen_btn_img = ImageTk.PhotoImage(btn_image)
         
         gen_btn_img = ImageTk.PhotoImage(btn_image, master=frame)
         

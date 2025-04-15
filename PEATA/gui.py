@@ -20,9 +20,8 @@ class Gui:
         self.client_id = ci
         self.client_key = ck
         self.access_token = access_token
-        self.tiktok_api = TikTokApi()
-        #self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
-        self.ui = UiHelper()
+        self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
+        self.ui = UiHelper(self.client_key, self.client_secret, self.access_token)
         self.track_type = None
     
 
@@ -32,7 +31,7 @@ class Gui:
             if messagebox.askyesno("Exit Program", "Are you sure you want to quit your session?"):
                 root.destroy()
             
-        root = tk.Tk()
+        root = tk.Toplevel(self.master)
         style = ttk.Style()
         style.theme_use('clam')
         root.title("Packaged Easier Access to APIs: TikTok Research API")
