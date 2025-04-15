@@ -2,7 +2,7 @@
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout,
-    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox
+    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox
     )
 from common_ui_elements import (
     create_date_range_widget, create_field_checkbox_group,
@@ -24,7 +24,7 @@ import json
 """ TODO
 Top Priorities
 
-- Show result -> file_converter.save_jason_to_csv()
+- Show result -> fileProcessor.save_jason_to_csv()
 - download button with csv/xlx options
 - data viewer
 - Consider Pagination (Max 100 video)
@@ -221,21 +221,21 @@ class VideoQueryUI(QWidget):
         
         # 1. Username
         self.username_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Username(s) (comma-separated):", self.username_input, "e.g. joe123, jimin456"))
+        layout.addWidget(create_labeled_input("Username(s):", self.username_input, "e.g. joe123, jimin456"))
     
         # Horizontal Line before Keyword filters        
         layout.addWidget(create_horizontal_line())
         
         # 2. Keyword
         self.keyword_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Keywords (comma-separated):", self.keyword_input, "e.g. coffee, tea"))
+        layout.addWidget(create_labeled_input("Keywords:", self.keyword_input, "e.g. coffee, tea"))
     
         # Horizontal Line before Hashtag filters
         layout.addWidget(create_horizontal_line())
         
         # 3. Hashtag
         self.hashtag_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Hashtags (comma-separated):", self.hashtag_input, "e.g. music, dance"))
+        layout.addWidget(create_labeled_input("Hashtags:", self.hashtag_input, "e.g. music, dance"))
         
         # Horizontal Line before Date Range filters
         layout.addWidget(create_horizontal_line())
@@ -249,7 +249,7 @@ class VideoQueryUI(QWidget):
         
         # 5. Region Code (Multi-Select)
         self.region_widget, self.region_combo, self.region_display, self.selected_region_codes = create_multi_select_input_with_labels(
-            "Select Region(s):", self.region_codes, on_add_callback=self.update_query_preview
+            "Region(s):", self.region_codes, on_add_callback=self.update_query_preview
             )
         layout.addWidget(self.region_widget)
         
@@ -271,15 +271,28 @@ class VideoQueryUI(QWidget):
     
         # 8. Music ID
         self.music_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Music IDs (comma-separated):", self.music_input, "e.g. 678123, 894562"))
+        layout.addWidget(create_labeled_input("Music IDs:", self.music_input, "e.g. 678123, 894562"))
         
         # Horizontal Line before Effect ID filters
         layout.addWidget(create_horizontal_line())
     
         # 9. Effect ID
         self.effect_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Effect IDs (comma-separated):", self.effect_input, "e.g. 9876, 1012"))
+        layout.addWidget(create_labeled_input("Effect IDs:", self.effect_input, "e.g. 9876, 1012"))
 
+        # Horizontal Line before Max rates limit
+        layout.addWidget(create_horizontal_line())
+        
+        # 10. Max rate option
+        self.max_results_selector = QComboBox()
+        self.max_results_selector.addItems(["100", "500", "1000", "ALL"])
+        self.max_results_selector.setCurrentText("500")
+        layout.addWidget(create_labeled_input("Max Results:", self.max_results_selector))
+    
+        self.over_limit_warning_checkbox = QCheckBox("Warn if result count exceeds 1000")
+        self.over_limit_warning_checkbox.setChecked(True)
+        self.over_limit_warning_checkbox.setToolTip("Disable this if you want to skip warnings for large requests (over 1000 results).")
+        layout.addWidget(self.over_limit_warning_checkbox)
       
         tab.setLayout(layout)
         return tab
@@ -343,11 +356,19 @@ class VideoQueryUI(QWidget):
         query = self.build_query()
         self.query_preview.setPlainText(json.dumps(query, indent=2)) # Just for checking
         
+        # Determine max results
+        selected_text = self.max_results_selector.currentText()
+        limit = None if selected_text == "ALL" else int(selected_text)
+ 
+        if limit and limit > 1000 and self.over_limit_warning_checkbox.isChecked():
+            QMessageBox.warning(self, "⚠️ Warning", "You are requesting more than 1000 videos. This may take time or exceed TikTok's rate limits.")
+
         def fetch_videos():
             return self.api.get_video_by_dynamic_query_body(
                 {"query": query["query"]},
                 query["start_date"],
-                query["end_date"]
+                query["end_date"],
+                limit=limit
                 )
         
         def after_fetch(result):
