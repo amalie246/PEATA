@@ -27,7 +27,8 @@ Top Priorities
 - Show result -> fileProcessor.save_jason_to_csv()
 - download button with csv/xlx options
 - data viewer
-- Consider Pagination (Max 100 video)
+- Consider Api call rate
+- Test Max Result option
 
 Others
 

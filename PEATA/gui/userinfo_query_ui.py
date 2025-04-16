@@ -1,16 +1,16 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox
-#from api import TikTokApi
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QTextEdit, QMessageBox
+from api_copy import TikTokApi
 from data_viewer import DataViewer
 from progress_bar import ProgressBar
 from common_ui_elements import focus_on_query_value, create_button
 import json
 
-# # Replace with actual values or pass dynamically
-# CLIENT_KEY = "your_client_key"
-# CLIENT_SECRET = "your_client_secret"
-# ACCESS_TOKEN = "your_access_token"
+# Replace with actual values or pass dynamically
+CLIENT_KEY = "your_client_key"
+CLIENT_SECRET = "your_client_secret"
+ACCESS_TOKEN = "your_access_token"
 
-# api = TikTokApi(CLIENT_KEY, CLIENT_SECRET, ACCESS_TOKEN)
+api = TikTokApi(CLIENT_KEY, CLIENT_SECRET, ACCESS_TOKEN)
 
 """
 Todo:
