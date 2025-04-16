@@ -14,7 +14,7 @@ from PyQt6.QtGui import QIcon, QFontDatabase, QFont
 # ───── Widgets ─────
 from navbar import Navbar
 from about_us import AboutUs
-
+from widget_login import LoginWidget  # Make sure this file exists and matches
 
 class Window(QWidget):
     def __init__(self):
@@ -23,7 +23,7 @@ class Window(QWidget):
         # Set window icon and title
         icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
         self.setWindowIcon(QIcon(icon_path))
-        self.setWindowTitle(" Project PEATA | home")
+        self.setWindowTitle("Project PEATA | login")
         self.setGeometry(100, 100, 700, 700)
 
         # ───── Main horizontal layout (left + right) ─────
@@ -36,32 +36,47 @@ class Window(QWidget):
         self.navbar = Navbar()
         self.navbar.about_clicked.connect(self.show_about_us)
         self.navbar.exit_clicked.connect(self.close)
+        self.navbar.set_logged_in(False)  # Disable buttons before login
         main_layout.addWidget(self.navbar)
 
-        # ───── Right box (content) ─────
+        # ───── Right box (content area) ─────
         self.content_window = QVBoxLayout()
+        self.content_container = QWidget()
+        self.content_container.setLayout(self.content_window)
+        main_layout.addWidget(self.content_container)
 
-        # Welcome message
-        welcome_label = QLabel("Welcome to the PEATA experience")
-        welcome_label.setStyleSheet("font-size: 18px; font-weight: bold;")
-        welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Add login widget on startup
+        self.login_widget = LoginWidget(on_login_success_callback=self.login_success)
+        self.content_window.addWidget(self.login_widget)
 
-        self.content_window.addWidget(welcome_label)
+    def login_success(self):
+        """Handle successful login"""
+        self.setWindowTitle("Project PEATA | home")
+        self.navbar.set_logged_in(True)
 
-        content_container = QWidget()
-        content_container.setLayout(self.content_window)
-        main_layout.addWidget(content_container)
-
-    def show_about_us(self):
-        self.setWindowTitle("Project PEATA | about us")
-        # Clear previous widgets
+        # Clear login widget
         while self.content_window.count():
             item = self.content_window.takeAt(0)
             widget = item.widget()
             if widget:
                 widget.setParent(None)
 
-        # Add AboutUsWidget
+        # Show welcome message
+        welcome_label = QLabel("Welcome to the PEATA experience")
+        welcome_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.content_window.addWidget(welcome_label)
+
+    def show_about_us(self):
+        self.setWindowTitle("Project PEATA | about us")
+
+        # Clear current content
+        while self.content_window.count():
+            item = self.content_window.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.setParent(None)
+
         self.content_window.addWidget(AboutUs())
 
 
