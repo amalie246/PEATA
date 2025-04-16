@@ -113,7 +113,13 @@ class CommentQueryUI(QWidget):
             return
         
         selected_text = self.max_results_selector.currentText()
-        limit = None if selected_text == "ALL" else int(selected_text)
+        limit = None if selected_text == "ALL" else int(selected_text)       
+        max_allowed = 2000 
+        if limit is None:
+            limit = max_allowed
+            
+# Note: TikTok API may allow larger values.
+# This 2000 is a tentative upper bound based on similar endpoints.
 
         if limit and limit > 1000 and self.over_limit_warning_checkbox.isChecked():
             QMessageBox.warning(self, "Warning", "You are requesting more than 1000 comments. This may take time and could hit rate limits.")
@@ -121,7 +127,7 @@ class CommentQueryUI(QWidget):
         self.setWindowOpacity(0.3) # UI dim effect
 
         def fetch_comments():
-            return api.get_video_comments(video_id)
+            return api.get_video_comments(video_id, limit=limit)
         
         def after_fetch(comments):
             self.setWindowOpacity(1.0) # restore full opacity

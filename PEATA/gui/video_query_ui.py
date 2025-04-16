@@ -360,6 +360,9 @@ class VideoQueryUI(QWidget):
         # Determine max results
         selected_text = self.max_results_selector.currentText()
         limit = None if selected_text == "ALL" else int(selected_text)
+        max_allowed = 2000 
+        if limit is None:
+            limit = max_allowed
  
         if limit and limit > 1000 and self.over_limit_warning_checkbox.isChecked():
             QMessageBox.warning(self, "⚠️ Warning", "You are requesting more than 1000 videos. This may take time or exceed TikTok's rate limits.")
