@@ -28,8 +28,11 @@ class HoverIconButton(QToolButton):
 
 # ───── Navbar Widget ─────
 class Navbar(QWidget):
+    user_query_clicked = pyqtSignal()
+    video_query_clicked = pyqtSignal()
+    comment_query_clicked = pyqtSignal()
     about_clicked = pyqtSignal()
-    exit_clicked = pyqtSignal()  # ✅ Signal for Exit
+    exit_clicked = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)

@@ -4,16 +4,17 @@ import os
 from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
-    QLineEdit,
+    QLabel,
     QVBoxLayout,
     QHBoxLayout,
-    QFrame
 )
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QFontDatabase, QFont
 
 # ───── Widgets ─────
 from navbar import Navbar
 from about_us import AboutUs
+
 
 class Window(QWidget):
     def __init__(self):
@@ -33,14 +34,19 @@ class Window(QWidget):
 
         # ───── Left box (navbar) ─────
         self.navbar = Navbar()
-        self.navbar.about_clicked.connect(self.show_about_us)  #  connect PyQT signal
+        self.navbar.about_clicked.connect(self.show_about_us)
         self.navbar.exit_clicked.connect(self.close)
         main_layout.addWidget(self.navbar)
 
         # ───── Right box (content) ─────
         self.content_window = QVBoxLayout()
-        self.content_window.addWidget(QLineEdit("Right LineEdit 1"))
-        self.content_window.addWidget(QLineEdit("Right LineEdit 2"))
+
+        # Welcome message
+        welcome_label = QLabel("Welcome to the PEATA experience")
+        welcome_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.content_window.addWidget(welcome_label)
 
         content_container = QWidget()
         content_container.setLayout(self.content_window)
