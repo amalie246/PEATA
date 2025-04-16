@@ -39,34 +39,34 @@ class Gui:
         root.bind("<Escape>", lambda event: show_exit())
         
         #FRAMES for content placing 
-        full_frame = tk.Frame(root, bg="#CAE1FF")
+        full_frame = tk.Frame(root, bg="#3A3A3A")
         full_frame.pack(fill="both", expand=True)
         
         header_frame = tk.Frame(full_frame, bg="#FFFFFF", height=100)
         header_frame.pack(fill="x", side="top")
         
-        content_frame = tk.Frame(full_frame, bg="white")
+        content_frame = tk.Frame(full_frame, bg="grey")
         content_frame.pack(fill="both", expand=True)
         content_frame.columnconfigure(0, weight=1)
         content_frame.columnconfigure(1, weight=1)
         content_frame.rowconfigure(0, weight=1, uniform="equal")
         content_frame.rowconfigure(1, weight=3, uniform="equal")
         
-        top_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        top_frame = tk.Frame(content_frame, bg="#3A3A3A")
         top_frame.grid(row=0, column=0, columnspan= 2, sticky="nsew", padx=20)
-        left_btm_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        left_btm_frame = tk.Frame(content_frame, bg="#3A3A3A")
         left_btm_frame.grid(row=1, column=0, sticky="nsew", pady=20, padx=20)
-        right_btm_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        right_btm_frame = tk.Frame(content_frame, bg="#3A3A3A")
         right_btm_frame.grid(row=1, column=1, sticky="nsew", pady=20, padx=20)
         
-        button_frame = tk.Frame(top_frame, bg="#D1D1D1")
+        button_frame = tk.Frame(top_frame, bg="#3A3A3A")
         button_frame.pack(side="top", pady=70)
         
-        video_btn_frame = tk.Frame(button_frame, bg="#D1D1D1")
+        video_btn_frame = tk.Frame(button_frame, bg="#3A3A3A")
         video_btn_frame.grid(row=0, column=0, padx=60)
-        comment_btn_frame = tk.Frame(button_frame, bg="#D1D1D1")
+        comment_btn_frame = tk.Frame(button_frame, bg="#3A3A3A")
         comment_btn_frame.grid(row=0, column=1, padx=60)
-        user_btn_frame = tk.Frame(button_frame, bg="#D1D1D1")
+        user_btn_frame = tk.Frame(button_frame, bg="#3A3A3A")
         user_btn_frame.grid(row=0, column=2, padx=60)
         
         def destroy_children_widgets(frame):
@@ -81,22 +81,22 @@ class Gui:
             self.track_type = Endpoints.VIDEOS.name
             destroy_children_widgets(left_btm_frame)
             rows = []
-            label = tk.Label(left_btm_frame, text="Enter parameters for video queries", font=("Arial", 10, "bold"))
+            label = tk.Label(left_btm_frame, text="Enter parameters for video queries", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
             label.pack(side="top", pady=10)
             
             base_container = tk.Frame(left_btm_frame)
             base_container.pack(side="top", pady=5)
             
-            startdate_label = tk.Label(left_btm_frame, text="Enter startdate (format: YYYYMMDD)")
+            startdate_label = tk.Label(left_btm_frame, text="Enter startdate (format: YYYYMMDD)", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
             startdate_label.pack(side="top")
             startdate_var = tk.StringVar()
-            startdate = tk.Entry(left_btm_frame, textvariable=startdate_var)
+            startdate = tk.Entry(left_btm_frame, textvariable=startdate_var, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white")
             startdate.pack(side="top", pady=5)
             
-            enddate_label = tk.Label(left_btm_frame, text="Enter enddate, cannot be more than 30 days later than startdate")
+            enddate_label = tk.Label(left_btm_frame, text="Enter enddate, cannot be more than 30 days later than startdate", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
             enddate_label.pack(side="top", pady=5)
             enddate_var = tk.StringVar()
-            enddate = tk.Entry(left_btm_frame, textvariable=enddate_var)
+            enddate = tk.Entry(left_btm_frame, textvariable=enddate_var, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white")
             enddate.pack(side="top", pady=5)
 
             rows = []
@@ -170,10 +170,10 @@ class Gui:
             self.track_type = Endpoints.COMMENTS.name
             destroy_children_widgets(left_btm_frame)
             
-            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments", font=("Arial", 10, "bold"))
+            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
             label.pack(side="top", pady=10)
         
-            entry = tk.Entry(left_btm_frame, width=50)
+            entry = tk.Entry(left_btm_frame, width=50, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white")
             entry.pack(side="top", pady=10)
         
             comment_queries.label = label
@@ -196,7 +196,7 @@ class Gui:
             self.track_type = Endpoints.USER_INFO.name
             destroy_children_widgets(left_btm_frame)
             
-            label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Arial", 10, "bold"))
+            label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
             label.pack(side="top", pady=10)
             entry = tk.Entry(left_btm_frame, width=50)
             entry.pack(side="top", pady=10)
@@ -219,7 +219,7 @@ class Gui:
             
         
         #CONTENT in frames
-        title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Arial", 16, "bold"), bg="#FFFFFF")
+        title = tk.Label(header_frame, text="Packaged Easier to Access APIs", font=("Helvetica", 12, "bold"), fg="white", bg="grey")
         title.pack(fill="both")
 
         btn_style = ttk.Style()

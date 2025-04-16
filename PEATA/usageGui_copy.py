@@ -11,11 +11,6 @@ from PIL import Image, ImageTk
 #   4 - A simple query for videos by date and username
 
 class Gui:
-    def __init__(self, cs, ci, ck):
-        self.client_secret = cs
-        self.client_id = ci
-        self.client_key = ck
-        self.tiktok_api = TikTokApi()
         
     def test_page(self):
         def show_exit():
@@ -30,27 +25,27 @@ class Gui:
         root.bind("<Escape>", lambda event: show_exit())
         
         #FRAMES for content placing
-        full_frame = tk.Frame(root, bg="#CAE1FF")
+        full_frame = tk.Frame(root, bg="#3A3A3A")
         full_frame.pack(fill="both", expand=True)
         
         header_frame = tk.Frame(full_frame, bg="#FFFFFF", height=100)
         header_frame.pack(fill="x", side="top")
         
-        content_frame = tk.Frame(full_frame, bg="white")
+        content_frame = tk.Frame(full_frame, bg="grey")
         content_frame.pack(fill="both", expand=True)
         content_frame.columnconfigure(0, weight=1)
         content_frame.columnconfigure(1, weight=1)
         content_frame.rowconfigure(0, weight=1, uniform="equal")
         content_frame.rowconfigure(1, weight=3, uniform="equal")
         
-        top_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        top_frame = tk.Frame(content_frame, bg="#3A3A3A")
         top_frame.grid(row=0, column=0, columnspan= 2, sticky="nsew", padx=20)
-        left_btm_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        left_btm_frame = tk.Frame(content_frame, bg="#3A3A3A")
         left_btm_frame.grid(row=1, column=0, sticky="nsew", pady=20, padx=20)
-        right_btm_frame = tk.Frame(content_frame, bg="#D1D1D1")
+        right_btm_frame = tk.Frame(content_frame, bg="#3A3A3A")
         right_btm_frame.grid(row=1, column=1, sticky="nsew", pady=20, padx=20)
         
-        button_frame = tk.Frame(top_frame, bg="#D1D1D1")
+        button_frame = tk.Frame(top_frame, bg="#3A3A3A")
         button_frame.pack(side="top", pady=70)
         
         def destroy_children_widgets(frame):
@@ -66,7 +61,7 @@ class Gui:
                     return
                 destroy_children_widgets(left_btm_frame)
                 # Allows users to input a video ID
-                label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments:", font=("Arial", 10, "bold"))
+                label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments:", font=("Arial", 10, "bold"), fg="white", bg="#3A3A3A")
                 label.pack(side="top", pady=10)
             
                 entry = tk.Entry(left_btm_frame, width=50)
@@ -77,7 +72,7 @@ class Gui:
                 def submit():
                     video_id = entry.get()
                     label.config(text=f"Fetching comments for video ID: {video_id}...")
-                    comments = self.tiktok_api.get_video_comments(video_id)
+                    comments = []
                     
                     temp_label.config(state=tk.NORMAL)
                     temp_label.delete(1.0, tk.END)
@@ -100,7 +95,7 @@ class Gui:
             def submit():
                 username = entry.get()
                 label.config(text=f"Fetching info about {username}...")
-                user_info = self.tiktok_api.get_public_user_info(username)
+                user_info = []
                 temp_label.config(state=tk.NORMAL)
                 temp_label.delete(1.0, tk.END)
                 temp_label.insert(tk.END, f"{user_info}")
@@ -126,7 +121,7 @@ class Gui:
                     focusthickness=3,
                     focuscolor="")
         
-        video_img = Image.open("images/VideoQueries.png")
+        video_img = Image.open("images/GenBtn.png")
         video_img = video_img.resize((200, 60), Image.LANCZOS)
         video_btn_image = ImageTk.PhotoImage(video_img)
         
@@ -221,3 +216,6 @@ class Gui:
 
 
 
+if __name__ == "__main__":
+    gui = Gui()
+    gui.test_page()
