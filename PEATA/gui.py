@@ -81,22 +81,22 @@ class Gui:
             self.track_type = Endpoints.VIDEOS.name
             destroy_children_widgets(left_btm_frame)
             rows = []
-            label = tk.Label(left_btm_frame, text="Enter parameters for video queries", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
+            label = tk.Label(left_btm_frame, text="Enter parameters for video queries", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
             label.pack(side="top", pady=10)
             
             base_container = tk.Frame(left_btm_frame)
             base_container.pack(side="top", pady=5)
             
-            startdate_label = tk.Label(left_btm_frame, text="Enter startdate (format: YYYYMMDD)", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
+            startdate_label = tk.Label(left_btm_frame, text="Enter startdate (format: YYYYMMDD)", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
             startdate_label.pack(side="top")
             startdate_var = tk.StringVar()
-            startdate = tk.Entry(left_btm_frame, textvariable=startdate_var, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white")
+            startdate = tk.Entry(left_btm_frame, textvariable=startdate_var, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
             startdate.pack(side="top", pady=5)
             
             enddate_label = tk.Label(left_btm_frame, text="Enter enddate, cannot be more than 30 days later than startdate", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
             enddate_label.pack(side="top", pady=5)
             enddate_var = tk.StringVar()
-            enddate = tk.Entry(left_btm_frame, textvariable=enddate_var, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white")
+            enddate = tk.Entry(left_btm_frame, textvariable=enddate_var, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
             enddate.pack(side="top", pady=5)
 
             rows = []
@@ -170,10 +170,10 @@ class Gui:
             self.track_type = Endpoints.COMMENTS.name
             destroy_children_widgets(left_btm_frame)
             
-            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
+            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
             label.pack(side="top", pady=10)
         
-            entry = tk.Entry(left_btm_frame, width=50, font=("Helvetica", 10), bg="lightgrey", fg="black", insertbackground="white")
+            entry = tk.Entry(left_btm_frame, width=50, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
             entry.pack(side="top", pady=10)
         
             comment_queries.label = label
@@ -196,7 +196,7 @@ class Gui:
             self.track_type = Endpoints.USER_INFO.name
             destroy_children_widgets(left_btm_frame)
             
-            label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
+            label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
             label.pack(side="top", pady=10)
             entry = tk.Entry(left_btm_frame, width=50)
             entry.pack(side="top", pady=10)

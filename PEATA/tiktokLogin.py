@@ -108,12 +108,3 @@ class Login:
             messagebox.showerror("Error", "No access token found. Please try again.")
         
         
-if __name__ == "__main__":
-    root = Tk()           
-    app = Login(root)  
-    root.attributes('-fullscreen', True)
-    root.mainloop()
-            
-
-
-
