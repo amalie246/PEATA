@@ -4,7 +4,7 @@ import threading
 from tkinter import messagebox
 from api import TikTokApi
 from ui_helper import UiHelper
-from queryFormatter import QueryFormatter
+from query_formatter import QueryFormatter
 from endpoint_type import Endpoints
 
 #TODO  below
@@ -93,7 +93,7 @@ class Gui:
             startdate = tk.Entry(left_btm_frame, textvariable=startdate_var, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
             startdate.pack(side="top", pady=5)
             
-            enddate_label = tk.Label(left_btm_frame, text="Enter enddate, cannot be more than 30 days later than startdate", font=("Helvetica", 12, "bold"), fg="white", bg="#3A3A3A")
+            enddate_label = tk.Label(left_btm_frame, text="Enter enddate, cannot be more than 30 days later than startdate", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
             enddate_label.pack(side="top", pady=5)
             enddate_var = tk.StringVar()
             enddate = tk.Entry(left_btm_frame, textvariable=enddate_var, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
@@ -257,3 +257,9 @@ class Gui:
         download_btn.grid(row=14, column=11)
         
         root.mainloop()
+
+if __name__ == "__main__":
+    root = tk.Tk() 
+    gui = Gui(root, "a", "b", "c", "d")
+    gui.main_frame()
+    root.mainloop()

@@ -1,5 +1,3 @@
-#combining fileHandler and fileconverter
-
 import json
 import csv
 import os

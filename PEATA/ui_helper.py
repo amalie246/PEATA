@@ -4,8 +4,8 @@ import json
 from PIL import Image, ImageTk
 from api import TikTokApi
 from endpoint_type import Endpoints
-from FileProcessor import FileProcessor
-from queryFormatter import QueryFormatter
+from file_processor import FileProcessor
+from query_formatter import QueryFormatter
 from datetime import datetime
 
 class UiHelper:
