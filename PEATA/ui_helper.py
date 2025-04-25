@@ -36,15 +36,15 @@ class UiHelper:
         return button
     
     def display_videos_chunked(self, videos, output, index):
-        chunk_size = 5
+        output.config(state=tk.NORMAL)
+        chunk_size = 1
         if index >= len(videos):
             return
     
         for i in range(index, min(index + chunk_size, len(videos))):
             output.insert(tk.END, f"{videos[i]}\n\n")
-
+        
         output.after(50, self.display_videos_chunked, videos, output, index + chunk_size)
-    
     
     
     def update_ui(self, data, label):
@@ -64,6 +64,7 @@ class UiHelper:
         
         label.config(state=tk.DISABLED)
         
+        
     def api_call(self, endpoint, data, start_date, end_date, output, progress_bar):
         try:
             if endpoint == Endpoints.VIDEOS.name:
@@ -72,45 +73,47 @@ class UiHelper:
                 submitted_data = data
                 print(f"submitted data: {submitted_data}")
             
-                if len(submitted_data) == 2:
+                if len(submitted_data) == 1000000:
+                #if len(submitted_data) == 2 and "AND" in submitted_data[0] and "username" in submitted_data[0] and "AND" in submitted_data[1] and "keyword" in submitted_data[1]:
                     t1 = submitted_data[0]
                     print("t1: ", t1)
                     t2 = submitted_data[1]
                     print("t2: ", t2)
                     
-                    if "AND" in t1 and "username" in t1:
-                        if "AND" in t2 and "keyword" in t2:
-                            username = t1[2]
-                            keyword = t2[2]
-                            videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
-                            print(videos)
+                    
+                    username = t1[2]
+                    keyword = t2[2]
+                    print("Hello usrname and keyword")
+                    videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
+                    print(videos)
                                 
                             
-                    else:
-                        and_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "AND"]
-                        or_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "OR"]                    
-                        not_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "NOT"]
+                else:
+                    and_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "AND"]
+                    or_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "OR"]                    
+                    not_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "NOT"]
                     
                         
-                        args = []
-                        if len(and_clauses) > 0:
-                            query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
-                            args.append(query_formatted_and_clauses)
-                            if len(or_clauses) > 0:
-                                query_formatted_or_clauses = self.query_formatter.query_OR_clause(or_clauses)
-                                args.append(query_formatted_or_clauses)
-                                if len(not_clauses) > 0:
-                                    query_formatted_not_clauses = self.query_formatter.query_NOT_clause(not_clauses)
-                                    args.append(query_formatted_not_clauses)
+                    args = []
+                    if len(and_clauses) > 0:
+                        query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
+                        args.append(query_formatted_and_clauses)
+                    if len(or_clauses) > 0:
+                        query_formatted_or_clauses = self.query_formatter.query_OR_clause(or_clauses)
+                        args.append(query_formatted_or_clauses)
+                    if len(not_clauses) > 0:
+                            query_formatted_not_clauses = self.query_formatter.query_NOT_clause(not_clauses)
+                            args.append(query_formatted_not_clauses)
                       
-                        print("len: ", len(args))
-                        query_body = self.query_formatter.query_builder(start_date, end_date, args)
-                        print("made query body: ", query_body)
-                        videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
-                        print(videos)
+                    print("len: ", len(args))
+                    query_body = self.query_formatter.query_builder(start_date, end_date, args)
+                    print("made query body: ", query_body)
+                    videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
+                    print(videos)
 
                 self.latest_data = videos
-                output.after(0, self.display_videos_chunked, videos, output, 0)
+                #output.after(0, self.display_videos_chunked, videos, output, 0)
+                output.after(0, self.update_ui, videos, output)
                 
             elif endpoint == Endpoints.COMMENTS.name:
                 comments = self.tiktok_api.get_video_comments(data)
@@ -133,8 +136,13 @@ class UiHelper:
             output.after(0, progress_bar.stop())
         
     
-    def download(self, endpoint_type_name):
+    def download(self, endpoint_type_name, messagebox):
         now = datetime.now()
         timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"{endpoint_type_name}{timestamp}.csv"
-        self.file_processor.export_data(filename, self.latest_data)
+        ret = self.file_processor.export_data(filename, self.latest_data)
+        
+        if ret == 0:
+            messagebox.showinfo("Download complete", "Your data has been downloaded as CSV and Excel, and can be found in the data-folder.")
+        else:
+            messagebox.showerror("Download failed", "Your data could not be downloaded")

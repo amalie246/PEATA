@@ -14,7 +14,6 @@ class Gui:
         self.client_id = ci
         self.client_key = ck
         self.access_token = access_token
-        self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
         self.ui = UiHelper(self.client_key, self.client_secret, self.access_token)
         self.track_type = None
 
@@ -176,7 +175,6 @@ class Gui:
             def submit():
                 video_id = entry.get()
                 label.config(text=f"Fetching comments for video ID: {video_id}...")
-                #TODO needs multithreading because it is insane
                 progress_bar.start(10)
                 thread = threading.Thread(target=self.ui.api_call, args=(Endpoints.COMMENTS.name, video_id, None, None, output, progress_bar), daemon=True)
                 thread.start()
@@ -210,7 +208,7 @@ class Gui:
             submit_btn.pack(side="top", pady=5)
         
         def download():
-            self.ui.download(self.track_type)
+            self.ui.download(self.track_type, messagebox)
             
         
         #CONTENT in frames
@@ -237,12 +235,12 @@ class Gui:
             mode="indeterminate",
             length=100
             )
-        progress_bar.grid(row=0, column=0, padx=10, pady=10)
+        progress_bar.grid(row=8, column=10, columnspan=3, padx=50, pady=(10, 0), sticky="ew")
         
         #Data sneak peak
         output = tk.Text(right_btm_frame, height=25, width=90, wrap=tk.WORD, fg="white", bg="black", font=("Arial", 10))
         output.grid(row=9, column=10, columnspan=3, pady=10)
-        output.config(state=tk.DISABLED)#Editing is disabled
+        output.config(state=tk.DISABLED)
 
         scrollbar = tk.Scrollbar(right_btm_frame, command=output.yview)
         scrollbar.grid(row=9, column=13, sticky="ns")

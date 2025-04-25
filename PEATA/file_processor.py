@@ -138,8 +138,10 @@ class FileProcessor:
             df.to_excel(excel_filepath, index=False, engine='openpyxl')
             
             print(f"Excel data saved: {excel_filepath}")
+            return 0
         except Exception as e:
             print(f"Error while saving CSV file: {e}")
+            return 1
         
         
             

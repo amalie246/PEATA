@@ -7,23 +7,9 @@ import logging
 BASE_URL = "https://open.tiktokapis.com/v2"
 
 class TikTokApi:
-    #TODO - do not use .env, use variables from user instead
-    #Use this in production
-    """def __init__(self, client_key, client_secret, access_token):
-        self.client_key = client_key
-        self.client_secret = client_secret
-        #If access_token = None - invalid parameters or something else is wrong
-        self.access_token = access_token
-        
-        self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
-        self.USER_INFO_URL = BASE_URL + "/research/user/info/"
-        self.VIDEO_COMMENTS_URL = BASE_URL + "/research/video/comment/list/" """
-        
-        #Using this for testing
     def __init__(self, client_key,client_secret, access_token):
          self.client_key = client_key
          self.client_secret = client_secret
-         #If access_token = None - invalid parameters or something else is wrong
          self.access_token = access_token
          
          self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
@@ -32,10 +18,10 @@ class TikTokApi:
        
 
     
-    #This method only is able to get username AND keyword, in a EQ operation
     def get_videos(self, username, keyword, startdate, enddate):
+        url = f"{self.VIDEO_QUERY_URL}?fields=id,video_description,create_time, region_code,share_count,view_count,like_count,comment_count, music_id,hashtag_names, username,effect_ids,playlist_id,voice_to_text, is_stem_verified, video_duration,hashtag_info_list, sticker_info_list, effect_info_list, video_mention_list,video_label,video_tag"
         query_params = {
-                "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
+                "fields" : "id,video_description,create_time, region_code,share_count,view_count,like_count,comment_count, music_id,hashtag_names, username,effect_ids,playlist_id,voice_to_text, is_stem_verified, favourites_count, video_duration,hashtag_info_list, sticker_info_list, effect_info_list, video_mention_list,video_label,video_tag",
                 "max_count" : 100,
                 "start_date" : startdate,
                 "end_date" : enddate
@@ -72,8 +58,8 @@ class TikTokApi:
             if search_id:
                 query_body["search_id"] = search_id
                 
-            response = requests.post(self.VIDEO_QUERY_URL, json=query_body, params=query_params, headers=headers)
-
+            response = requests.post(url, json=query_body, params=query_params, headers=headers)
+            print("status code: ", response.status_code)
             if response.status_code == 200:
                 response_json = response.json()
                 error = response_json.get("error", {})
@@ -81,7 +67,7 @@ class TikTokApi:
                     print("API quota exceeded. Stopping fetch.")
                     break
                 
-                data = response_json().get("data", [])
+                data = response_json.get("data", []) 
                 videos = data.get("videos", [])
                 all_videos.extend(videos)
                 
@@ -105,7 +91,6 @@ class TikTokApi:
                 error = response.json()
                 return error
             
-        print(query_body)
         return all_videos
         
 
@@ -163,8 +148,7 @@ class TikTokApi:
         print(all_videos)
         return all_videos
         
-
-    #Edge case - extreme long processing time for many comments!
+    
     def get_video_comments(self, video_id):
         url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
         
