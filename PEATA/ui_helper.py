@@ -31,19 +31,21 @@ class UiHelper:
         
         text_label = tk.Label(frame, text=text, background="#323232", font=("Arial", 10, "bold"), fg="white")
         text_label.place(relx=0.5, rely=0.5, anchor="center")
+        text_label.bind("<Button-1>", lambda event: command())
         
         return button
     
     def display_videos_chunked(self, videos, output, index):
-        chunk_size = 5  # or 10 if it's text-heavy
+        chunk_size = 5
         if index >= len(videos):
             return
     
         for i in range(index, min(index + chunk_size, len(videos))):
             output.insert(tk.END, f"{videos[i]}\n\n")
 
-        # Schedule the next chunk
         output.after(50, self.display_videos_chunked, videos, output, index + chunk_size)
+    
+    
     
     def update_ui(self, data, label):
         label.config(state=tk.NORMAL)

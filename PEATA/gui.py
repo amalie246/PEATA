@@ -7,12 +7,6 @@ from ui_helper import UiHelper
 from query_formatter import QueryFormatter
 from endpoint_type import Endpoints
 
-#TODO  below
-# 1 - Check that ALL FUNCTIONALITY WORKS
-#       - AND/OR/NOT
-#       - Download button
-# 2 - Stabilize threads
-
 class Gui:
     def __init__(self, master, cs, ci, ck, access_token):
         self.master = master
@@ -23,7 +17,6 @@ class Gui:
         self.tiktok_api = TikTokApi(self.client_key, self.client_secret, self.access_token)
         self.ui = UiHelper(self.client_key, self.client_secret, self.access_token)
         self.track_type = None
-    
 
         
     def main_frame(self):
@@ -217,7 +210,7 @@ class Gui:
             submit_btn.pack(side="top", pady=5)
         
         def download():
-            self.ui.download(self.track_type)            
+            self.ui.download(self.track_type)
             
         
         #CONTENT in frames
