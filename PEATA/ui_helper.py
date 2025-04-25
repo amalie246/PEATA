@@ -57,42 +57,47 @@ class UiHelper:
     def api_call(self, endpoint, data, start_date, end_date, output, progress_bar):
         try:
             if endpoint == Endpoints.VIDEOS.name:
+                print("in videos block")
                 videos = []
                 submitted_data = data
+                print(f"submitted data: {submitted_data}")
             
                 if len(submitted_data) == 2:
                     t1 = submitted_data[0]
+                    print("t1: ", t1)
                     t2 = submitted_data[1]
+                    print("t2: ", t2)
                     
                     if "AND" in t1 and "username" in t1:
                         if "AND" in t2 and "keyword" in t2:
                             username = t1[2]
                             keyword = t2[2]
                             videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
+                            print(videos)
                                 
-                else:
-                    and_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "AND"]
-                    print("and created")
-                    or_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "OR"]
-                    print("or created")
-                    not_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "NOT"]
-                    print("not created")
+                            
+                    else:
+                        and_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "AND"]
+                        or_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "OR"]                    
+                        not_clauses = [(t[1], t[2], "EQ") for t in submitted_data if t[0] == "NOT"]
+                    
                         
-                    args = []
-                    if len(and_clauses) > 0:
-                        query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
-                        args.append(query_formatted_and_clauses)
-                    if len(or_clauses) > 0:
-                        query_formatted_or_clauses = self.query_formatter.query_OR_clause(or_clauses)
-                        args.append(query_formatted_or_clauses)
-                    if len(not_clauses) > 0:
-                        query_formatted_not_clauses = self.query_formatter.query_NOT_clause(not_clauses)
-                        args.append(query_formatted_not_clauses)
+                        args = []
+                        if len(and_clauses) > 0:
+                            query_formatted_and_clauses = self.query_formatter.query_AND_clause(and_clauses)
+                            args.append(query_formatted_and_clauses)
+                            if len(or_clauses) > 0:
+                                query_formatted_or_clauses = self.query_formatter.query_OR_clause(or_clauses)
+                                args.append(query_formatted_or_clauses)
+                                if len(not_clauses) > 0:
+                                    query_formatted_not_clauses = self.query_formatter.query_NOT_clause(not_clauses)
+                                    args.append(query_formatted_not_clauses)
                       
-                    print("len: ", len(args))
-                    query_body = self.query_formatter.query_builder(start_date, end_date, args)
-                    print("made query body")
-                    videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
+                        print("len: ", len(args))
+                        query_body = self.query_formatter.query_builder(start_date, end_date, args)
+                        print("made query body: ", query_body)
+                        videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
+                        print(videos)
 
                 self.latest_data = videos
                 output.after(0, self.update_ui, videos, output)

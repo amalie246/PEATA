@@ -4,6 +4,7 @@ class QueryFormatter:
     And builds a full query body, ready to use in tiktok_api class
     """
     def query_builder(self, startdate, enddate, args):
+        print("in query builder")
         clause_arr = args
 
         query_structure = {}
@@ -20,6 +21,7 @@ class QueryFormatter:
             "end_date": f"{enddate}",
             "cursor": 0
         }
+        print(f"query body: {query_body}")
         return query_body
     
     
