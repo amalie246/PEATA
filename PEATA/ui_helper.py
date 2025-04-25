@@ -73,8 +73,7 @@ class UiHelper:
                 submitted_data = data
                 print(f"submitted data: {submitted_data}")
             
-                if len(submitted_data) == 1000000:
-                #if len(submitted_data) == 2 and "AND" in submitted_data[0] and "username" in submitted_data[0] and "AND" in submitted_data[1] and "keyword" in submitted_data[1]:
+                if len(submitted_data) == 2 and "AND" in submitted_data[0] and "username" in submitted_data[0] and "AND" in submitted_data[1] and "keyword" in submitted_data[1]:
                     t1 = submitted_data[0]
                     print("t1: ", t1)
                     t2 = submitted_data[1]
