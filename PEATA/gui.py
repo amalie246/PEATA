@@ -126,9 +126,11 @@ class Gui:
         
                 bool_var = tk.OptionMenu(container, bool_option_var, *bool_op)
                 bool_var.pack(side="left")
+                bool_var.config(fg="black")
 
                 fields_var = tk.OptionMenu(container, video_fields_option_var, *video_fields)
                 fields_var.pack(side="left")
+                fields_var.config(fg="black")
         
                 value_entry = tk.Entry(container, textvariable=value_var)
                 value_entry.pack(side="left")

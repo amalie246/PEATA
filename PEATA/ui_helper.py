@@ -34,6 +34,17 @@ class UiHelper:
         
         return button
     
+    def display_videos_chunked(self, videos, output, index):
+        chunk_size = 5  # or 10 if it's text-heavy
+        if index >= len(videos):
+            return
+    
+        for i in range(index, min(index + chunk_size, len(videos))):
+            output.insert(tk.END, f"{videos[i]}\n\n")
+
+        # Schedule the next chunk
+        output.after(50, self.display_videos_chunked, videos, output, index + chunk_size)
+    
     def update_ui(self, data, label):
         label.config(state=tk.NORMAL)
         label.delete(1.0, tk.END)
@@ -45,12 +56,9 @@ class UiHelper:
         if "error" in data:
             message = "Error occured during fetching:"
             label.insert(tk.END, f"{message}\n{data}")
-            return
         
         else:
             label.insert(tk.END, f"{data}")
-            return
-        
         
         label.config(state=tk.DISABLED)
         
@@ -100,7 +108,7 @@ class UiHelper:
                         print(videos)
 
                 self.latest_data = videos
-                output.after(0, self.update_ui, videos, output)
+                output.after(0, self.display_videos_chunked, videos, output, 0)
                 
             elif endpoint == Endpoints.COMMENTS.name:
                 comments = self.tiktok_api.get_video_comments(data)
@@ -120,7 +128,7 @@ class UiHelper:
             output.after(0, self.update_ui, f"Error: {e}", output)
 
         finally:
-            progress_bar.stop()
+            output.after(0, progress_bar.stop())
         
     
     def download(self, endpoint_type_name):
