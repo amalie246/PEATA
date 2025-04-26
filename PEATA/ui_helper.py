@@ -104,8 +104,7 @@ class UiHelper:
                     print(videos)
 
                 self.latest_data = videos
-                #output.after(0, self.display_videos_chunked, videos, output, 0)
-                output.after(0, self.update_ui, videos, output)
+                output.after(0, self.display_videos_chunked, videos, output, 0)
                 
             elif endpoint == Endpoints.COMMENTS.name:
                 comments = self.tiktok_api.get_video_comments(data)
