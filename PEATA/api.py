@@ -53,13 +53,14 @@ class TikTokApi:
         all_videos = []
         cursor = 0
         search_id = None
+        
         while does_have_more:
             query_body["cursor"] = cursor
             if search_id:
                 query_body["search_id"] = search_id
                 
             response = requests.post(url, json=query_body, params=query_params, headers=headers)
-            print("status code: ", response.status_code)
+            
             if response.status_code == 200:
                 response_json = response.json()
                 error = response_json.get("error", {})

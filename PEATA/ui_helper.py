@@ -74,12 +74,10 @@ class UiHelper:
                 print(f"submitted data: {submitted_data}")
             
                 if len(submitted_data) == 2 and "AND" in submitted_data[0] and "username" in submitted_data[0] and "AND" in submitted_data[1] and "keyword" in submitted_data[1]:
-                    username = submitted_data[0]
-                    keyword = submitted_data[1]
-                    
-                    print("Hello usrname and keyword")
+                    username = submitted_data[0][2]
+                    keyword = submitted_data[1][2]
+                
                     videos = self.tiktok_api.get_videos(username, keyword, start_date, end_date)
-                    print(videos)
                                 
                             
                 else:
