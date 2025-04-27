@@ -152,56 +152,51 @@ class TikTokApi:
     
     def get_video_comments(self, video_id):
         url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
-        
-        headers = {
-            "Content-Type" : "application/json",
-            "Authorization" : f"Bearer {self.access_token}"
-        }
     
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.access_token}"
+            }
+
         data = {
-            "video_id" : video_id,
-           "max_count" : 100,
-           "cursor": 0
-            
-        }
+            "video_id": video_id,
+            "max_count": 100,
+            "cursor": 0
+            }
+    
         all_comments = []
-        
-        does_have_more = True
-        cursor_count = 0
-        while does_have_more:
+
+        while True:
             response = requests.post(url, headers=headers, json=data)
 
             if response.status_code == 200:
                 response_json = response.json()
+
                 error = response_json.get("error", {})
                 if error.get("code") == "daily_quota_limit_exceeded":
-                    print("API quota exceeded. Stopping fetch.")
-                    does_have_more = False
+                    print("API quota exceeded")
                     break
-                
-                comments_data = response_json.get("data", {})
 
+                comments_data = response_json.get("data", {})
                 comments = comments_data.get("comments", [])
-                print(comments)
-                if len(comments) < 1:
-                    does_have_more = False
+                print("Fetched comments:", comments)
+
+                if not comments:
+                    print("No more comments.")
                     break
-                    
+
                 all_comments.extend(comments)
                 
-
-                does_have_more = comments_data.get("has_more", False)
-                cursor_count = len(all_comments)
-                if does_have_more:
-                    data["cursor"] = cursor_count
-        
-                if not len(all_comments):
+                next_cursor = comments_data.get("cursor", None)
+                if next_cursor is not None:
+                    data["cursor"] = next_cursor
+                else:
                     break
             else:
                 logging.error("Something went wrong")
                 print("Error response:", response.json())
-                break
-            
+                break 
+
         return all_comments
 
 

@@ -35,16 +35,16 @@ class UiHelper:
         
         return button
     
-    def display_videos_chunked(self, videos, output, index):
+    def display_data_chunked(self, data, output, index):
         output.config(state=tk.NORMAL)
         chunk_size = 1
-        if index >= len(videos):
+        if index >= len(data):
             return
     
-        for i in range(index, min(index + chunk_size, len(videos))):
-            output.insert(tk.END, f"{videos[i]}\n\n")
+        for i in range(index, min(index + chunk_size, len(data))):
+            output.insert(tk.END, f"{data[i]}\n\n")
         
-        output.after(50, self.display_videos_chunked, videos, output, index + chunk_size)
+        output.after(50, self.display_data_chunked, data, output, index + chunk_size)
     
     
     def update_ui(self, data, label):
@@ -104,12 +104,15 @@ class UiHelper:
                     print(videos)
 
                 self.latest_data = videos
-                output.after(0, self.display_videos_chunked, videos, output, 0)
+                output.delete(1.0, tk.END)
+                output.after(0, self.display_data_chunked, videos, output, 0)
                 
             elif endpoint == Endpoints.COMMENTS.name:
                 comments = self.tiktok_api.get_video_comments(data)
                 self.latest_data = comments
-                output.after(0, self.update_ui, comments, output)
+                output.delete(1.0, tk.END)
+                output.after(0, self.display_data_chunked, comments, output, 0)
+                
                 
             elif endpoint == Endpoints.USER_INFO.name:
                 user_info = self.tiktok_api.get_public_user_info(data)
