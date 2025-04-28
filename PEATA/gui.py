@@ -207,8 +207,23 @@ class Gui:
             submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
             submit_btn.pack(side="top", pady=5)
         
-        def download():
-            self.ui.download(self.track_type, messagebox)
+        def download_csv():
+            def run_download():
+                progress_bar.start(10)
+                self.ui.download(self.track_type, messagebox, file_format="csv")
+                progress_bar.stop()
+
+            threading.Thread(target=run_download, daemon=True).start()
+
+        def download_excel():
+            def run_download():
+                progress_bar.start(10)
+                self.ui.download(self.track_type, messagebox, file_format="excel")
+                progress_bar.stop()
+
+            threading.Thread(target=run_download, daemon=True).start()
+
+
             
         
         #CONTENT in frames
@@ -246,8 +261,12 @@ class Gui:
         scrollbar.grid(row=9, column=13, sticky="ns")
         output.config(yscrollcommand=scrollbar.set)
         
-        download_btn = tk.Button(right_btm_frame, text="Download as CSV file", command=download)
-        download_btn.grid(row=14, column=11)
+        download_csv_btn = tk.Button(right_btm_frame, text="Download as CSV", command=download_csv)
+        download_csv_btn.grid(row=14, column=10, pady=10)
+
+        download_excel_btn = tk.Button(right_btm_frame, text="Download as Excel", command=download_excel)
+        download_excel_btn.grid(row=14, column=11, pady=10)
+
         
         root.mainloop()
 

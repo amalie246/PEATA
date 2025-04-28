@@ -123,13 +123,31 @@ class UiHelper:
             output.after(0, progress_bar.stop())
         
     
-    def download(self, endpoint_type_name, messagebox):
+    def download(self, endpoint_type_name, messagebox, file_format="csv"):
         now = datetime.now()
         timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
-        filename = f"{endpoint_type_name}{timestamp}.csv"
-        ret = self.file_processor.export_data(filename, self.latest_data)
-        
-        if ret == 0:
-            messagebox.showinfo("Download complete", "Your data has been downloaded as CSV and Excel, and can be found in the data-folder.")
-        else:
-            messagebox.showerror("Download failed", "Your data could not be downloaded")
+        filename = f"{endpoint_type_name}_{timestamp}"
+
+        if self.latest_data is None:
+            messagebox.showerror("Download failed", "No data available to download.")
+            return
+
+        try:
+            if file_format == "csv":
+                ret = self.file_processor.export_data(filename, self.latest_data)
+                if ret == 0:
+                    messagebox.showinfo("Download complete", f"Data downloaded as CSV: {filename}.csv")
+                
+                else:
+                    messagebox.showerror("Download failed", "Failed to save CSV file.")
+            elif file_format == "excel":
+                self.file_processor.data = self.latest_data
+                self.file_processor.file_path = None
+                self.file_processor.export_as_excel()
+                messagebox.showinfo("Download complete", f"Data downloaded as Excel: {filename}.xlsx")
+            else:
+                messagebox.showerror("Download failed", "Unsupported file format selected.")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred during download: {e}")
+
+            
