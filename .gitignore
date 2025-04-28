@@ -171,6 +171,10 @@ cython_debug/
 .pypirc
 .env
 
-data/csv/
-data/exports/
-data/json/
+PEATA/data/csv/*
+PEATA/data/exports/*
+PEATA/data/json/*
+
+!PEATA/data/csv/.gitkeep
+!PEATA/data/exports/.gitkeep
+!PEATA/data/json/.gitkeep
