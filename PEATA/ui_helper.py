@@ -18,20 +18,12 @@ class UiHelper:
         
     
     def create_button_with_image(self, text, command, frame):
-        btn_image = Image.open("images/GenBtn.png")
-        btn_image = btn_image.crop(btn_image.getbbox())
+        button = tk.Button(frame, command=command, text=text,
+                           fg="white", bg="#232323",
+                           font=("Helvetica", 10, "bold"),
+                           width=30, height=2)
+        button.pack(padx=10, pady=10)
         
-        gen_btn_img = ImageTk.PhotoImage(btn_image, master=frame)
-        
-        self.images[text] = gen_btn_img
-        
-        button = tk.Button(frame, image=gen_btn_img, command=command)
-        button.image = gen_btn_img
-        button.pack(padx=10)
-        
-        text_label = tk.Label(frame, text=text, background="#323232", font=("Arial", 10, "bold"), fg="white")
-        text_label.place(relx=0.5, rely=0.5, anchor="center")
-        text_label.bind("<Button-1>", lambda event: command())
         
         return button
     
