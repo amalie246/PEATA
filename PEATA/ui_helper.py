@@ -117,6 +117,7 @@ class UiHelper:
             elif endpoint == Endpoints.USER_INFO.name:
                 user_info = self.tiktok_api.get_public_user_info(data)
                 self.latest_data = user_info
+                output.delete(1.0, tk.END)
                 output.after(0, self.update_ui, user_info, output)
                 
             else:
