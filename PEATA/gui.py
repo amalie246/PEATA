@@ -3,9 +3,13 @@ import tkinter.ttk as ttk
 import threading
 from tkinter import messagebox
 from api import TikTokApi
-from ui_helper import UiHelper
+from ui_controller import UiController
 from query_formatter import QueryFormatter
 from endpoint_type import Endpoints
+from ui_config import UiConfig
+from video_query_widget import VideoQueryWidget
+from comment_query_widget import CommentQueryWidget
+from user_query_widget import UserQueryWidget
 
 class Gui:
     def __init__(self, master, cs, ci, ck, access_token):
@@ -14,7 +18,8 @@ class Gui:
         self.client_id = ci
         self.client_key = ck
         self.access_token = access_token
-        self.ui = UiHelper(self.client_key, self.client_secret, self.access_token)
+        self.ui_controller = UiController(self.client_key, self.client_secret, self.access_token)
+        self.ui_config = UiConfig()
         self.track_type = None
 
         
@@ -68,93 +73,22 @@ class Gui:
         
         def video_queries():
             if hasattr(video_queries, "label"):
-                return
+                return 
             
             self.track_type = Endpoints.VIDEOS.name
             destroy_children_widgets(left_btm_frame)
-            rows = []
-            label = tk.Label(left_btm_frame, text="Enter parameters for video queries", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
-            label.pack(side="top", pady=10)
             
-            base_container = tk.Frame(left_btm_frame)
-            base_container.pack(side="top", pady=5)
-            
-            startdate_label = tk.Label(left_btm_frame, text="Enter startdate (format: YYYYMMDD)", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
-            startdate_label.pack(side="top")
-            startdate_var = tk.StringVar()
-            startdate = tk.Entry(left_btm_frame, textvariable=startdate_var, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
-            startdate.pack(side="top", pady=5)
-            
-            enddate_label = tk.Label(left_btm_frame, text="Enter enddate, cannot be more than 30 days later than startdate", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
-            enddate_label.pack(side="top", pady=5)
-            enddate_var = tk.StringVar()
-            enddate = tk.Entry(left_btm_frame, textvariable=enddate_var, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
-            enddate.pack(side="top", pady=5)
-
-            rows = []
-            containers = []
-
-            def add_dropdown_row(default_field=None, default_value=""):
-                def remove_row():
-                    # Remove this row's data and container
-                    idx = containers.index(container)
-                    containers.pop(idx)
-                    rows.pop(idx)
-                    container.destroy()
-                    
-                for cont in containers:
-                    cont.pack_forget()
-                    cont.pack(side="top", pady=5)
-
-                container = tk.Frame(left_btm_frame)
-                container.pack(side="top", pady=5)
-        
-                bool_option_var = tk.StringVar(value=bool_op[0])
-                video_fields_option_var = tk.StringVar(value=default_field if default_field else video_fields[0])  
-                value_var = tk.StringVar(value=default_value)
-            
-                rows.append((bool_option_var, video_fields_option_var, value_var))
-                containers.append(container)
-        
-                bool_var = tk.OptionMenu(container, bool_option_var, *bool_op)
-                bool_var.pack(side="left")
-                bool_var.config(fg="black")
-
-                fields_var = tk.OptionMenu(container, video_fields_option_var, *video_fields)
-                fields_var.pack(side="left")
-                fields_var.config(fg="black")
-        
-                value_entry = tk.Entry(container, textvariable=value_var)
-                value_entry.pack(side="left")
-        
-                remove_btn = tk.Button(container, text="-", command=remove_row)
-                remove_btn.pack(side="left")
-            
-            def submit():
-                start_date = startdate_var.get()
-                end_date = enddate_var.get()
-                
-                submitted_data = []
-                for bool_var, field_var, value_var in rows:
-                    t = (bool_var.get(), field_var.get(), value_var.get())
-                    submitted_data.append(t)
-                
+            def handle_submit(conditions, start, end):
                 progress_bar.start(10)
-                thread = threading.Thread(target=self.ui.api_call, args=(Endpoints.VIDEOS.name, submitted_data, start_date, end_date, output, progress_bar), daemon=True)
+                thread = threading.Thread(
+                    target=self.ui_controller.api_call,
+                    args=(Endpoints.VIDEOS.name, conditions, start, end, output, progress_bar),
+                    daemon=True
+                    )
                 thread.start()
-                        
             
-            add_dropdown_row(default_field="username", default_value="")
-            add_dropdown_row(default_field="keyword", default_value="")
-            
-            add_row_btn = tk.Button(left_btm_frame, text="Add row", command=add_dropdown_row)
-            add_row_btn.pack(side="bottom")
-            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
-            submit_btn.pack(side="bottom", pady=5)
-        
-        
-        bool_op = ["AND", "OR", "NOT"]
-        video_fields = ["username", "keyword", "create_date", "region_code", "video_id", "hashtag_name", "music_id", "effect_id", "video_length"]
+            video_query_widget = VideoQueryWidget(left_btm_frame, on_submit=handle_submit)
+            video_query_widget.pack(fill="both", expand=True)
 
             
         def comment_queries():
@@ -164,23 +98,18 @@ class Gui:
             self.track_type = Endpoints.COMMENTS.name
             destroy_children_widgets(left_btm_frame)
             
-            label = tk.Label(left_btm_frame, text="Enter Video ID to fetch comments", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
-            label.pack(side="top", pady=10)
-        
-            entry = tk.Entry(left_btm_frame, width=50, font=("Helvetica", 8), bg="lightgrey", fg="black", insertbackground="white")
-            entry.pack(side="top", pady=10)
-        
-            comment_queries.label = label
 
-            def submit():
-                video_id = entry.get()
-                label.config(text=f"Fetching comments for video ID: {video_id}...")
+            def handle_submit(video_id):
                 progress_bar.start(10)
-                thread = threading.Thread(target=self.ui.api_call, args=(Endpoints.COMMENTS.name, video_id, None, None, output, progress_bar), daemon=True)
+                thread = threading.Thread(
+                    target=self.ui_controller.api_call,
+                    args=(Endpoints.COMMENTS.name, video_id, None, None, output, progress_bar),
+                    daemon=True
+                    )
                 thread.start()
-        
-            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
-            submit_btn.pack(side="top", pady=5)
+            
+            comment_query_widget = CommentQueryWidget(left_btm_frame, on_submit=handle_submit)
+            comment_query_widget.pack(fill="both", expand=True)
         
         def user_queries():
             if hasattr(user_queries, "label"):
@@ -189,28 +118,23 @@ class Gui:
             self.track_type = Endpoints.USER_INFO.name
             destroy_children_widgets(left_btm_frame)
             
-            label = tk.Label(left_btm_frame, text="Enter username to fetch user information:", font=("Helvetica", 8, "bold"), fg="white", bg="#3A3A3A")
-            label.pack(side="top", pady=10)
-            entry = tk.Entry(left_btm_frame, width=50)
-            entry.pack(side="top", pady=10)
-            user_queries.label = label
-            
-            
-            def submit():
-                username = entry.get()
-                label.config(text=f"Fetching info about {username}...")
-                
+            def handle_submit(username):
                 progress_bar.start(10)
-                thread = threading.Thread(target=self.ui.api_call, args=(Endpoints.USER_INFO.name, username, None, None, output, progress_bar), daemon=True)
+                thread = threading.Thread(
+                    target=self.ui_controller.api_call,
+                    args=(Endpoints.USER_INFO.name, username, None, None, output, progress_bar),
+                    daemon=True
+                    )
                 thread.start()
                 
-            submit_btn = tk.Button(left_btm_frame, text="Submit", command=submit)
-            submit_btn.pack(side="top", pady=5)
+            user_query_widget = UserQueryWidget(left_btm_frame, on_submit=handle_submit)   
+            user_query_widget.pack(fill="both", expand=True)
+            
         
         def download_csv():
             def run_download():
                 progress_bar.start(10)
-                self.ui.download(self.track_type, messagebox, file_format="csv")
+                self.ui_controller.download(self.track_type, messagebox, file_format="csv")
                 progress_bar.stop()
 
             threading.Thread(target=run_download, daemon=True).start()
@@ -218,7 +142,7 @@ class Gui:
         def download_excel():
             def run_download():
                 progress_bar.start(10)
-                self.ui.download(self.track_type, messagebox, file_format="excel")
+                self.ui_controller.download(self.track_type, messagebox, file_format="excel")
                 progress_bar.stop()
 
             threading.Thread(target=run_download, daemon=True).start()
@@ -240,9 +164,9 @@ class Gui:
                     focuscolor="")
         
         #Buttons
-        self.ui.create_button("Videos", video_queries, video_btn_frame)
-        self.ui.create_button("Comments", comment_queries, comment_btn_frame)
-        self.ui.create_button("User info", user_queries, user_btn_frame)
+        self.ui_config.create_button("Videos", video_queries, video_btn_frame)
+        self.ui_config.create_button("Comments", comment_queries, comment_btn_frame)
+        self.ui_config.create_button("User info", user_queries, user_btn_frame)
         
         progress_bar = ttk.Progressbar(
             right_btm_frame,

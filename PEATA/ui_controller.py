@@ -8,7 +8,7 @@ from file_processor import FileProcessor
 from query_formatter import QueryFormatter
 from datetime import datetime
 
-class UiHelper:
+class UiController:
     def __init__(self, client_key, client_secret, access_token):
         self.tiktok_api = TikTokApi(client_key, client_secret, access_token)
         self.file_processor = FileProcessor()
@@ -16,16 +16,7 @@ class UiHelper:
         self.query_formatter = QueryFormatter()
         self.images = {}
         
-    
-    def create_button(self, text, command, frame):
-        button = tk.Button(frame, command=command, text=text,
-                           fg="white", bg="#232323",
-                           font=("Helvetica", 10, "bold"),
-                           width=30, height=2)
-        button.pack(padx=10, pady=10)
-        
-        
-        return button
+
     
     def display_data_chunked(self, data, output, index):
         output.config(state=tk.NORMAL)
