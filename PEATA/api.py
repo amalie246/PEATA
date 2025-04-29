@@ -97,7 +97,6 @@ class TikTokApi:
 
     
     def get_videos_by_dynamic_query_body(self, query_body, start_date, end_date):
-        print(query_body)
         query_params = {
                 "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
                 "max_count" : 100,
@@ -146,7 +145,6 @@ class TikTokApi:
                 print(error)
                 return error
         
-        print(all_videos)
         return all_videos
         
     
@@ -179,7 +177,6 @@ class TikTokApi:
 
                 comments_data = response_json.get("data", {})
                 comments = comments_data.get("comments", [])
-                print("Fetched comments:", comments)
 
                 if not comments:
                     print("No more comments.")
@@ -215,7 +212,6 @@ class TikTokApi:
         }
         
         response = requests.post(url, headers=headers, json=data)
-        print(response.json())
         
         if(response.status_code == 200):
             user_info = response.json().get("data", None)

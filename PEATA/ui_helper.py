@@ -17,7 +17,7 @@ class UiHelper:
         self.images = {}
         
     
-    def create_button_with_image(self, text, command, frame):
+    def create_button(self, text, command, frame):
         button = tk.Button(frame, command=command, text=text,
                            fg="white", bg="#232323",
                            font=("Helvetica", 10, "bold"),
@@ -60,10 +60,8 @@ class UiHelper:
     def api_call(self, endpoint, data, start_date, end_date, output, progress_bar):
         try:
             if endpoint == Endpoints.VIDEOS.name:
-                print("in videos block")
                 videos = []
                 submitted_data = data
-                print(f"submitted data: {submitted_data}")
             
                 if len(submitted_data) == 2 and "AND" in submitted_data[0] and "username" in submitted_data[0] and "AND" in submitted_data[1] and "keyword" in submitted_data[1]:
                     username = submitted_data[0][2]
@@ -89,11 +87,8 @@ class UiHelper:
                             query_formatted_not_clauses = self.query_formatter.query_NOT_clause(not_clauses)
                             args.append(query_formatted_not_clauses)
                       
-                    print("len: ", len(args))
                     query_body = self.query_formatter.query_builder(start_date, end_date, args)
-                    print("made query body: ", query_body)
                     videos = self.tiktok_api.get_videos_by_dynamic_query_body(query_body, start_date, end_date)
-                    print(videos)
 
                 self.latest_data = videos
                 output.delete(1.0, tk.END)
@@ -134,7 +129,7 @@ class UiHelper:
 
         try:
             if file_format == "csv":
-                ret = self.file_processor.export_data(filename, self.latest_data)
+                ret = self.file_processor.export_data_as_csv(filename, self.latest_data)
                 if ret == 0:
                     messagebox.showinfo("Download complete", f"Data downloaded as CSV: {filename}.csv")
                 
@@ -143,8 +138,11 @@ class UiHelper:
             elif file_format == "excel":
                 self.file_processor.data = self.latest_data
                 self.file_processor.file_path = None
-                self.file_processor.export_as_excel()
-                messagebox.showinfo("Download complete", f"Data downloaded as Excel: {filename}.xlsx")
+                ret = self.file_processor.export_as_excel(filename, self.latest_data)
+                if ret == 0:
+                    messagebox.showinfo("Download complete", f"Data downloaded as Excel: {filename}.xlsx")
+                else:
+                    messagebox.showerror("Download failed", "Failed to save Excel file.")
             else:
                 messagebox.showerror("Download failed", "Unsupported file format selected.")
         except Exception as e:

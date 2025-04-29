@@ -240,9 +240,9 @@ class Gui:
                     focuscolor="")
         
         #Buttons
-        self.ui.create_button_with_image("Videos", video_queries, video_btn_frame)
-        self.ui.create_button_with_image("Comments", comment_queries, comment_btn_frame)
-        self.ui.create_button_with_image("User info", user_queries, user_btn_frame)
+        self.ui.create_button("Videos", video_queries, video_btn_frame)
+        self.ui.create_button("Comments", comment_queries, comment_btn_frame)
+        self.ui.create_button("User info", user_queries, user_btn_frame)
         
         progress_bar = ttk.Progressbar(
             right_btm_frame,
