@@ -2,7 +2,7 @@
 Packaged Easier Access To API's
 
 ## Introduction
-This project is meant to retrieve data from the TikTok Research API, targeted at researchers with access to the TikTok Research API. This version has a simple and straightforward GUI, you can see the more advanced GUI-version here: [LINK]
+This project is meant to retrieve data from the TikTok Research API, targeted at researchers with access to the TikTok Research API. This version has a simple and straightforward GUI, you can see the more advanced GUI-version here: https://github.com/ElinEunjung/peata_ver2
 
 This version can fetch video data with all fields available from the TikTok Research API (https://developers.tiktok.com/doc/research-api-specs-query-videos?enter_method=left_navigation), comment information from a video ID (https://developers.tiktok.com/doc/research-api-specs-query-video-comments?enter_method=left_navigation) and user info by username (https://developers.tiktok.com/doc/research-api-specs-query-user-info?enter_method=left_navigation). Other available endpoints are descriptive on the TikTok Developer page.
 
@@ -54,6 +54,6 @@ For the comment queries, you must enter a video-id, which can be found in the se
 
 
 ## Contributions
-Amalie Nilsen, Oda Nøstdahl, Elin Eujung Park, Ibrahim Khan.
+Amalie Nilsen, Oda Nøstdahl, Elin Eunjung Park, Ibrahim Khan.
 
 ## Licensing
