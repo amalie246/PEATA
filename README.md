@@ -36,6 +36,10 @@ Now, your program should be ready to run. See "Usage" for a guide on how to prop
 
 
 ### Mac
+If you have a mac with apple M1/M2 chip, this version is for you! You can head over to the releases section in github and download the zip file called MacOs.zip. Make sure to save it somewhere easy to remember on your computer, such as your Desktop. Then you can double-click on the zip file to unzip. You will now see a folder called main. 
+
+Then you can head over to Terminal and navigate to where you saved the file. When you use pyInstaller on mac you have to make the file executable with the command "chmod +x main". When you have done that you will be able to launch the program by writing the following command "./main". 
+
 
 ## Usage
 When you first start the program, either from a runnable file or from your IDE, the login page should appear immediately (or at least after a few seconds). 
