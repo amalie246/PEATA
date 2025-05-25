@@ -40,7 +40,7 @@ If you have a mac with apple M1/M2 chip, this version is for you! You can head o
 
 Then you can head over to Terminal and navigate to where you saved the file. When you use pyInstaller on mac you have to make the file executable with the command "chmod +x main". When you have done that you will be able to launch the program by writing the following command "./main". 
 
-If you run into any problems using the main.exe file for Windows 64-bit, please contact Oda. You can also download the entire source code and run it in an IDE.
+If you run into any problems using the main.exe file for Mac M1/M2 chip, please contact Oda. You can also download the entire source code and run it in an IDE.
 
 
 ## Usage
