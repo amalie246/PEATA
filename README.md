@@ -1,5 +1,7 @@
 # PEATA
 Packaged Easier Access To API's
+![Hits](https://hits.dwyl.com/amalie246/PEATA.svg)
+
 
 ## Introduction
 This project is meant to retrieve data from the TikTok Research API, targeted at researchers with access to the TikTok Research API. This version has a simple and straightforward GUI, you can see the more advanced GUI-version here: https://github.com/ElinEunjung/peata_ver2
