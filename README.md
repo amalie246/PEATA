@@ -1,6 +1,5 @@
 # PEATA
 Packaged Easier Access To API's
-![Hits](https://hits.dwyl.com/amalie246/PEATA.svg)
 
 
 ## Introduction
