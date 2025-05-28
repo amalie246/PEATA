@@ -64,3 +64,4 @@ For the comment queries, you must enter a video-id, which can be found in the se
 Amalie Nilsen, Oda Nøstdahl, Elin Eunjung Park, Ibrahim Khan.
 
 ## Licensing
+Free to use
