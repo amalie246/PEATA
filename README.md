@@ -37,9 +37,10 @@ Now, your program should be ready to run. See "Usage" for a guide on how to prop
 
 
 ### Mac
-If you have a mac with apple M1/M2 chip, this version is for you! You can head over to the releases section in github and download the zip file called MacOs.zip. Make sure to save it somewhere easy to remember on your computer, such as your Desktop. Then you can double-click on the zip file to unzip. You will now see a folder called main. 
+If you have a mac with apple M1/M2 chip, this version is for you! You can head over to the releases section in github and download the zip file called MacOs.zip. Make sure to save it somewhere easy to remember on your computer, such as your Desktop. Once the download is complete, double-click the zip file to unzip it. This will create a folder named main. Inside the main folder, you’ll find a file also named main. Try double-clicking this file to launch the program. If that doesn’t work, you can open it through the Terminal instead.
 
-Then you can head over to Terminal and navigate to where you saved the file. When you use pyInstaller on mac you have to make the file executable with the command "chmod +x main". When you have done that you will be able to launch the program by writing the following command "./main". 
+### Here is how to do that
+If double-clicking the main file doesn’t work, you can try launching it through the Terminal instead. To do this, first open the Terminal application on your Mac. You can find the terminal app by searching terminal on your mac through spotlight. This will open a small black window with white text. This is the terminal. Then you can navigate to the location where you saved and unzipped the file. For example, if you saved it on your Desktop, you can type the following command: cd Desktop/main.  When you use pyInstaller on mac you have to make the file executable with the command "chmod +x main". When you have done that you will be able to launch the program by writing the following command "./main". The program takes some time to open, so you might have to wait for a while.
 
 If you run into any problems using the main.exe file for Mac M1/M2 chip, please contact Oda. You can also download the entire source code and run it in an IDE.
 
